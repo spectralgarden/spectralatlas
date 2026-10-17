@@ -83,7 +83,7 @@ export const TopCitiesDrawer: React.FC<TopCitiesDrawerProps> = ({
             angle: inf.angle,
             polarity: inf.polarity,
             points: [],
-            color: pDef?.color || '#f59e0b',
+            color: pDef?.color || '#a78bfa',
             description: inf.summary,
             chartOwner: 'primary',
             method: 'in_mundo',
@@ -200,7 +200,7 @@ export const TopCitiesDrawer: React.FC<TopCitiesDrawerProps> = ({
         <div className="p-4 border-b border-slate-800 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-amber-400 font-serif text-lg">✦</span>
+              <span className="text-violet-400 font-serif text-lg">✦</span>
               <h2 className="text-base font-serif font-bold text-white tracking-wide">
                 Top Cities & Power Spots
               </h2>
@@ -232,7 +232,7 @@ export const TopCitiesDrawer: React.FC<TopCitiesDrawerProps> = ({
               onClick={() => setSelectedFilter(item.id as CityDomainFilter)}
               className={`px-3 py-1 rounded-lg shrink-0 transition font-medium text-xs ${
                 selectedFilter === item.id
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+                  ? 'bg-violet-500 text-slate-950 font-bold shadow-md shadow-violet-500/20'
                   : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white'
               }`}
             >
@@ -273,9 +273,9 @@ export const TopCitiesDrawer: React.FC<TopCitiesDrawerProps> = ({
               return (
                 <div
                   key={item.city.id}
-                  className={`p-3.5 rounded-xl border transition group hover:border-amber-500/60 cursor-pointer ${
+                  className={`p-3.5 rounded-xl border transition group hover:border-violet-500/60 cursor-pointer ${
                     isSelected
-                      ? 'bg-amber-500/10 border-amber-500 shadow-lg shadow-amber-500/10'
+                      ? 'bg-violet-500/10 border-violet-500 shadow-lg shadow-violet-500/10'
                       : 'bg-slate-950/60 border-slate-800/80 hover:bg-slate-800/40'
                   }`}
                   onClick={() => {
@@ -285,11 +285,11 @@ export const TopCitiesDrawer: React.FC<TopCitiesDrawerProps> = ({
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="w-5 h-5 rounded-full bg-slate-800 border border-slate-700 text-[10px] font-mono text-amber-400 flex items-center justify-center shrink-0">
+                      <span className="w-5 h-5 rounded-full bg-slate-800 border border-slate-700 text-[10px] font-mono text-violet-400 flex items-center justify-center shrink-0">
                         {index + 1}
                       </span>
                       <div>
-                        <h3 className="text-sm font-semibold text-white group-hover:text-amber-300 transition">
+                        <h3 className="text-sm font-semibold text-white group-hover:text-violet-300 transition">
                           {item.city.name}
                           <span className="text-xs font-normal text-slate-400 ml-1.5">
                             {item.city.country}
@@ -303,7 +303,7 @@ export const TopCitiesDrawer: React.FC<TopCitiesDrawerProps> = ({
 
                     {/* Power Score Badge */}
                     <div className="text-right shrink-0">
-                      <div className="text-sm font-bold font-mono text-amber-400">
+                      <div className="text-sm font-bold font-mono text-violet-400">
                         {item.score} / 100
                       </div>
                       <span className="text-[9px] uppercase tracking-wider text-slate-400 block font-medium">
@@ -329,7 +329,7 @@ export const TopCitiesDrawer: React.FC<TopCitiesDrawerProps> = ({
 
                   {/* Dominant Astrological Theme */}
                   <div className="mt-2.5 text-xs text-slate-300 bg-slate-900/80 rounded-lg p-2 border border-slate-800/60">
-                    <span className="text-amber-400 mr-1">✦</span>
+                    <span className="text-violet-400 mr-1">✦</span>
                     {item.dominantTheme}
                   </div>
 
@@ -359,7 +359,7 @@ export const TopCitiesDrawer: React.FC<TopCitiesDrawerProps> = ({
                       Coordinates: {item.city.lat.toFixed(2)}°, {item.city.lng.toFixed(2)}°
                     </span>
                     <button
-                      className="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-950 text-xs font-semibold transition"
+                      className="px-2.5 py-1 rounded-lg bg-violet-500/20 hover:bg-violet-500 text-violet-300 hover:text-slate-950 text-xs font-semibold transition"
                       onClick={(e) => {
                         e.stopPropagation();
                         onSelectCity(item.city);
