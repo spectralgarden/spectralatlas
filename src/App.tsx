@@ -135,10 +135,8 @@ export default function App() {
     return null;
   });
 
-  // Modals & Panels - Starts open if user does not have a saved profile yet
-  const [isBirthModalOpen, setIsBirthModalOpen] = useState(() => {
-    return getInitialProfiles().length === 0;
-  });
+  // Let the map and welcome prompt show before requesting birth information.
+  const [isBirthModalOpen, setIsBirthModalOpen] = useState(false);
   const [isRelocationModalOpen, setIsRelocationModalOpen] = useState(false);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
   const [isChartWheelOpen, setIsChartWheelOpen] = useState(false);
@@ -473,13 +471,22 @@ export default function App() {
       <main className="relative flex-1 w-full h-full overflow-hidden">
         {/* Welcome Prompt If No Profile Is Entered Yet */}
         {!activeProfile && !isBirthModalOpen && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center p-4 pointer-events-none">
-            <div className="pointer-events-auto max-w-md w-full bg-slate-950/90 backdrop-blur-md border border-amber-500/40 rounded-2xl p-6 shadow-2xl text-center space-y-4 animate-scaleUp">
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 mx-auto flex items-center justify-center text-amber-300 text-xl font-serif">
-                ✦
+          <div className="absolute inset-0 z-20 flex items-center justify-center p-4">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="welcome-title"
+              className="max-w-md w-full bg-gradient-to-br from-slate-950/95 via-violet-950/90 to-fuchsia-950/85 backdrop-blur-md border border-violet-400/50 rounded-2xl p-6 shadow-[0_0_40px_rgba(139,92,246,0.25)] text-center space-y-4 animate-scaleUp"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-violet-500/20 border border-violet-300/60 shadow-[0_0_18px_rgba(167,139,250,0.25)] mx-auto flex items-center justify-center">
+                <img
+                  src={`${import.meta.env.BASE_URL}sglogo.png`}
+                  alt=""
+                  className="h-9 w-9 rounded-xl object-contain"
+                />
               </div>
               <div>
-                <h2 className="text-lg font-serif font-bold text-white tracking-wide">
+                <h2 id="welcome-title" className="text-lg font-serif font-bold text-white tracking-wide">
                   Welcome to Spectral Atlas
                 </h2>
                 <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
@@ -489,7 +496,7 @@ export default function App() {
               <button
                 id="btn-welcome-enter-birth"
                 onClick={() => setIsBirthModalOpen(true)}
-                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-semibold text-xs transition shadow-lg shadow-amber-500/20 cursor-pointer"
+                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-600 hover:from-violet-400 hover:to-fuchsia-500 text-white font-semibold text-xs transition shadow-lg shadow-violet-500/20 cursor-pointer"
               >
                 ✦ Enter Your Birth Information
               </button>
@@ -617,16 +624,16 @@ export default function App() {
             onClick={() => setIsInspectorOpen(true)}
             className="absolute bottom-6 left-6 z-20 flex items-center gap-3 px-4 py-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 backdrop-blur-md border border-slate-700/80 shadow-2xl transition group cursor-pointer"
           >
-            <div className="w-2.5 h-2.5 rounded-full bg-amber-400 group-hover:scale-125 transition-transform" />
+            <div className="w-2.5 h-2.5 rounded-full bg-violet-400 group-hover:scale-125 transition-transform" />
             <div className="text-left">
               <div className="text-xs font-bold text-white">
                 {selectedCity ? `${selectedCity.name}, ${selectedCity.country}` : `Coordinates (${activeLocation.lat.toFixed(1)}°, ${activeLocation.lng.toFixed(1)}°)`}
               </div>
               <div className="text-[11px] font-mono text-slate-400">
-                Score: <strong className="text-amber-300">{locationScore.overallScore}/100</strong> • {locationScore.topInfluences.length} active power lines
+                Score: <strong className="text-violet-300">{locationScore.overallScore}/100</strong> • {locationScore.topInfluences.length} active power lines
               </div>
             </div>
-            <span className="text-xs text-amber-400 ml-2 font-mono">Inspect ➔</span>
+            <span className="text-xs text-violet-400 ml-2 font-mono">Inspect ➔</span>
           </button>
         )}
 
@@ -638,7 +645,7 @@ export default function App() {
           >
             <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
               <div className="flex items-center gap-2">
-                <span className="text-amber-400 text-sm">✦</span>
+                <span className="text-violet-400 text-sm">✦</span>
                 <h3 className="text-sm font-serif font-bold text-white">
                   Interactive Astrological Chart Wheel
                 </h3>
