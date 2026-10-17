@@ -183,12 +183,12 @@ export const FlatMapView: React.FC<FlatMapViewProps> = ({
         {/* Graticule Coordinates Grid */}
         <g stroke="rgba(56,189,248,0.18)" strokeWidth="1">
           {/* Equator */}
-          <line x1={0} y1={mapHeight / 2} x2={mapWidth} y2={mapHeight / 2} stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.4" />
+          <line x1={0} y1={mapHeight / 2} x2={mapWidth} y2={mapHeight / 2} stroke="#a78bfa" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.4" />
           {/* Tropics */}
           <line x1={0} y1={toY(23.44)} x2={mapWidth} y2={toY(23.44)} strokeDasharray="3 4" opacity="0.3" />
           <line x1={0} y1={toY(-23.44)} x2={mapWidth} y2={toY(-23.44)} strokeDasharray="3 4" opacity="0.3" />
           {/* Greenwich Prime Meridian */}
-          <line x1={mapWidth / 2} y1={0} x2={mapWidth / 2} y2={mapHeight} stroke="#f59e0b" strokeWidth="1.2" strokeDasharray="4 4" opacity="0.4" />
+          <line x1={mapWidth / 2} y1={0} x2={mapWidth / 2} y2={mapHeight} stroke="#a78bfa" strokeWidth="1.2" strokeDasharray="4 4" opacity="0.4" />
           {/* Meridians every 30 deg */}
           {Array.from({ length: 13 }).map((_, i) => (
             <line key={`meridian_${i}`} x1={(i * mapWidth) / 12} y1={0} x2={(i * mapWidth) / 12} y2={mapHeight} opacity="0.15" />
@@ -210,7 +210,7 @@ export const FlatMapView: React.FC<FlatMapViewProps> = ({
                 strokeWidth="1.5"
                 strokeDasharray="4 6"
                 opacity="0.6"
-                className="hover:stroke-amber-400 hover:opacity-100 transition cursor-pointer"
+                className="hover:stroke-violet-400 hover:opacity-100 transition cursor-pointer"
                 onMouseEnter={() => setHoveredLabel(`Paran: ${paran.title} (Lat ${paran.latitude.toFixed(1)}°)`)}
                 onMouseLeave={() => setHoveredLabel(null)}
               />
@@ -257,7 +257,7 @@ export const FlatMapView: React.FC<FlatMapViewProps> = ({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 opacity="0.88"
-                className="hover:opacity-100 hover:stroke-amber-300 transition-all cursor-pointer"
+                className="hover:opacity-100 hover:stroke-violet-300 transition-all cursor-pointer"
                 onMouseEnter={() => {
                   const pDef = PLANET_DEFINITIONS[line.planetId];
                   setHoveredLabel(`✦ ${pDef?.name || line.planetId} on ${line.angle} Line`);
@@ -358,7 +358,7 @@ export const FlatMapView: React.FC<FlatMapViewProps> = ({
           {crossings.map((cross) => {
             const cx = toX(cross.lng);
             const cy = toY(cross.lat);
-            const col = cross.polarity === 'harmonious' ? '#f59e0b' : cross.polarity === 'challenging' ? '#ef4444' : '#38bdf8';
+            const col = cross.polarity === 'harmonious' ? '#a78bfa' : cross.polarity === 'challenging' ? '#ef4444' : '#38bdf8';
             return (
               <circle
                 key={cross.id}
@@ -399,13 +399,13 @@ export const FlatMapView: React.FC<FlatMapViewProps> = ({
                 }}
               >
                 {isSelected && (
-                  <circle cx={cx} cy={cy} r="9" fill="none" stroke="#f59e0b" strokeWidth="2" strokeDasharray="3 3" className="animate-spin" />
+                  <circle cx={cx} cy={cy} r="9" fill="none" stroke="#a78bfa" strokeWidth="2" strokeDasharray="3 3" className="animate-spin" />
                 )}
-                <circle cx={cx} cy={cy} r={isSelected ? '4.5' : '2.8'} fill={isSelected ? '#f59e0b' : '#f8fafc'} opacity={isSelected ? 1 : 0.75} />
+                <circle cx={cx} cy={cy} r={isSelected ? '4.5' : '2.8'} fill={isSelected ? '#a78bfa' : '#f8fafc'} opacity={isSelected ? 1 : 0.75} />
                 <text
                   x={cx + 6}
                   y={cy + 3}
-                  fill={isSelected ? '#f59e0b' : '#cbd5e1'}
+                  fill={isSelected ? '#a78bfa' : '#cbd5e1'}
                   fontSize={isSelected ? '12' : '10'}
                   fontWeight={isSelected ? '600' : '400'}
                   className="pointer-events-none drop-shadow"
@@ -420,8 +420,8 @@ export const FlatMapView: React.FC<FlatMapViewProps> = ({
         {/* Active Coordinate Pin */}
         {activeLocation && !selectedCity && (
           <g>
-            <circle cx={toX(activeLocation.lng)} cy={toY(activeLocation.lat)} r="6" fill="#f59e0b" opacity="0.9" />
-            <circle cx={toX(activeLocation.lng)} cy={toY(activeLocation.lat)} r="12" fill="none" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="3 3" />
+            <circle cx={toX(activeLocation.lng)} cy={toY(activeLocation.lat)} r="6" fill="#a78bfa" opacity="0.9" />
+            <circle cx={toX(activeLocation.lng)} cy={toY(activeLocation.lat)} r="12" fill="none" stroke="#a78bfa" strokeWidth="1.5" strokeDasharray="3 3" />
           </g>
         )}
       </svg>
