@@ -24,7 +24,7 @@ export const CrossingsExplorerModal: React.FC<CrossingsExplorerModalProps> = ({
 
   const themes = [
     { id: 'all', label: 'All Crossings' },
-    { id: 'wealth', label: '💎 Wealth & Expansion', color: 'text-amber-400' },
+    { id: 'wealth', label: '💎 Wealth & Expansion', color: 'text-violet-400' },
     { id: 'career', label: '👑 Career & Leadership', color: 'text-purple-400' },
     { id: 'love', label: '💖 Love & Magnetic Ties', color: 'text-pink-400' },
     { id: 'creativity', label: '⚡ Creative Awakening', color: 'text-cyan-400' },
@@ -290,7 +290,7 @@ export const CrossingsExplorerModal: React.FC<CrossingsExplorerModalProps> = ({
                         className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
                           c.isHarmonious
                             ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                            : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                            : 'bg-violet-500/20 text-violet-400 border border-violet-500/30'
                         }`}
                       >
                         {c.isHarmonious ? 'Harmonious' : 'Intense'}
