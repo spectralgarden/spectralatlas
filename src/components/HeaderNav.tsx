@@ -71,7 +71,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
             </span>
           </div>
           <div className="flex items-center gap-2 text-[11px] text-slate-400">
-            <span>spectral garden</span>
+            <span>by spectral garden</span>
             {activeLocationName && (
               <>
                 <span className="text-slate-600 hidden sm:inline">•</span>
