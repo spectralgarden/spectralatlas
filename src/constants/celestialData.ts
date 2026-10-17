@@ -5,8 +5,8 @@ export const PLANET_DEFINITIONS: Record<PlanetId, PlanetDefinition> = {
     id: 'sun',
     name: 'Sun',
     symbol: '☉',
-    color: '#F59E0B', // Radiant Gold
-    secondaryColor: '#FDE68A',
+    color: '#E879F9', // Nebula Magenta
+    secondaryColor: '#F5D0FE',
     nature: 'luminary',
     archetype: 'The Radiant Self, Vitality, Creative Will, Recognition & Life Purpose',
     keywords: ['Identity', 'Visibility', 'Leadership', 'Vitality', 'Core Purpose'],
@@ -115,8 +115,8 @@ export const PLANET_DEFINITIONS: Record<PlanetId, PlanetDefinition> = {
     id: 'north_node',
     name: 'North Node',
     symbol: '☊',
-    color: '#F59E0B', // Solar Amber
-    secondaryColor: '#FEF3C7',
+    color: '#A78BFA', // Nebula Violet
+    secondaryColor: '#DDD6FE',
     nature: 'point',
     archetype: 'The Evolutionary Path, Karmic Destiny, Growth Horizon & Soul Calling',
     keywords: ['Soul Purpose', 'Destined Encounters', 'New Frontiers', 'Growth Calling', 'Dharma'],
@@ -199,7 +199,7 @@ export const ANGLE_DEFINITIONS = {
     name: 'Midheaven (Medium Coeli)',
     latin: 'South Meridian / Peak Sky',
     description: 'Career zenith, public reputation, social status, vocation, worldly authority, and calling.',
-    badgeColor: 'text-amber-300 border-amber-500/40 bg-amber-500/10',
+    badgeColor: 'text-violet-300 border-violet-500/40 bg-violet-500/10',
     icon: 'Crown',
   },
   IC: {
@@ -240,7 +240,7 @@ export const ZODIAC_SIGNS: {
   { sign: 'Taurus', symbol: '♉', element: 'Earth', modality: 'Fixed', ruler: 'venus', color: '#10B981' },
   { sign: 'Gemini', symbol: '♊', element: 'Air', modality: 'Mutable', ruler: 'mercury', color: '#06B6D4' },
   { sign: 'Cancer', symbol: '♋', element: 'Water', modality: 'Cardinal', ruler: 'moon', color: '#93C5FD' },
-  { sign: 'Leo', symbol: '♌', element: 'Fire', modality: 'Fixed', ruler: 'sun', color: '#F59E0B' },
+  { sign: 'Leo', symbol: '♌', element: 'Fire', modality: 'Fixed', ruler: 'sun', color: '#E879F9' },
   { sign: 'Virgo', symbol: '♍', element: 'Earth', modality: 'Mutable', ruler: 'mercury', color: '#84CC16' },
   { sign: 'Libra', symbol: '♎', element: 'Air', modality: 'Cardinal', ruler: 'venus', color: '#EC4899' },
   { sign: 'Scorpio', symbol: '♏', element: 'Water', modality: 'Fixed', ruler: 'pluto', color: '#A855F7' },
@@ -257,7 +257,7 @@ export const LIFE_CATEGORIES_META: Record<
   career: {
     label: 'Career & Ambition',
     icon: 'Briefcase',
-    color: '#F59E0B',
+    color: '#A78BFA',
     description: 'Professional recognition, vocational mastery, entrepreneurship, and leadership status.',
   },
   relationships: {
