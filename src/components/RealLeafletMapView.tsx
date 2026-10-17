@@ -441,7 +441,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
             [paran.latitude, 180],
           ],
           {
-            color: isActive ? '#f59e0b' : paran.polarity === 'harmonious' ? '#10b981' : '#64748b',
+            color: isActive ? '#a78bfa' : paran.polarity === 'harmonious' ? '#10b981' : '#64748b',
             weight: isActive ? 4 : 1.4,
             opacity: isActive ? 1 : 0.6,
             dashArray: isActive ? undefined : '4, 8',
@@ -491,8 +491,8 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
 
         const marker = L.circleMarker([crossing.lat, crossing.lng], {
           radius: isActive ? 9 : 5,
-          color: isActive ? '#d946ef' : isHarmonious ? '#f59e0b' : '#38bdf8',
-          fillColor: isActive ? '#f43f5e' : isHarmonious ? '#f59e0b' : '#0284c7',
+          color: isActive ? '#d946ef' : isHarmonious ? '#a78bfa' : '#38bdf8',
+          fillColor: isActive ? '#f43f5e' : isHarmonious ? '#a78bfa' : '#0284c7',
           fillOpacity: isActive ? 1 : 0.85,
           weight: isActive ? 3 : 2,
         });
@@ -503,7 +503,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
             title: `Crossing: ${crossing.planet1.toUpperCase()} × ${crossing.planet2.toUpperCase()}`,
             orb: `Zenith Intersection Point`,
             subtitle: crossing.summary,
-            color: '#f59e0b',
+            color: '#a78bfa',
           });
         });
 
@@ -532,7 +532,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
           const latLngs = seg.map((pt) => [pt.lat, pt.lng] as [number, number]);
 
           const poly = L.polyline(latLngs, {
-            color: ls.color || '#f59e0b',
+            color: ls.color || '#a78bfa',
             weight: 2.2,
             opacity: 0.9,
             dashArray: '8, 5',
@@ -551,7 +551,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
               title: `🧭 ${ls.planetName} Local Space Vector (${ls.compassHeading})`,
               orb: `Azimuth: ${ls.azimuthDeg}° • Altitude: ${ls.altitudeDeg}°`,
               subtitle: `Compass vector originating from ${ls.originCityName}. Living or traveling along this heading activates ${ls.planetName}.`,
-              color: ls.color || '#f59e0b',
+              color: ls.color || '#a78bfa',
             });
           });
 
@@ -699,9 +699,9 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
     if (activeLocation) {
       const iconHtml = `
         <div style="position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; pointer-events: none;">
-          <div style="position: absolute; width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(circle, rgba(245, 158, 11, 0.45) 0%, rgba(245, 158, 11, 0) 70%); border: 2px solid rgba(245, 158, 11, 0.9); animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
-          <div style="position: absolute; width: 26px; height: 26px; border-radius: 50%; border: 1.5px dashed #f59e0b; opacity: 0.85;"></div>
-          <div style="position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #f59e0b; border: 2.5px solid #ffffff; box-shadow: 0 0 16px #f59e0b;"></div>
+          <div style="position: absolute; width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(circle, rgba(139, 92, 246, 0.45) 0%, rgba(139, 92, 246, 0) 70%); border: 2px solid rgba(139, 92, 246, 0.9); animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+          <div style="position: absolute; width: 26px; height: 26px; border-radius: 50%; border: 1.5px dashed #a78bfa; opacity: 0.85;"></div>
+          <div style="position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #a78bfa; border: 2.5px solid #ffffff; box-shadow: 0 0 16px #a78bfa;"></div>
         </div>
       `;
 
@@ -716,7 +716,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
       const cityName = selectedCity ? selectedCity.name : `Location (${activeLocation.lat.toFixed(1)}°, ${activeLocation.lng.toFixed(1)}°)`;
       marker.bindPopup(`
         <div style="padding: 4px; font-size: 12px; color: #f8fafc;">
-          <strong style="color: #f59e0b;">${cityName}</strong>
+          <strong style="color: #a78bfa;">${cityName}</strong>
           <div style="color: #94a3b8; font-family: monospace; font-size: 11px;">
             ${activeLocation.lat.toFixed(2)}°, ${activeLocation.lng.toFixed(2)}°
           </div>
@@ -744,7 +744,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
             </span>
           </div>
           {hoveredInfo.orb && (
-            <div className="text-[10px] font-mono text-amber-300 mt-0.5">{hoveredInfo.orb}</div>
+            <div className="text-[10px] font-mono text-violet-300 mt-0.5">{hoveredInfo.orb}</div>
           )}
           {hoveredInfo.subtitle && (
             <div className="text-[11px] text-slate-300 mt-0.5 leading-tight line-clamp-1 max-w-[280px] mx-auto">
@@ -763,7 +763,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
             onClick={() => setTileStyle(style)}
             className={`px-2.5 py-1 rounded-lg text-xs font-medium transition cursor-pointer ${
               tileStyle === style
-                ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+                ? 'bg-violet-500 text-slate-950 font-bold shadow-md shadow-violet-500/20'
                 : 'text-slate-300 hover:text-white hover:bg-slate-800'
             }`}
           >
