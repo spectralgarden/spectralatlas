@@ -22,6 +22,12 @@ npm run preview
 
 The static site is generated in `dist/`.
 
+## Astrocartography calculations
+
+Spectral Atlas converts the entered local birth date and time to UTC using the supplied time-zone offset, then uses [Astronomy Engine](https://github.com/cosinekitty/astronomy) to calculate geocentric planetary positions, sidereal time, and the ecliptic obliquity for that moment. Those values are projected onto the globe to map the planets' Midheaven (MC), Imum Coeli (IC), Ascendant (ASC), and Descendant (DSC) lines. **In Mundo** maps where planets physically culminate, reach the nadir, rise, or set; **In Zodiaco** maps locations where a planet aligns with the corresponding relocated chart angle in zodiacal longitude.
+
+The app also derives planetary aspects and harmonic lines, latitude-based planetary parans, line intersections, and optional fixed-star parans and local-space bearings. Relocation charts recalculate angles and house placements for a destination. Location scores estimate nearby planetary influences by distance, then apply the app's interpretive weights for life categories; these are exploratory astrology interpretations, not scientifically validated predictions. Transit maps repeat the position and line calculations for a selected date and compare them with natal lines.
+
 ## Deploy to GitHub Pages
 
 The workflow in `.github/workflows/deploy.yml` builds and deploys the site to GitHub Pages whenever changes are pushed to `main` (and can also be started manually). In the repository, open **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**.
