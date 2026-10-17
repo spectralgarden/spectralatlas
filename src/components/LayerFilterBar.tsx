@@ -238,7 +238,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
               className="w-full bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none"
             />
             {isSearchingLive && (
-              <span className="text-[10px] text-amber-400 animate-pulse font-mono shrink-0">Searching...</span>
+              <span className="text-[10px] text-violet-400 animate-pulse font-mono shrink-0">Searching...</span>
             )}
             {citySearch && (
               <button
@@ -259,7 +259,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
             <button
               id="btn-open-top-cities"
               onClick={onOpenTopCities}
-              className="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition shrink-0 flex items-center gap-1 cursor-pointer shadow-xs"
+              className="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 border border-violet-500/40 transition shrink-0 flex items-center gap-1 cursor-pointer shadow-xs"
               title="Open ranked Top Cities for your chart"
             >
               <span>✦ Top Cities</span>
@@ -339,7 +339,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                 onClick={onToggleLocalSpace}
                 className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition shrink-0 flex items-center gap-1 cursor-pointer shadow-xs ${
                   showLocalSpace
-                    ? 'bg-amber-500/25 text-amber-300 border-amber-500/50 shadow-xs'
+                    ? 'bg-violet-500/25 text-violet-300 border-violet-500/50 shadow-xs'
                     : 'bg-slate-800/80 hover:bg-slate-800 text-slate-400 border-slate-700'
                 }`}
                 title="Toggle Local Space Lines (Horizon Coordinate Great Circle Bearings from Origin)"
@@ -396,7 +396,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
               <button
                 id="btn-filter-open-tutorial"
                 onClick={onOpenTutorial}
-                className="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-amber-500/10 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 transition shrink-0 flex items-center gap-1 cursor-pointer shadow-xs"
+                className="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-violet-500/10 hover:bg-violet-500/25 text-violet-300 border border-violet-500/40 transition shrink-0 flex items-center gap-1 cursor-pointer shadow-xs"
                 title="Open Complete Beginner's Manual and Tutorial Guide"
               >
                 <span>📖 Tutorial</span>
@@ -421,7 +421,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                   <span className="font-semibold text-white block">{c.name}</span>
                   <span className="text-[10px] text-slate-400">{c.country}</span>
                 </div>
-                <span className="text-[10px] font-mono text-amber-400/80">
+                <span className="text-[10px] font-mono text-violet-400/80">
                   {c.lat.toFixed(2)}°, {c.lng.toFixed(2)}°
                 </span>
               </button>
@@ -433,7 +433,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
       {/* Quick Saved Locations Bar */}
       {savedLocations.length > 0 && (
         <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none">
-          <span className="text-[10px] font-mono uppercase text-amber-400 shrink-0">Saved:</span>
+          <span className="text-[10px] font-mono uppercase text-violet-400 shrink-0">Saved:</span>
           {savedLocations.map((loc, idx) => {
             const label = 'name' in loc ? (loc as CityData).name : `${loc.lat.toFixed(1)}°, ${loc.lng.toFixed(1)}°`;
             return (
@@ -457,7 +457,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
             <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
               <div className="flex items-center justify-between mb-1.5">
                 <span className="font-mono uppercase text-[10px] text-slate-300 font-semibold tracking-wider flex items-center gap-1.5">
-                  <span className="text-amber-400">✦</span> Calculation Engine: Mundo vs Zodiaco
+                  <span className="text-violet-400">✦</span> Calculation Engine: Mundo vs Zodiaco
                 </span>
                 <span className="text-[10px] font-mono text-slate-400">
                   {calculationMethod === 'in_zodiaco' ? 'Relocated Cusps (Zodico)' : 'Jim Lewis Sky (Mundo)'}
@@ -470,20 +470,20 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                   onClick={() => onChangeCalculationMethod('in_mundo')}
                   className={`px-2.5 py-2 rounded-lg text-left border transition cursor-pointer ${
                     calculationMethod === 'in_mundo'
-                      ? 'bg-amber-500/20 border-amber-500/50 text-amber-200'
+                      ? 'bg-violet-500/20 border-violet-500/50 text-violet-200'
                       : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
                   } ${isRecalculating && calculationMethod === 'in_mundo' ? 'animate-pulse' : ''}`}
                 >
                   <div className="font-semibold text-xs flex items-center justify-between">
                     <div className="flex items-center gap-1">
                       {isRecalculating && calculationMethod === 'in_mundo' ? (
-                        <span className="animate-spin text-amber-400 text-[10px] inline-block">◌</span>
+                        <span className="animate-spin text-violet-400 text-[10px] inline-block">◌</span>
                       ) : (
                         <span>☉</span>
                       )}
                       <span>In Mundo</span>
                     </div>
-                    {calculationMethod === 'in_mundo' && !isRecalculating && <span className="text-[10px] text-amber-400">✓</span>}
+                    {calculationMethod === 'in_mundo' && !isRecalculating && <span className="text-[10px] text-violet-400">✓</span>}
                   </div>
                   <p className="text-[10px] text-slate-400 mt-0.5 leading-tight">
                     Jim Lewis classic: 3D sky position (actual physical rising & culmination)
@@ -532,7 +532,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
               </button>
               <button
                 onClick={handlePresetBenefics}
-                className="px-2 py-1 rounded-md bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-xs font-medium cursor-pointer"
+                className="px-2 py-1 rounded-md bg-violet-500/20 hover:bg-violet-500/30 border border-violet-500/40 text-violet-300 text-xs font-medium cursor-pointer"
               >
                 Benefics (☉ ♀ ♃)
               </button>
@@ -570,7 +570,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                 Planetary Bodies ({selectedPlanets.length}/{allPlanetKeys.length})
               </span>
               <div className="flex gap-2 text-[11px]">
-                <button onClick={onSelectAllPlanets} className="text-amber-400 hover:underline cursor-pointer">
+                <button onClick={onSelectAllPlanets} className="text-violet-400 hover:underline cursor-pointer">
                   All
                 </button>
                 <span className="text-slate-600">|</span>
@@ -650,7 +650,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                   onClick={onToggleConjunctions}
                   className={`px-2.5 py-1.5 rounded-lg text-xs font-medium border text-left transition cursor-pointer ${
                     showConjunctions
-                      ? 'bg-amber-500/20 border-amber-500/50 text-amber-200'
+                      ? 'bg-violet-500/20 border-violet-500/50 text-violet-200'
                       : 'bg-slate-900 border-slate-800 text-slate-400'
                   }`}
                 >
@@ -713,7 +713,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                     { h: 6, label: 'H6 (Sextile 60°)', color: 'text-emerald-400' },
                     { h: 7, label: 'H7 (Septile 51.4°)', color: 'text-purple-400' },
                     { h: 8, label: 'H8 (Octile 45°)', color: 'text-rose-400' },
-                    { h: 9, label: 'H9 (Novile 40°)', color: 'text-amber-400' },
+                    { h: 9, label: 'H9 (Novile 40°)', color: 'text-violet-400' },
                   ].map((harmonicItem) => {
                     const isActive = activeHarmonics.includes(harmonicItem.h);
                     return (
@@ -808,7 +808,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                 onClick={onToggleCrossings}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition flex items-center justify-between cursor-pointer ${
                   showCrossings
-                    ? 'bg-amber-950/60 text-amber-300 border-amber-500/40 shadow-sm'
+                    ? 'bg-violet-950/60 text-violet-300 border-violet-500/40 shadow-sm'
                     : 'bg-slate-900/60 text-slate-500 border-slate-900 hover:text-slate-300'
                 }`}
               >
@@ -828,7 +828,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                 onClick={() => onSelectCategory(null)}
                 className={`px-2.5 py-1 rounded-md text-xs border transition cursor-pointer ${
                   selectedCategory === null
-                    ? 'bg-amber-500 text-slate-950 font-bold border-amber-500'
+                    ? 'bg-violet-500 text-slate-950 font-bold border-violet-500'
                     : 'bg-slate-900/60 text-slate-400 border-slate-800 hover:text-white'
                 }`}
               >
@@ -840,7 +840,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                   onClick={() => onSelectCategory(selectedCategory === cat ? null : cat)}
                   className={`px-2.5 py-1 rounded-md text-xs border transition cursor-pointer ${
                     selectedCategory === cat
-                      ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-semibold'
+                      ? 'bg-violet-500/20 text-violet-300 border-violet-500/40 font-semibold'
                       : 'bg-slate-900/60 text-slate-400 border-slate-800 hover:text-white'
                   }`}
                 >
