@@ -207,7 +207,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
               onClick={() => onSaveLocation(city || coordinates)}
               className={`px-2.5 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1 transition border cursor-pointer ${
                 isSaved
-                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                  ? 'bg-violet-500/20 text-violet-300 border-violet-500/40'
                   : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
               }`}
               title={isSaved ? 'Remove from saved spots' : 'Save this location'}
@@ -233,7 +233,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
             onClick={() => setActiveTab('synthesis')}
             className={`py-2.5 text-[11px] sm:text-xs font-semibold tracking-wider uppercase border-b-2 whitespace-nowrap transition cursor-pointer ${
               activeTab === 'synthesis'
-                ? 'border-amber-400 text-amber-300'
+                ? 'border-violet-400 text-violet-300'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
@@ -243,7 +243,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
             onClick={() => setActiveTab('interpretations')}
             className={`py-2.5 text-[11px] sm:text-xs font-semibold tracking-wider uppercase border-b-2 whitespace-nowrap transition cursor-pointer ${
               activeTab === 'interpretations'
-                ? 'border-amber-400 text-amber-300'
+                ? 'border-violet-400 text-violet-300'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
@@ -273,7 +273,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
             onClick={() => setActiveTab('parans')}
             className={`py-2.5 text-[11px] sm:text-xs font-semibold tracking-wider uppercase border-b-2 whitespace-nowrap transition cursor-pointer ${
               activeTab === 'parans'
-                ? 'border-amber-400 text-amber-300'
+                ? 'border-violet-400 text-violet-300'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
@@ -292,7 +292,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                   <div className="text-xs uppercase tracking-wider text-slate-400 font-mono">
                     Locational Power Quotient
                   </div>
-                  <div className="text-2xl font-serif font-bold text-amber-300 mt-1">
+                  <div className="text-2xl font-serif font-bold text-violet-300 mt-1">
                     {score.overallScore} / 100
                   </div>
                   <div className="text-xs text-slate-400 mt-1">
@@ -303,7 +303,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                 {/* Adjustable Orb Radius Slider */}
                 <div className="flex flex-col items-end gap-1.5">
                   <div className="text-xs text-slate-300 font-mono">
-                    Influence Radius: <span className="text-amber-300 font-bold">{radiusKm} km</span>
+                    Influence Radius: <span className="text-violet-300 font-bold">{radiusKm} km</span>
                   </div>
                   <input
                     type="range"
@@ -312,7 +312,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                     step="50"
                     value={radiusKm}
                     onChange={(e) => onRadiusChange(Number(e.target.value))}
-                    className="w-32 sm:w-36 accent-amber-400 cursor-pointer"
+                    className="w-32 sm:w-36 accent-violet-400 cursor-pointer"
                   />
                   <div className="flex justify-between w-32 sm:w-36 text-[10px] text-slate-500 font-mono">
                     <span>50 km</span>
@@ -329,7 +329,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                     : verdict.grade === 'B'
                     ? 'bg-sky-950/30 border-sky-500/50 shadow-lg shadow-sky-500/10'
                     : verdict.grade === 'C'
-                    ? 'bg-amber-950/30 border-amber-500/50 shadow-lg shadow-amber-500/10'
+                    ? 'bg-violet-950/30 border-violet-500/50 shadow-lg shadow-violet-500/10'
                     : 'bg-rose-950/30 border-rose-500/50 shadow-lg shadow-rose-500/10'
                 }`}
               >
@@ -342,7 +342,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                           : verdict.grade === 'B'
                           ? 'bg-sky-500/20 text-sky-300 border-sky-400'
                           : verdict.grade === 'C'
-                          ? 'bg-amber-500/20 text-amber-300 border-amber-400'
+                          ? 'bg-violet-500/20 text-violet-300 border-violet-400'
                           : 'bg-rose-500/20 text-rose-300 border-rose-400'
                       }`}
                     >
@@ -358,7 +358,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                               : verdict.grade === 'B'
                               ? 'bg-sky-500/20 text-sky-300'
                               : verdict.grade === 'C'
-                              ? 'bg-amber-500/20 text-amber-300'
+                              ? 'bg-violet-500/20 text-violet-300'
                               : 'bg-rose-500/20 text-rose-300'
                           }`}
                         >
@@ -378,7 +378,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                   {/* Export Relocation Report Button */}
                   <button
                     onClick={handleExportReport}
-                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 hover:text-amber-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shrink-0"
+                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-violet-300 hover:text-violet-200 border border-slate-700 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer shrink-0"
                     title="Export clean side-by-side relocation report to clipboard"
                   >
                     <span>📄</span>
@@ -435,7 +435,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                         onClick={() => setSelectedCategory(catKey)}
                         className={`p-3 rounded-xl border transition cursor-pointer ${
                           selectedCategory === catKey
-                            ? 'bg-slate-800 border-amber-500/50 shadow-md shadow-amber-500/10'
+                            ? 'bg-slate-800 border-violet-500/50 shadow-md shadow-violet-500/10'
                             : 'bg-slate-950/60 border-slate-800 hover:bg-slate-850 hover:border-slate-700'
                         }`}
                       >
@@ -444,7 +444,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                             <span className="text-sm">{catMeta.icon}</span>
                             <span className="text-xs font-semibold text-white">{catMeta.label}</span>
                           </div>
-                          <span className="font-mono text-xs font-bold text-amber-300">{catScore}%</span>
+                          <span className="font-mono text-xs font-bold text-violet-300">{catScore}%</span>
                         </div>
                         <div className="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
                           <div
@@ -519,7 +519,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                       {deepInterp && (
                         <div className="pt-2 border-t border-slate-800/60 text-xs text-slate-300 space-y-2">
                           <div>
-                            <strong className="text-amber-300 text-[11px] font-mono uppercase tracking-wider block mb-0.5">
+                            <strong className="text-violet-300 text-[11px] font-mono uppercase tracking-wider block mb-0.5">
                               Vibrational Atmosphere & Psychological Shift:
                             </strong>
                             <p className="text-[11px] text-slate-400 leading-relaxed">{deepInterp.generalSynthesis}</p>
@@ -577,7 +577,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                       </div>
                       <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
                         <span className="text-slate-500 block text-[10px]">MIDHEAVEN (10th)</span>
-                        <span className="text-amber-300 font-bold">{relocation.relocatedAngles.midheaven.toFixed(1)}°</span>
+                        <span className="text-violet-300 font-bold">{relocation.relocatedAngles.midheaven.toFixed(1)}°</span>
                       </div>
                       <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
                         <span className="text-slate-500 block text-[10px]">DESCENDANT (7th)</span>
@@ -614,10 +614,10 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                               <div className="flex items-center gap-2">
                                 <span className="text-sm font-semibold text-white">{pDef.name}</span>
                                 <span className="text-xs font-mono text-slate-400">
-                                  House {shift.natalHouse} → <strong className="text-amber-300">House {shift.relocatedHouse}</strong>
+                                  House {shift.natalHouse} → <strong className="text-violet-300">House {shift.relocatedHouse}</strong>
                                 </span>
                                 {shift.angularType && (
-                                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/40">
                                     Conjunction to {shift.angularType} (Orb {shift.angularProximityDeg}°)
                                   </span>
                                 )}
@@ -639,7 +639,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                         </h3>
                         <button
                           onClick={handleExportReport}
-                          className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 text-[11px] font-mono flex items-center gap-1 transition cursor-pointer border border-slate-700"
+                          className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-violet-300 text-[11px] font-mono flex items-center gap-1 transition cursor-pointer border border-slate-700"
                         >
                           <span>📄</span>
                           <span>{copiedReport ? '✓ Copied' : 'Export Side-by-Side'}</span>
@@ -653,7 +653,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                               <th className="p-2.5">Body</th>
                               <th className="p-2.5">Zodiac</th>
                               <th className="p-2.5 text-center">Natal House</th>
-                              <th className="p-2.5 text-center text-amber-300">Relocated House</th>
+                              <th className="p-2.5 text-center text-violet-300">Relocated House</th>
                               <th className="p-2.5">Shift Impact</th>
                             </tr>
                           </thead>
@@ -665,7 +665,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                               const shift = relocation.significantShifts.find((s) => s.planetId === natPos.planetId);
 
                               return (
-                                <tr key={natPos.planetId} className={`hover:bg-slate-850/50 ${isShifted ? 'bg-amber-950/10' : ''}`}>
+                                <tr key={natPos.planetId} className={`hover:bg-slate-850/50 ${isShifted ? 'bg-violet-950/10' : ''}`}>
                                   <td className="p-2.5 flex items-center gap-2">
                                     <span style={{ color: pDef.color }}>{pDef.symbol}</span>
                                     <span className="text-white font-sans font-medium">{pDef.name}</span>
@@ -676,12 +676,12 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                                   <td className="p-2.5 text-center text-slate-400">
                                     House {natPos.house}
                                   </td>
-                                  <td className="p-2.5 text-center font-bold text-amber-300">
+                                  <td className="p-2.5 text-center font-bold text-violet-300">
                                     House {relPos?.house}
                                   </td>
                                   <td className="p-2.5 text-[11px] font-sans">
                                     {shift?.angularType ? (
-                                      <span className="text-amber-300 font-semibold">
+                                      <span className="text-violet-300 font-semibold">
                                         Conjunct {shift.angularType} ({shift.angularProximityDeg}°)
                                       </span>
                                     ) : isShifted ? (
