@@ -213,13 +213,13 @@ export const TransitControlBar: React.FC<TransitControlBarProps> = ({
               onClick={() => onFocusCoordinates && onFocusCoordinates(birthplace.coordinates)}
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border transition cursor-pointer ${
                 birthplaceTransit?.isNear
-                  ? 'bg-amber-500/15 border-amber-500/40 text-amber-200'
+                  ? 'bg-violet-500/15 border-violet-500/40 text-violet-200'
                   : 'bg-slate-900/80 border-slate-800 text-slate-400'
               }`}
             >
               <span className="font-mono text-[10px] uppercase text-slate-500">Birthplace ({birthplace.name}):</span>
               {birthplaceTransit?.isNear ? (
-                <span className="font-semibold text-amber-300 flex items-center gap-1">
+                <span className="font-semibold text-violet-300 flex items-center gap-1">
                   ⚡ Transiting {birthplaceTransit.line.planetId.toUpperCase()} {birthplaceTransit.line.angle} ({birthplaceTransit.distanceKm} km)
                 </span>
               ) : (
@@ -287,7 +287,7 @@ export const TransitControlBar: React.FC<TransitControlBarProps> = ({
                     <span className="font-semibold text-white flex items-center gap-1">
                       <span style={{ color: tDef?.color || '#38bdf8' }}>{tDef?.symbol} {trig.transitAngle}</span>
                       <span className="text-slate-500">×</span>
-                      <span style={{ color: nDef?.color || '#f59e0b' }}>{nDef?.symbol} {trig.natalAngle}</span>
+                      <span style={{ color: nDef?.color || '#a78bfa' }}>{nDef?.symbol} {trig.natalAngle}</span>
                     </span>
                     {trig.nearestCity && (
                       <span className="text-slate-400 text-[10px] font-mono truncate max-w-[100px]">
