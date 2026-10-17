@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
+@theme {
+  --font-serif: "Spectral", Georgia, serif;
+}
+
 /* Leaflet container customization */
 .leaflet-container {
   width: 100%;
