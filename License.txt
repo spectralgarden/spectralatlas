@@ -1,0 +1,21 @@
+Spectral Garden Proprietary License
+© 2026 Spectral Garden Studios. All rights reserved.
+
+1. Grant of License
+Subject to the terms of this agreement, you are granted a non-exclusive, non-transferable license to access, run, and use software, web applications, digital tools, and media provided by Spectral Garden Studios for personal, professional, or commercial projects and production.
+
+2. Restrictions
+You may not:
+
+Redistribute, sublicense, or share any portion of the software, source code, web applications, or digital assets.
+
+Modify, decompile, disassemble, or reverse-engineer the software or underlying architecture.
+
+Sell, resell, rent, or repackage the software, applications, or associated assets, whether standalone or bundled into another product.
+
+DISCLAIMER OF WARRANTY & LIMITATION OF LIABILITY
+USE AT YOUR OWN RISK
+
+All software, web applications, VST plugins, scripts, and digital tools provided by Spectral Garden Studios are experimental digital offerings. While care and testing are applied to ensure stable, high-performance architecture, all software, downloads, and web services are provided on an “AS IS” and “AS AVAILABLE” basis without warranty of any kind, either express or implied.
+
+Use of any software, web application, or digital offering is strictly at your own risk. Spectral Garden Studios and its creator(s) assume no liability for system instabilities, data corruption, hardware damage, application or DAW crashes, loss of work, audio output clipping, or unexpected digital/sonic anomalies resulting from the use or inability to use these products.
