@@ -260,7 +260,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
         {/* Header */}
         <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/80">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 font-serif text-base shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-violet-500/20 border border-violet-500/40 flex items-center justify-center text-violet-300 font-serif text-base shrink-0">
               ✦
             </div>
             <div>
@@ -300,7 +300,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
                   key={prof.id}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition cursor-pointer ${
                     activeProfileId === prof.id
-                      ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm shadow-amber-500/10'
+                      ? 'bg-violet-500/20 text-violet-300 border-violet-500/40 shadow-sm shadow-violet-500/10'
                       : 'bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-800'
                   }`}
                   onClick={() => {
@@ -350,7 +350,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
               placeholder="e.g. My Chart, Solar Return, John Doe"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-amber-400 transition"
+              className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-violet-400 transition"
             />
           </div>
 
@@ -365,7 +365,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
                 required
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-amber-400 transition font-mono"
+                className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-violet-400 transition font-mono"
               />
             </div>
             <div>
@@ -377,7 +377,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
                 required
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-amber-400 transition font-mono"
+                className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-violet-400 transition font-mono"
               />
               <span className="block text-[10px] text-slate-500 mt-1">
                 If exact minute is unknown, 12:00 PM (Noon) is standard.
@@ -392,7 +392,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
                 Birth City / Town / Location *
               </label>
               {isSearchingGeocode && (
-                <span className="text-[10px] font-mono text-amber-400 animate-pulse">
+                <span className="text-[10px] font-mono text-violet-400 animate-pulse">
                   Searching global atlas...
                 </span>
               )}
@@ -405,7 +405,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
                 placeholder="Type any city or town (e.g. Pittsburgh PA, Sedona, Austin, Kyoto)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-amber-400 transition"
+                className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-violet-400 transition"
               />
               {searchQuery && (
                 <button
@@ -450,7 +450,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
                       <span className="font-medium text-white block">{c.name}</span>
                       <span className="text-[10px] text-slate-400">{c.country}</span>
                     </div>
-                    <span className="font-mono text-amber-400/80 text-[11px]">
+                    <span className="font-mono text-violet-400/80 text-[11px]">
                       {c.lat.toFixed(2)}°, {c.lng.toFixed(2)}°
                     </span>
                   </button>
@@ -504,17 +504,19 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
 
           {/* Action Buttons */}
           <div className="pt-4 flex items-center justify-between gap-3 border-t border-slate-800">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 rounded-lg text-xs text-slate-400 hover:text-white transition cursor-pointer"
-            >
-              {isInitialSetup ? 'Explore Map First' : 'Cancel'}
-            </button>
+            {!isInitialSetup && (
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 rounded-lg text-xs text-slate-400 hover:text-white transition cursor-pointer"
+              >
+                Cancel
+              </button>
+            )}
             <button
               id="btn-calculate-chart"
               type="submit"
-              className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 transition cursor-pointer flex items-center gap-1.5"
+              className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-400 hover:to-violet-500 text-slate-950 shadow-lg shadow-violet-500/20 transition cursor-pointer flex items-center gap-1.5"
             >
               <span>✦</span>
               <span>{isInitialSetup ? 'Calculate & Generate My Map' : 'Update & View Map'}</span>
