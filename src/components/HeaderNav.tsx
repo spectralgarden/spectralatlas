@@ -53,7 +53,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           rel="noopener noreferrer"
           aria-label="Visit Spectral Garden"
           title="Visit Spectral Garden"
-          className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-sky-400 p-[1px] shadow-lg shadow-amber-500/10 transition duration-200 hover:shadow-[0_0_18px_rgba(251,191,36,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
+          className="w-9 h-9 rounded-xl bg-gradient-to-tr from-violet-500 via-violet-400 to-fuchsia-400 p-[1px] shadow-lg shadow-violet-500/10 transition duration-200 hover:shadow-[0_0_18px_rgba(167,139,250,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300"
         >
           <span className="flex h-full w-full items-center justify-center rounded-[11px] bg-slate-950">
             <img
@@ -66,7 +66,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         <div>
           <div className="flex items-center gap-2">
             <h1 className="font-serif font-bold text-sm sm:text-base text-white tracking-wider">SPECTRAL ATLAS</h1>
-            <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30">
+            <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-300 border border-violet-500/30">
               Astrocartography
             </span>
           </div>
@@ -75,7 +75,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
             {activeLocationName && (
               <>
                 <span className="text-slate-600 hidden sm:inline">•</span>
-                <span className="text-amber-400 font-sans truncate max-w-[150px] sm:max-w-[220px] hidden sm:inline">
+                <span className="text-violet-400 font-sans truncate max-w-[150px] sm:max-w-[220px] hidden sm:inline">
                   {activeLocationName}
                 </span>
               </>
@@ -98,14 +98,14 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
             onClick={() => onChangeCalculationMethod('in_mundo')}
             className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition cursor-pointer flex items-center gap-1 ${
               calculationMethod === 'in_mundo'
-                ? 'bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/40 shadow-xs'
+                ? 'bg-violet-500/20 text-violet-300 font-semibold border border-violet-500/40 shadow-xs'
                 : 'text-slate-400 hover:text-slate-200 border border-transparent'
             } ${isRecalculating && calculationMethod === 'in_mundo' ? 'animate-pulse' : ''}`}
           >
             {isRecalculating && calculationMethod === 'in_mundo' ? (
-              <span className="animate-spin text-amber-400 text-[10px] inline-block">◌</span>
+              <span className="animate-spin text-violet-400 text-[10px] inline-block">◌</span>
             ) : (
-              <span className="text-amber-400 text-[10px]">☉</span>
+              <span className="text-violet-400 text-[10px]">☉</span>
             )}
             <span>In Mundo</span>
           </button>
@@ -133,10 +133,10 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         <button
           id="btn-nav-top-cities"
           onClick={onOpenTopCities}
-          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-amber-500/20 to-amber-600/20 hover:from-amber-500/30 hover:to-amber-600/30 text-amber-300 border border-amber-500/40 shadow-sm shadow-amber-500/10 transition flex items-center gap-1.5 cursor-pointer"
+          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-violet-500/20 to-violet-600/20 hover:from-violet-500/30 hover:to-violet-600/30 text-violet-300 border border-violet-500/40 shadow-sm shadow-violet-500/10 transition flex items-center gap-1.5 cursor-pointer"
           title="Ranked Top Cities and Planetary Power Spots for your Chart"
         >
-          <span className="text-amber-400">✦</span>
+          <span className="text-violet-400">✦</span>
           <span className="font-serif">Top Cities List</span>
         </button>
 
@@ -198,7 +198,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           <button
             id="btn-open-tutorial"
             onClick={onOpenTutorial}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:border-amber-400 transition cursor-pointer shadow-xs"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-violet-500/10 hover:bg-violet-500/20 text-violet-300 border border-violet-500/40 hover:border-violet-400 transition cursor-pointer shadow-xs"
             title="Open Complete Beginner's Manual & Astrological Reference Guide"
           >
             <span>📖</span>
@@ -216,9 +216,9 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           rel="noopener noreferrer"
           aria-label="Visit Spectral Garden home"
           title="Home"
-          className="group flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-900 transition duration-200 hover:border-amber-300 hover:shadow-[0_0_18px_rgba(251,191,36,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
+          className="group flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-700 bg-slate-900 transition duration-200 hover:border-violet-300 hover:shadow-[0_0_18px_rgba(167,139,250,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300"
         >
-          <Home aria-hidden="true" className="h-4 w-4 text-slate-300 transition-colors group-hover:text-amber-300" />
+          <Home aria-hidden="true" className="h-4 w-4 text-slate-300 transition-colors group-hover:text-violet-300" />
         </a>
 
         {/* Relocation Target Badge or Add Button */}
@@ -270,11 +270,11 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs transition cursor-pointer ${
             currentProfile
               ? 'bg-slate-900 hover:bg-slate-800 border-slate-800 text-slate-200'
-              : 'bg-amber-500/20 hover:bg-amber-500/30 border-amber-500/40 text-amber-200 shadow-sm shadow-amber-500/10'
+              : 'bg-violet-500/20 hover:bg-violet-500/30 border-violet-500/40 text-violet-200 shadow-sm shadow-violet-500/10'
           }`}
           title={currentProfile ? 'Edit Birth Chart or Switch Profile' : 'Enter Birth Chart'}
         >
-          <span className={`w-2 h-2 rounded-full ${currentProfile ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400 animate-ping'}`} />
+          <span className={`w-2 h-2 rounded-full ${currentProfile ? 'bg-emerald-400 animate-pulse' : 'bg-violet-400 animate-ping'}`} />
           <div className="text-left">
             <span className="font-semibold block leading-none text-white text-[11px] sm:text-xs">
               {currentProfile ? currentProfile.name : 'Enter Birth Info'}
