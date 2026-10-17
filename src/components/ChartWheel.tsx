@@ -69,7 +69,7 @@ export const ChartWheel: React.FC<ChartWheelProps> = ({
             onClick={() => setActiveTab('natal')}
             className={`px-3 py-1 text-xs font-medium rounded-md transition ${
               activeTab === 'natal'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
+                ? 'bg-violet-500/20 text-violet-300 border border-violet-500/40 shadow-sm'
                 : 'text-slate-400 hover:text-slate-200'
             }`}
           >
@@ -178,7 +178,7 @@ export const ChartWheel: React.FC<ChartWheelProps> = ({
                   y1={yOuter}
                   x2={xInner}
                   y2={yInner}
-                  stroke={hIdx % 3 === 0 ? '#f59e0b' : '#475569'}
+                  stroke={hIdx % 3 === 0 ? '#a78bfa' : '#475569'}
                   strokeWidth={hIdx % 3 === 0 ? 1.8 : 0.8}
                   strokeDasharray={hIdx % 3 === 0 ? undefined : '2 2'}
                 />
@@ -216,7 +216,7 @@ export const ChartWheel: React.FC<ChartWheelProps> = ({
             if (asp.aspectType === 'square' || asp.aspectType === 'opposition') {
               strokeColor = '#ef4444'; // Dynamic tension
             } else if (asp.aspectType === 'conjunction') {
-              strokeColor = '#f59e0b';
+              strokeColor = '#a78bfa';
             }
 
             return (
@@ -248,7 +248,7 @@ export const ChartWheel: React.FC<ChartWheelProps> = ({
             y1={center - radius * 0.98}
             x2={center}
             y2={center + radius * 0.98}
-            stroke="#f59e0b"
+            stroke="#a78bfa"
             strokeWidth="2"
             opacity={0.8}
           />
@@ -260,10 +260,10 @@ export const ChartWheel: React.FC<ChartWheelProps> = ({
           <text x={center + radius * 1.05} y={center + 4} textAnchor="start" fill="#10b981" fontSize="10" fontWeight="bold" fontFamily="monospace">
             DSC
           </text>
-          <text x={center} y={center - radius * 1.03} textAnchor="middle" fill="#f59e0b" fontSize="10" fontWeight="bold" fontFamily="monospace">
+          <text x={center} y={center - radius * 1.03} textAnchor="middle" fill="#a78bfa" fontSize="10" fontWeight="bold" fontFamily="monospace">
             MC
           </text>
-          <text x={center} y={center + radius * 1.08} textAnchor="middle" fill="#f59e0b" fontSize="10" fontWeight="bold" fontFamily="monospace">
+          <text x={center} y={center + radius * 1.08} textAnchor="middle" fill="#a78bfa" fontSize="10" fontWeight="bold" fontFamily="monospace">
             IC
           </text>
 
@@ -283,7 +283,7 @@ export const ChartWheel: React.FC<ChartWheelProps> = ({
                 onClick={() => setSelectedPlanet(pos)}
               >
                 {isSelected && (
-                  <circle cx={px} cy={py - 4} r={12} fill="none" stroke="#f59e0b" strokeWidth={1.5} />
+                  <circle cx={px} cy={py - 4} r={12} fill="none" stroke="#a78bfa" strokeWidth={1.5} />
                 )}
                 <text
                   x={px}
@@ -361,7 +361,7 @@ export const ChartWheel: React.FC<ChartWheelProps> = ({
             </div>
             <div className="flex flex-col gap-1">
               <div className="flex justify-between items-center text-[11px]">
-                <span className="text-amber-300">Cardinal (Initiative)</span>
+                <span className="text-violet-300">Cardinal (Initiative)</span>
                 <span className="font-mono">{modalityCounts.Cardinal}</span>
               </div>
               <div className="flex justify-between items-center text-[11px]">
