@@ -5,6 +5,39 @@
   --font-serif: "Spectral", Georgia, serif;
 }
 
+.atlas-cosmic-nav {
+  border: 1px solid transparent;
+  border-bottom-color: #c4a5fd;
+  background:
+    linear-gradient(105deg, rgb(8 7 18 / 98%), rgb(19 13 34 / 97%), rgb(9 8 20 / 98%)) padding-box,
+    linear-gradient(90deg, #3d2863, #9b7aca, #d9c8ff, #8b6db5, #38244f) border-box;
+  box-shadow:
+    0 5px 22px rgb(5 3 14 / 50%),
+    0 1px 12px rgb(185 148 235 / 18%);
+}
+
+.atlas-cosmic-search {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(115deg, rgb(13 12 27 / 97%), rgb(18 13 29 / 97%), rgb(10 16 27 / 97%)) padding-box,
+    conic-gradient(
+      from 20deg,
+      #a855f7,
+      #ec4899,
+      #fb7185,
+      #ef4444,
+      #84cc16,
+      #34d399,
+      #38bdf8,
+      #60a5fa,
+      #a855f7
+    ) border-box;
+  box-shadow:
+    0 12px 34px rgb(2 3 12 / 60%),
+    0 0 12px rgb(168 85 247 / 27%),
+    0 0 24px rgb(236 72 153 / 14%);
+}
+
 /* Leaflet container customization */
 .leaflet-container {
   width: 100%;
