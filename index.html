@@ -4,18 +4,132 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Spectral Atlas — Professional Astrocartography & Locational Astrology</title>
-    <meta name="description" content="Professional astrocartography, relocation astrology, and locational mapping platform by Spectral Garden." />
+    <meta name="description" content="Explore an interactive astrocartography map, planetary lines, relocation charts, parans, and location astrology concepts with Spectral Atlas." />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <link rel="canonical" href="https://spectralgarden.github.io/spectralatlas/" />
     <meta property="og:title" content="Spectral Atlas — Professional Astrocartography & Locational Astrology" />
-    <meta property="og:description" content="Professional astrocartography, relocation astrology, and locational mapping platform by Spectral Garden." />
+    <meta property="og:description" content="Explore an interactive astrocartography map, planetary lines, relocation charts, parans, and location astrology concepts with Spectral Atlas." />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://spectralgarden.github.io/spectralatlas/" />
+    <meta property="og:image" content="https://spectralgarden.github.io/spectralatlas/sglogo.png" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Spectral Atlas — Astrocartography & Locational Astrology" />
+    <meta name="twitter:description" content="Learn about planetary lines, relocation charts, and location astrology with this interactive map." />
+    <meta name="twitter:image" content="https://spectralgarden.github.io/spectralatlas/sglogo.png" />
     <link rel="icon" type="image/png" href="./sglogo.png?v=2" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Spectral:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://spectralgarden.github.io/spectralatlas/#website",
+            "url": "https://spectralgarden.github.io/spectralatlas/",
+            "name": "Spectral Atlas",
+            "publisher": { "@type": "Organization", "name": "Spectral Garden" }
+          },
+          {
+            "@type": "WebApplication",
+            "name": "Spectral Atlas",
+            "url": "https://spectralgarden.github.io/spectralatlas/",
+            "applicationCategory": "EducationalApplication",
+            "operatingSystem": "Any",
+            "description": "An interactive astrocartography study tool for exploring planetary angular lines, crossings, parans, relocation charts, and transits."
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What does an astrocartography map show?",
+                "acceptedAnswer": { "@type": "Answer", "text": "An astrocartography map projects where planets were rising, setting, culminating, or at the nadir at a given birth moment. Astrologers interpret these angular locations symbolically." }
+              },
+              {
+                "@type": "Question",
+                "name": "Is astrocartography scientifically proven?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. Astrocartography is an astrological interpretive tradition and is not a scientifically validated way to predict outcomes or choose a place to live." }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body class="bg-slate-950 text-slate-100 antialiased selection:bg-violet-500/30 selection:text-violet-200">
     <div id="root"></div>
+    <noscript><p class="editorial-noscript">The interactive map needs JavaScript. The educational guide below explains astrocartography and the map's features without requiring JavaScript.</p></noscript>
+    <main class="editorial-content" aria-labelledby="atlas-guide-title">
+      <nav class="editorial-breadcrumb" aria-label="Breadcrumb">
+        <a href="https://spectralgarden.github.io/spectralgarden/">Spectral Garden</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Spectral Atlas</span>
+      </nav>
+      <header class="editorial-intro">
+        <p class="editorial-kicker">A locational astrology study tool</p>
+        <h1 id="atlas-guide-title">Astrocartography and location astrology, explained</h1>
+        <p>Spectral Atlas is an interactive map for exploring how astrologers relate a birth chart to places around the world. Enter birth date, time, and location to calculate planetary angular lines, then inspect cities, crossings, parans, and relocation charts. This guide explains what the map represents and how to use its features; the application remains available above if JavaScript or WebGL is unavailable.</p>
+      </header>
+
+      <section>
+        <h2>What the tool calculates</h2>
+        <p>At a selected moment, each planet occupies a position in the sky and may be rising, setting, at the Midheaven (culminating), or at the Imum Coeli (nadir) somewhere on Earth. Spectral Atlas calculates planetary positions and projects those angular relationships onto a world map. In <em>In Mundo</em> mode, lines represent physical angular positions; in <em>In Zodiaco</em> mode, the map relates planetary zodiacal longitude to relocated chart angles. The method changes the interpretation of a line, so compare modes rather than assuming that every line is equivalent.</p>
+        <p>The tool can also display planetary aspects, latitude-based parans, local-space bearings, line crossings, transit lines, and a relocated chart for a destination. These are analytical layers for study; a dense map is easier to read when you enable a small number of relevant layers at a time.</p>
+      </section>
+
+      <section>
+        <h2>How to use Spectral Atlas</h2>
+        <ol>
+          <li>Enter the birth date, exact local birth time, birthplace, and the correct time-zone offset. If the time is uncertain, treat angle-based lines and houses cautiously.</li>
+          <li>Select a map mode and planet or angle layers. Use the search field to find a city, then inspect nearby lines and their angular labels.</li>
+          <li>Open a line, crossing, or paran to compare its geometry and astrological interpretation. Distance from a line is a descriptive input, not a guarantee of an effect.</li>
+          <li>Use relocation and transit views to compare a destination or date with the natal map. Save or export a report only after checking the underlying birth data.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Astrocartography glossary</h2>
+        <dl class="editorial-glossary">
+          <dt>Ascendant (ASC)</dt><dd>The eastern horizon point; an ASC line marks where a planet was rising at the selected moment.</dd>
+          <dt>Descendant (DSC)</dt><dd>The western horizon point; a DSC line marks where a planet was setting.</dd>
+          <dt>Midheaven (MC)</dt><dd>The upper meridian angle associated with culmination; an MC line marks where a planet was overhead.</dd>
+          <dt>Imum Coeli (IC)</dt><dd>The lower meridian angle opposite the Midheaven; an IC line marks where a planet was beneath the local meridian.</dd>
+          <dt>Paran</dt><dd>A latitude-based relationship where two celestial bodies are simultaneously angular; parans are usually interpreted by their latitude band.</dd>
+          <dt>Relocation chart</dt><dd>A natal chart recalculated for a different location while retaining the original birth moment. The planetary signs remain tied to that moment while angles and houses can change.</dd>
+          <dt>Transit</dt><dd>A comparison between planetary positions on a selected date and a natal chart. In this tool, transit lines are exploratory overlays rather than forecasts.</dd>
+        </dl>
+      </section>
+
+      <section>
+        <h2>Interpretation, accuracy, and limitations</h2>
+        <p>The calculations use the entered local birth time and time-zone offset to establish a UTC moment, then calculate planetary positions and project angular geometry. A mistaken time zone, daylight-saving adjustment, or imprecise birth time can shift chart angles and their mapped lines. Check source data and consult a qualified ephemeris if exact timing is important to your study.</p>
+        <p>Astrology is a symbolic tradition, not a scientifically validated predictive method. A map cannot determine whether a city is safe, affordable, healthy, or right for an individual. Use practical research and personal circumstances for real-world decisions; treat location scores and interpretive descriptions as prompts for reflection, not objective measurements.</p>
+      </section>
+
+      <section>
+        <h2>Why the map is interactive</h2>
+        <p>The application combines a React and TypeScript interface with astronomical calculations from Astronomy Engine, a 2D map layer, and a Three.js globe view. Dragging or zooming changes the visible geography; layer controls focus the map on selected planets and relationships. The globe is a navigational visualization of Earth and the calculated lines, while this text provides the same conceptual context without requiring the graphics or JavaScript to load.</p>
+      </section>
+
+      <section>
+        <h2>Related astrology tools and learning</h2>
+        <p>Explore <a href="https://flamefinder.onrender.com/">Flame Finder</a> to compare natal charts through synastry, or visit the <a href="https://spectralgarden.github.io/akashictarot/">Akashic Tarot card reference</a> for independent card-study material. Return to <a href="https://spectralgarden.github.io/spectralgarden/">Spectral Garden</a> for the full software and creative-project overview.</p>
+      </section>
+
+      <section class="editorial-faq">
+        <h2>Frequently asked questions</h2>
+        <details><summary>What information do I need for an astrocartography map?</summary><p>You need a birth date, birth time, and birthplace. The local time-zone offset is important because it determines the UTC moment used for planetary positions and chart angles.</p></details>
+        <details><summary>What is the difference between a planet's MC and ASC lines?</summary><p>An MC line follows locations where the planet culminates at the upper meridian; an ASC line follows locations where it rises at the eastern horizon. Astrologers assign different symbolic themes to these angles.</p></details>
+        <details><summary>Do planetary lines guarantee an experience in a location?</summary><p>No. Lines are calculated geometric relationships interpreted through astrology. They do not guarantee events or outcomes and should not replace practical decision-making.</p></details>
+        <details><summary>Can I use the map if my birth time is approximate?</summary><p>You can explore it, but rising and setting lines, house placements, and relocation angles are time-sensitive. Note the uncertainty and avoid treating fine geographic distinctions as precise.</p></details>
+        <details><summary>What are parans and crossings?</summary><p>Parans describe latitude bands where two bodies are simultaneously angular, while crossings mark intersections of mapped lines. Both are optional layers for comparing combined chart relationships.</p></details>
+      </section>
+      <footer class="editorial-footer">
+        <p>Spectral Atlas is an educational and reflective astrology tool by Spectral Garden. It is not scientific, medical, legal, financial, or relocation advice.</p>
+      </footer>
+    </main>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

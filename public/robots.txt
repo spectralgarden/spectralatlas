@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://spectralgarden.github.io/spectralatlas/sitemap.xml

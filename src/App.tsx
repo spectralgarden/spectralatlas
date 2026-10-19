@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
   AstrologicalAspect,
   AstrocartographyLine,
@@ -38,6 +38,23 @@ import { CalculationLoadingDialog } from './components/CalculationLoadingDialog'
 import { TutorialModal } from './components/TutorialModal';
 import { calculateLocalSpaceLines } from './engine/localSpaceEngine';
 import { calculateStarParans } from './engine/fixedStarsEngine';
+
+const FLAME_FINDER_API = 'https://flamefinder.onrender.com';
+const ATLAS_ACCESS_TOKEN_KEY = 'spectral_atlas_access_token';
+const ATLAS_SSO_PENDING_KEY = 'spectral_atlas_sso_pending';
+const ATLAS_PRIVACY_ACK_KEY = 'spectral_atlas_cookie_notice_v2_acknowledged';
+
+interface NetworkMember {
+  id: string;
+  username: string;
+}
+
+function encodeBase64Url(bytes: Uint8Array): string {
+  return btoa(String.fromCharCode(...bytes))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+}
 
 // Helper to retrieve saved profiles without legacy dummy profiles
 function getInitialProfiles(): BirthData[] {
@@ -143,6 +160,150 @@ export default function App() {
   const [isChartWheelOpen, setIsChartWheelOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isTopCitiesOpen, setIsTopCitiesOpen] = useState(false);
+  const [networkMember, setNetworkMember] = useState<NetworkMember | null>(null);
+  const [isCheckingNetworkSession, setIsCheckingNetworkSession] = useState(true);
+  const [networkAuthError, setNetworkAuthError] = useState<string | null>(null);
+  const hasProcessedSsoCallback = useRef(false);
+  const [showPrivacyNotice, setShowPrivacyNotice] = useState(() => {
+    try {
+      return localStorage.getItem(ATLAS_PRIVACY_ACK_KEY) !== 'true';
+    } catch {
+      return true;
+    }
+  });
+  const [showPrivacyDetails, setShowPrivacyDetails] = useState(false);
+
+  const dismissPrivacyNotice = () => {
+    try {
+      localStorage.setItem(ATLAS_PRIVACY_ACK_KEY, 'true');
+    } catch (error) {
+      setNetworkAuthError(error instanceof Error ? error.message : 'Could not save this privacy preference.');
+    }
+    setShowPrivacyNotice(false);
+  };
+
+  const startNetworkSignIn = async (mode: 'login' | 'register' = 'login') => {
+    try {
+      setNetworkAuthError(null);
+      const verifier = encodeBase64Url(crypto.getRandomValues(new Uint8Array(32)));
+      const state = encodeBase64Url(crypto.getRandomValues(new Uint8Array(32)));
+      const challengeBytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier));
+      const codeChallenge = encodeBase64Url(new Uint8Array(challengeBytes));
+      const redirectUri = `${window.location.origin}${window.location.pathname}`;
+      sessionStorage.setItem(ATLAS_SSO_PENDING_KEY, JSON.stringify({ verifier, state }));
+
+      const authorizationUrl = new URL(`${FLAME_FINDER_API}/api/auth/sso/authorize`);
+      authorizationUrl.searchParams.set('redirect_uri', redirectUri);
+      authorizationUrl.searchParams.set('state', state);
+      authorizationUrl.searchParams.set('code_challenge', codeChallenge);
+      authorizationUrl.searchParams.set('auth_mode', mode);
+      window.location.assign(authorizationUrl.toString());
+    } catch (error) {
+      setNetworkAuthError(error instanceof Error ? error.message : 'Could not start member sign-in.');
+    }
+  };
+
+  const signOutNetworkMember = async () => {
+    const token = sessionStorage.getItem(ATLAS_ACCESS_TOKEN_KEY);
+    try {
+      if (token) {
+        const response = await fetch(`${FLAME_FINDER_API}/api/auth/logout`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          credentials: 'omit',
+        });
+        if (!response.ok) {
+          setNetworkAuthError('Could not revoke the member session on the server.');
+        }
+      }
+    } catch {
+      setNetworkAuthError('Could not reach Flame Finder to revoke the member session.');
+    } finally {
+      sessionStorage.removeItem(ATLAS_ACCESS_TOKEN_KEY);
+      setNetworkMember(null);
+    }
+  };
+
+  useEffect(() => {
+    if (hasProcessedSsoCallback.current) return;
+    hasProcessedSsoCallback.current = true;
+    let isActive = true;
+
+    const restoreNetworkSession = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const authorizationCode = params.get('code');
+      const returnedState = params.get('state');
+      const savedToken = sessionStorage.getItem(ATLAS_ACCESS_TOKEN_KEY);
+
+      if (!authorizationCode && !savedToken) {
+        if (isActive) setIsCheckingNetworkSession(false);
+        return;
+      }
+
+      try {
+        let token = savedToken;
+        if (authorizationCode) {
+          const pending = sessionStorage.getItem(ATLAS_SSO_PENDING_KEY);
+          if (!pending) throw new Error('This sign-in link has expired. Please sign in again.');
+          const { verifier, state } = JSON.parse(pending) as { verifier: string; state: string };
+          if (!returnedState || returnedState !== state) {
+            throw new Error('Sign-in verification failed. Please try again.');
+          }
+          const tokenResponse = await fetch(`${FLAME_FINDER_API}/api/auth/sso/token`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'omit',
+            signal: AbortSignal.timeout(90_000),
+            body: JSON.stringify({ code: authorizationCode, codeVerifier: verifier }),
+          });
+          const tokenData = await tokenResponse.json() as {
+            accessToken?: string;
+            user?: NetworkMember;
+            error?: string;
+          };
+          if (!tokenResponse.ok || !tokenData.accessToken || !tokenData.user) {
+            throw new Error(tokenData.error || 'Could not complete member sign-in.');
+          }
+          token = tokenData.accessToken;
+          sessionStorage.setItem(ATLAS_ACCESS_TOKEN_KEY, token);
+          sessionStorage.removeItem(ATLAS_SSO_PENDING_KEY);
+          window.history.replaceState({}, '', `${window.location.pathname}${window.location.hash}`);
+          if (isActive) {
+            setNetworkMember(tokenData.user);
+            setNetworkAuthError(null);
+          }
+        }
+
+        if (!token || authorizationCode) return;
+        const memberResponse = await fetch(`${FLAME_FINDER_API}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+          credentials: 'omit',
+          signal: AbortSignal.timeout(90_000),
+        });
+        if (!memberResponse.ok) {
+          sessionStorage.removeItem(ATLAS_ACCESS_TOKEN_KEY);
+          throw new Error('Your member session expired. Sign in again to reconnect.');
+        }
+        const memberData = await memberResponse.json() as { user: NetworkMember };
+        if (isActive) setNetworkMember(memberData.user);
+      } catch (error) {
+        if (isActive) {
+          setNetworkAuthError(
+            error instanceof DOMException && error.name === 'TimeoutError'
+              ? 'Flame Finder is taking too long to respond. Please try member sign-in again.'
+              : error instanceof Error ? error.message : 'Could not restore member sign-in.',
+          );
+        }
+      } finally {
+        if (isActive) setIsCheckingNetworkSession(false);
+      }
+    };
+
+    void restoreNetworkSession();
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   // Filter States & Specialized Lines
   const allPlanetKeys = Object.keys(PLANET_DEFINITIONS) as PlanetId[];
@@ -468,6 +629,40 @@ export default function App() {
         onOpenTutorial={() => setIsTutorialOpen(true)}
       />
 
+      <div className="z-20 flex min-h-8 items-center justify-between gap-2 border-b border-violet-400/20 bg-slate-950/95 px-3 py-1.5 text-[10px] sm:px-5 sm:text-[11px]">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="shrink-0 font-mono text-violet-300">SPECTRAL GARDEN MEMBER NETWORK</span>
+          <span className="hidden text-slate-600 sm:inline">|</span>
+          <span className="hidden text-slate-400 sm:inline">Astrology tools are available without signing in.</span>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          {networkAuthError && (
+            <span role="status" className="hidden max-w-64 truncate text-rose-300 md:inline" title={networkAuthError}>
+              {networkAuthError}
+            </span>
+          )}
+          {networkMember ? (
+            <>
+              <span className="max-w-32 truncate rounded border border-emerald-800 bg-emerald-950/60 px-2 py-0.5 text-emerald-300 sm:max-w-none">
+                Signed in: {networkMember.username}
+              </span>
+              <button type="button" onClick={() => void signOutNetworkMember()} className="text-slate-300 underline decoration-slate-600 underline-offset-2 hover:text-white">
+                Sign out of Atlas
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={() => void startNetworkSignIn()}
+              disabled={isCheckingNetworkSession}
+              className="rounded border border-violet-500/50 bg-violet-500/10 px-2 py-0.5 font-semibold text-violet-200 transition hover:bg-violet-500/20 disabled:opacity-60"
+            >
+              {isCheckingNetworkSession ? 'Checking account…' : 'Member sign in'}
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* Main Interactive Stage Area */}
       <main className="relative flex-1 w-full h-full overflow-hidden">
         {/* Welcome Prompt If No Profile Is Entered Yet */}
@@ -477,7 +672,7 @@ export default function App() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="welcome-title"
-              className="max-w-md w-full bg-gradient-to-br from-slate-950/95 via-violet-950/90 to-fuchsia-950/85 backdrop-blur-md border border-violet-400/50 rounded-2xl p-6 shadow-[0_0_40px_rgba(139,92,246,0.25)] text-center space-y-4 animate-scaleUp"
+              className="atlas-welcome-card max-w-md w-full rounded-2xl p-6 text-center space-y-4 animate-scaleUp"
             >
               <div className="w-12 h-12 rounded-2xl bg-violet-500/20 border border-violet-300/60 shadow-[0_0_18px_rgba(167,139,250,0.25)] mx-auto flex items-center justify-center">
                 <img
@@ -491,16 +686,34 @@ export default function App() {
                   Welcome to Spectral Atlas
                 </h2>
                 <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
-                  Enter your birth date, time, and birth city to map your personalized planetary astrocartography lines, zenith crossings, and power zones.
+                  Explore planetary maps as a guest, or connect your member account across Spectral Garden.
                 </p>
               </div>
-              <button
-                id="btn-welcome-enter-birth"
-                onClick={() => setIsBirthModalOpen(true)}
-                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-600 hover:from-violet-400 hover:to-fuchsia-500 text-white font-semibold text-xs transition shadow-lg shadow-violet-500/20 cursor-pointer"
-              >
-                ✦ Enter Your Birth Information
-              </button>
+              <div className="flex flex-col gap-2">
+                <button
+                  id="btn-welcome-enter-birth"
+                  onClick={() => setIsBirthModalOpen(true)}
+                  className="w-full rounded-lg border border-cyan-300/50 bg-slate-950/65 px-4 py-2 text-xs font-semibold text-cyan-100 transition hover:border-cyan-200 hover:bg-cyan-500/15 cursor-pointer"
+                >
+                  Guest
+                </button>
+                <button
+                  id="btn-welcome-create-account"
+                  type="button"
+                  onClick={() => void startNetworkSignIn('register')}
+                  className="w-full rounded-lg border border-fuchsia-300/50 bg-slate-950/65 px-4 py-2 text-xs font-semibold text-fuchsia-100 transition hover:border-fuchsia-200 hover:bg-fuchsia-500/15 cursor-pointer"
+                >
+                  Create an account
+                </button>
+                <button
+                  id="btn-welcome-member-login"
+                  type="button"
+                  onClick={() => void startNetworkSignIn('login')}
+                  className="w-full rounded-lg border border-violet-300/50 bg-slate-950/65 px-4 py-2 text-xs font-semibold text-violet-100 transition hover:border-violet-200 hover:bg-violet-500/15 cursor-pointer"
+                >
+                  Log in
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -837,6 +1050,64 @@ export default function App() {
         isOpen={isTutorialOpen}
         onClose={() => setIsTutorialOpen(false)}
       />
+
+      {showPrivacyNotice ? (
+        <aside className="fixed inset-x-0 bottom-0 z-[70] border-t border-violet-300/30 bg-slate-950/90 px-4 py-3 text-xs text-slate-200 shadow-[0_-8px_32px_rgba(2,3,12,0.55)] backdrop-blur-md sm:px-6">
+          <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="max-w-4xl leading-relaxed">
+              <strong className="text-violet-200">Cookies &amp; privacy:</strong> Spectral Garden does not sell your data. Atlas stores chart profiles and settings in this browser; map providers receive requests when maps load. AdSense is not currently active.
+            </p>
+            <div className="flex shrink-0 items-center gap-4">
+              <button
+                type="button"
+                onClick={() => setShowPrivacyDetails((open) => !open)}
+                className="font-semibold text-violet-200 underline underline-offset-2 hover:text-white"
+                aria-expanded={showPrivacyDetails}
+              >
+                {showPrivacyDetails ? 'Hide details' : 'Cookie & ad details'}
+              </button>
+              <button
+                type="button"
+                onClick={dismissPrivacyNotice}
+                className="rounded-md border border-violet-300/40 bg-violet-500/15 px-3 py-1.5 font-semibold text-white hover:bg-violet-500/30"
+              >
+                Close notice
+              </button>
+            </div>
+          </div>
+          {showPrivacyDetails && (
+            <div className="mx-auto mt-3 max-w-7xl border-t border-slate-700/80 pt-3 leading-relaxed text-slate-300">
+              <strong className="text-white">Atlas storage and use:</strong> Birth-chart profiles (including birth date, time, and place), favorites, relocation targets, and settings are saved in this browser's local storage so the app can restore your work. They are not sent to the Spectral Garden account database. Clearing this site's browser storage removes them. Member sign-in temporarily keeps a limited token in this tab's session storage (up to one hour) and sends only your member ID and username to Flame Finder to display your signed-in status. The notice preference is also stored in this browser. Map providers receive map requests, including your IP address and the map area requested. When you use city search or address lookup, OpenStreetMap's Nominatim service receives the search query and your network request information. These providers process requests under their own privacy terms.
+              <br /><br />
+              <strong className="text-white">Cookies:</strong> Atlas does not currently use its own advertising cookies or analytics trackers. Browser storage described above is still used for app functionality and may be treated as similar technology under some laws. Third-party map and geocoding services may use their own technologies.
+              <br /><br />
+              <strong className="text-white">Google AdSense notice (planned):</strong> AdSense ads are not currently displayed by Atlas. When ads are enabled, third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to this website or other websites. Google's use of advertising cookies enables it and its partners to serve ads to users based on their visit to this site and/or other sites on the Internet. Google and its advertising partners may process device, browser, network, and ad-interaction information for ad delivery, personalization, frequency capping, fraud prevention, and measurement. Users may opt out of personalized advertising by visiting{' '}
+              <a href="https://adssettings.google.com/" target="_blank" rel="noreferrer" className="text-violet-200 underline underline-offset-2 hover:text-white">Google Ads Settings</a>.{' '}
+              See{' '}
+              <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noreferrer" className="text-violet-200 underline underline-offset-2 hover:text-white">how Google uses information from sites or apps that use its services</a>. Ad technology partners may also process data under their own privacy notices. Before ads are enabled, Spectral Garden must configure applicable Google settings and consent choices; where required by Google, this includes using a Google-certified consent-management platform. This notice is not itself an advertising-consent choice.
+              <br /><br />
+              <strong className="text-white">Flame Finder:</strong> If you choose to sign in or use its community features, Flame Finder separately processes account and service data as described in its privacy and cookie notice.{' '}
+              <a
+                href="https://flamefinder.onrender.com/"
+                target="_blank"
+                rel="noreferrer"
+                className="text-violet-200 underline underline-offset-2 hover:text-white"
+              >
+                Flame Finder privacy &amp; cookie notice
+              </a>
+              .
+            </div>
+          )}
+        </aside>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setShowPrivacyNotice(true)}
+          className="fixed bottom-3 left-3 z-[70] rounded-md border border-violet-300/35 bg-slate-950/75 px-3 py-1.5 text-[11px] font-medium text-slate-300 backdrop-blur hover:text-white"
+        >
+          Cookies &amp; privacy
+        </button>
+      )}
     </div>
   );
 }

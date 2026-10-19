@@ -41,11 +41,12 @@
 .atlas-logo-link {
   position: relative;
   isolation: isolate;
+  overflow: hidden;
   border: 1px solid transparent;
   background:
     linear-gradient(#090814, #090814) padding-box,
-    conic-gradient(from 20deg, #a855f7, #ec4899, #60a5fa, #c4b5fd, #a855f7) border-box;
-  background-size: 100% 100%, 300% 300%;
+    linear-gradient(90deg, #a855f7, #ec4899, #60a5fa, #c4b5fd, #a855f7) border-box;
+  background-size: 100% 100%, 300% 100%;
   animation: atlas-logo-spectrum 8s linear infinite;
 }
 
@@ -54,40 +55,20 @@
   z-index: 1;
 }
 
-.atlas-logo-link::before,
 .atlas-logo-link::after {
   content: "";
   position: absolute;
-  pointer-events: none;
-}
-
-.atlas-logo-link::before {
-  inset: -4px;
-  z-index: -1;
-  background:
-    radial-gradient(circle at 4% 18%, #fff 0 1px, transparent 2px),
-    radial-gradient(circle at 96% 28%, #c4b5fd 0 1px, transparent 2px),
-    radial-gradient(circle at 14% 95%, #f0abfc 0 1px, transparent 2px),
-    radial-gradient(circle at 88% 90%, #93c5fd 0 1px, transparent 2px);
-  animation: atlas-logo-static 0.45s steps(2, end) infinite;
-}
-
-.atlas-logo-link::after {
-  inset: 1px;
+  inset: 0;
   z-index: 2;
   border-radius: inherit;
-  clip-path: inset(0 round 11px);
-  background: linear-gradient(110deg, transparent 25%, rgb(255 255 255 / 65%) 48%, transparent 70%);
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 65%) 48%, transparent 66%);
   transform: translateX(-130%);
   animation: atlas-logo-shimmer 4.5s ease-in-out infinite;
 }
 
 .atlas-logo-link:hover {
   box-shadow: 0 0 10px rgb(255 255 255 / 75%), 0 0 22px rgb(196 181 253 / 55%);
-}
-
-.atlas-logo-link:hover::before {
-  opacity: 1;
 }
 
 .flame-finder-nav:hover,
@@ -119,14 +100,22 @@
   box-shadow: 0 0 12px rgb(196 181 253 / 24%), 0 0 20px rgb(147 197 253 / 16%);
 }
 
+.atlas-welcome-card {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(135deg, rgb(5 7 20 / 96%), rgb(24 13 45 / 94%), rgb(7 13 28 / 96%)) padding-box,
+    linear-gradient(115deg, #c4b5fd, #e879f9, #7dd3fc, #a5b4fc, #f0abfc) border-box;
+  box-shadow:
+    0 0 28px rgb(139 92 246 / 24%),
+    0 0 56px rgb(56 189 248 / 12%),
+    inset 0 0 24px rgb(168 85 247 / 8%);
+}
+
 @keyframes atlas-logo-spectrum {
   from { background-position: 0 0, 0% 50%; }
   to { background-position: 0 0, 100% 50%; }
-}
-
-@keyframes atlas-logo-static {
-  0%, 100% { opacity: 0.45; transform: translate(0, 0); }
-  50% { opacity: 0.95; transform: translate(1px, -1px); }
 }
 
 @keyframes atlas-logo-shimmer {
@@ -144,9 +133,23 @@
   to { background-position: 0 0, 100% 50%; }
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .atlas-welcome-card {
+    animation: atlas-welcome-glow 5s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes atlas-welcome-glow {
+  from {
+    box-shadow: 0 0 22px rgb(139 92 246 / 22%), 0 0 42px rgb(56 189 248 / 8%), inset 0 0 18px rgb(168 85 247 / 7%);
+  }
+  to {
+    box-shadow: 0 0 34px rgb(217 70 239 / 30%), 0 0 58px rgb(56 189 248 / 18%), inset 0 0 26px rgb(168 85 247 / 10%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .atlas-logo-link,
-  .atlas-logo-link::before,
   .atlas-logo-link::after,
   .flame-finder-nav:hover,
   .flame-finder-nav:focus-visible {
