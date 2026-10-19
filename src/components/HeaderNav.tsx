@@ -142,7 +142,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
 
         <a
           id="btn-nav-flame-finder"
-          href="https://flamefinder.onrender.com/"
+          href="https://flame-finder-main.spectralgarden.workers.dev/"
           target="_blank"
           rel="noopener noreferrer"
           className="flame-finder-nav flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-500/10 text-red-300 border border-red-500/40 transition cursor-pointer"
@@ -219,7 +219,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         )}
         <a
           id="btn-open-forum"
-          href="https://flamefinder.onrender.com/?tab=forum"
+          href="https://flame-finder-main.spectralgarden.workers.dev/?tab=forum"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-fuchsia-500/10 hover:bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/40 hover:border-fuchsia-400 transition cursor-pointer shadow-xs"
