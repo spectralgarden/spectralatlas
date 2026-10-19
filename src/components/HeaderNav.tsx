@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home } from 'lucide-react';
+import { Home, MessageSquare } from 'lucide-react';
 import { BirthData, CalculationMethod, CityData, Coordinates } from '../types/astronomy';
 
 interface HeaderNavProps {
@@ -44,7 +44,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
   onOpenTutorial,
 }) => {
   return (
-    <header className="h-16 px-4 sm:px-6 border-b border-slate-800 bg-slate-950/95 backdrop-blur-md flex items-center justify-between z-30 shrink-0 select-none">
+    <header className="atlas-cosmic-nav h-16 px-4 sm:px-6 backdrop-blur-md flex items-center justify-between z-30 shrink-0 select-none">
       {/* Left Brand Identity */}
       <div className="flex items-center gap-3">
         <a
@@ -205,6 +205,17 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
             <span className="font-serif">Tutorial</span>
           </button>
         )}
+        <a
+          id="btn-open-forum"
+          href="https://flame-finder-main.onrender.com/?tab=forum"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-fuchsia-500/10 hover:bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/40 hover:border-fuchsia-400 transition cursor-pointer shadow-xs"
+          title="Open the Flame Finder community forum"
+        >
+          <MessageSquare size={14} aria-hidden="true" />
+          <span className="font-serif">Forum</span>
+        </a>
       </div>
 
       {/* Right: Relocation & Active Natal Profile Indicators */}
