@@ -23,7 +23,6 @@ interface LayerFilterBarProps {
   onSelectCity: (city: CityData) => void;
   savedLocations: (CityData | Coordinates)[];
   onQuickLocate: (loc: CityData | Coordinates) => void;
-  onOpenTopCities: () => void;
   calculationMethod?: CalculationMethod;
   onChangeCalculationMethod?: (method: CalculationMethod) => void;
   isRecalculating?: boolean;
@@ -78,7 +77,6 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
   onSelectCity,
   savedLocations,
   onQuickLocate,
-  onOpenTopCities,
   calculationMethod = 'in_mundo',
   onChangeCalculationMethod,
   isRecalculating = false,
@@ -253,16 +251,6 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
 
           {/* Action Toolbar Cluster (All completely contained within the grey container) */}
           <div className="flex flex-wrap items-center gap-1.5 flex-1 min-w-0">
-            {/* Top Cities List Trigger */}
-            <button
-              id="btn-open-top-cities"
-              onClick={onOpenTopCities}
-              className="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 border border-violet-500/40 transition shrink-0 flex items-center gap-1 cursor-pointer shadow-xs"
-              title="Open ranked Top Cities for your chart"
-            >
-              <span>✦ Top Cities</span>
-            </button>
-
             {/* Quick Harmonious Aspects Toggle */}
             {onToggleHarmoniousAspects && (
               <button

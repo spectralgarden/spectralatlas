@@ -18,6 +18,7 @@ import { evaluateRelocationVerdict } from '../engine/locationScoring';
 interface LocationInspectorModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onBackToTopCities?: () => void;
   coordinates: Coordinates;
   city?: CityData | null;
   score: LocationScore;
@@ -52,6 +53,7 @@ function calculateSphericalDistance(c1: Coordinates, c2: Coordinates): number {
 export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
   isOpen,
   onClose,
+  onBackToTopCities,
   coordinates,
   city,
   score,
@@ -164,22 +166,34 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
       >
         {/* Header Bar */}
         <div className="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/80">
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-base sm:text-lg font-serif font-bold text-white tracking-wide">{locationTitle}</h2>
-              {city && (
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-                  {city.timezone}
-                </span>
-              )}
-            </div>
-            <div className="text-xs text-slate-400 mt-0.5 font-mono flex items-center gap-2">
-              <span>Lat: {coordinates.lat.toFixed(2)}° • Lng: {coordinates.lng.toFixed(2)}°</span>
-              {isRelocationTarget && (
-                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40">
-                  Active Relocation Target
-                </span>
-              )}
+          <div className="flex min-w-0 items-start gap-2">
+            {onBackToTopCities && (
+              <button
+                type="button"
+                onClick={onBackToTopCities}
+                className="mt-0.5 shrink-0 rounded-lg border border-violet-400/30 bg-violet-500/10 px-2.5 py-1.5 text-xs font-semibold text-violet-200 transition hover:border-violet-300/70 hover:bg-violet-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300"
+                aria-label="Back to Top Cities list"
+              >
+                ← Top Cities
+              </button>
+            )}
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <h2 className="text-base sm:text-lg font-serif font-bold text-white tracking-wide">{locationTitle}</h2>
+                {city && (
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                    {city.timezone}
+                  </span>
+                )}
+              </div>
+              <div className="text-xs text-slate-400 mt-0.5 font-mono flex items-center gap-2">
+                <span>Lat: {coordinates.lat.toFixed(2)}° • Lng: {coordinates.lng.toFixed(2)}°</span>
+                {isRelocationTarget && (
+                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40">
+                    Active Relocation Target
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 

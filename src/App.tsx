@@ -139,6 +139,7 @@ export default function App() {
   const [isBirthModalOpen, setIsBirthModalOpen] = useState(false);
   const [isRelocationModalOpen, setIsRelocationModalOpen] = useState(false);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
+  const [returnToTopCities, setReturnToTopCities] = useState(false);
   const [isChartWheelOpen, setIsChartWheelOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isTopCitiesOpen, setIsTopCitiesOpen] = useState(false);
@@ -549,7 +550,6 @@ export default function App() {
               handleSelectLocation(loc);
             }
           }}
-          onOpenTopCities={() => setIsTopCitiesOpen(true)}
           calculationMethod={calculationMethod}
           onChangeCalculationMethod={handleToggleCalculationMethod}
           isRecalculating={isSwitchingMethod}
@@ -674,7 +674,15 @@ export default function App() {
       {activeLocation && locationScore && (
         <LocationInspectorModal
           isOpen={isInspectorOpen}
-          onClose={() => setIsInspectorOpen(false)}
+          onClose={() => {
+            setIsInspectorOpen(false);
+            setReturnToTopCities(false);
+          }}
+          onBackToTopCities={returnToTopCities ? () => {
+            setIsInspectorOpen(false);
+            setReturnToTopCities(false);
+            setIsTopCitiesOpen(true);
+          } : undefined}
           coordinates={activeLocation}
           city={selectedCity}
           score={locationScore}
@@ -781,6 +789,7 @@ export default function App() {
         crossings={primaryAtlas.crossings}
         radiusKm={radiusKm}
         onSelectCity={(city) => {
+          setReturnToTopCities(true);
           handleSelectLocation({ lat: city.lat, lng: city.lng }, city);
           setIsInspectorOpen(true);
         }}

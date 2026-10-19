@@ -193,7 +193,7 @@ export const TopCitiesDrawer: React.FC<TopCitiesDrawerProps> = ({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg h-full bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col animate-slideInRight cursor-default"
+        className="top-cities-nebula-panel w-full max-w-lg h-full bg-slate-900 shadow-2xl flex flex-col animate-slideInRight cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -275,7 +275,7 @@ export const TopCitiesDrawer: React.FC<TopCitiesDrawerProps> = ({
                   key={item.city.id}
                   className={`p-3.5 rounded-xl border transition group hover:border-violet-500/60 cursor-pointer ${
                     isSelected
-                      ? 'bg-violet-500/10 border-violet-500 shadow-lg shadow-violet-500/10'
+                      ? 'top-city-selected bg-violet-500/10 border-violet-500 shadow-lg shadow-violet-500/10'
                       : 'bg-slate-950/60 border-slate-800/80 hover:bg-slate-800/40'
                   }`}
                   onClick={() => {

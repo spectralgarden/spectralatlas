@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, MessageSquare } from 'lucide-react';
+import { Flame, Home, MessageSquare } from 'lucide-react';
 import { BirthData, CalculationMethod, CityData, Coordinates } from '../types/astronomy';
 
 interface HeaderNavProps {
@@ -53,9 +53,9 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           rel="noopener noreferrer"
           aria-label="Visit Spectral Garden"
           title="Visit Spectral Garden"
-          className="w-9 h-9 rounded-xl bg-gradient-to-tr from-violet-500 via-violet-400 to-fuchsia-400 p-[1px] shadow-lg shadow-violet-500/10 transition duration-200 hover:shadow-[0_0_18px_rgba(167,139,250,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300"
+          className="atlas-logo-link w-9 h-9 rounded-xl p-[1px] shadow-lg shadow-violet-500/10 transition duration-200 hover:shadow-[0_0_18px_rgba(167,139,250,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300"
         >
-          <span className="flex h-full w-full items-center justify-center rounded-[11px] bg-slate-950">
+          <span className="atlas-logo-link__inner flex h-full w-full items-center justify-center rounded-[11px] bg-slate-950">
             <img
               src={`${import.meta.env.BASE_URL}sglogo.png`}
               alt=""
@@ -139,6 +139,18 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           <span className="text-violet-400">✦</span>
           <span className="font-serif">Top Cities List</span>
         </button>
+
+        <a
+          id="btn-nav-flame-finder"
+          href="https://flamefinder.onrender.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flame-finder-nav flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-500/10 text-red-300 border border-red-500/40 transition cursor-pointer"
+          title="Open Flame Finder"
+        >
+          <Flame size={14} aria-hidden="true" />
+          <span className="hidden sm:inline font-serif">Flame Finder</span>
+        </a>
 
         {/* Toggle Chart Wheel */}
         <button
