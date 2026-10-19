@@ -39,7 +39,7 @@ import { TutorialModal } from './components/TutorialModal';
 import { calculateLocalSpaceLines } from './engine/localSpaceEngine';
 import { calculateStarParans } from './engine/fixedStarsEngine';
 
-const FLAME_FINDER_API = 'https://flame-finder-main.spectralgarden.workers.dev';
+const FLAME_FINDER_API = 'https://flamefinder.spectralgarden.workers.dev';
 const ATLAS_ACCESS_TOKEN_KEY = 'spectral_atlas_access_token';
 const ATLAS_SSO_PENDING_KEY = 'spectral_atlas_sso_pending';
 const ATLAS_PRIVACY_ACK_KEY = 'spectral_atlas_cookie_notice_v2_acknowledged';
@@ -631,11 +631,25 @@ export default function App() {
 
       <div className="z-20 flex min-h-8 items-center justify-between gap-2 border-b border-violet-400/20 bg-slate-950/95 px-3 py-1.5 text-[10px] sm:px-5 sm:text-[11px]">
         <div className="flex min-w-0 items-center gap-2">
-          <span className="shrink-0 font-mono text-violet-300">SPECTRAL GARDEN MEMBER NETWORK</span>
+          <span className="shrink-0 font-mono text-violet-300">
+            <span className="sm:hidden">MEMBERS</span>
+            <span className="hidden sm:inline">SPECTRAL GARDEN MEMBER NETWORK</span>
+          </span>
           <span className="hidden text-slate-600 sm:inline">|</span>
           <span className="hidden text-slate-400 sm:inline">Astrology tools are available without signing in.</span>
         </div>
         <div className="flex shrink-0 items-center gap-2">
+          {!showPrivacyNotice && (
+            <button
+              type="button"
+              onClick={() => setShowPrivacyNotice(true)}
+              className="text-slate-300 underline decoration-slate-600 underline-offset-2 hover:text-white"
+              aria-label="Open cookies and privacy notice"
+            >
+              <span className="sm:hidden">Privacy</span>
+              <span className="hidden sm:inline">Cookies &amp; privacy</span>
+            </button>
+          )}
           {networkAuthError && (
             <span role="status" className="hidden max-w-64 truncate text-rose-300 md:inline" title={networkAuthError}>
               {networkAuthError}
@@ -1051,7 +1065,7 @@ export default function App() {
         onClose={() => setIsTutorialOpen(false)}
       />
 
-      {showPrivacyNotice ? (
+      {showPrivacyNotice && (
         <aside className="fixed inset-x-0 bottom-0 z-[70] border-t border-violet-300/30 bg-slate-950/90 px-4 py-3 text-xs text-slate-200 shadow-[0_-8px_32px_rgba(2,3,12,0.55)] backdrop-blur-md sm:px-6">
           <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p className="max-w-4xl leading-relaxed">
@@ -1088,7 +1102,7 @@ export default function App() {
               <br /><br />
               <strong className="text-white">Flame Finder:</strong> If you choose to sign in or use its community features, Flame Finder separately processes account and service data as described in its privacy and cookie notice.{' '}
               <a
-                href="https://flame-finder-main.spectralgarden.workers.dev/"
+                href="https://flamefinder.spectralgarden.workers.dev/"
                 target="_blank"
                 rel="noreferrer"
                 className="text-violet-200 underline underline-offset-2 hover:text-white"
@@ -1099,14 +1113,6 @@ export default function App() {
             </div>
           )}
         </aside>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setShowPrivacyNotice(true)}
-          className="fixed bottom-3 left-3 z-[70] rounded-md border border-violet-300/35 bg-slate-950/75 px-3 py-1.5 text-[11px] font-medium text-slate-300 backdrop-blur hover:text-white"
-        >
-          Cookies &amp; privacy
-        </button>
       )}
     </div>
   );
