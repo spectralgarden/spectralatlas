@@ -562,14 +562,13 @@ export default function App() {
           onToggleDisharmoniousAspects={() => setShowDisharmoniousAspects(!showDisharmoniousAspects)}
           activeHarmonics={activeHarmonics}
           onToggleHarmonic={handleToggleHarmonic}
-          // Local Space, Star Parans, 3D Aspects & Tutorial
+          // Local Space, Star Parans & 3D Aspects
           showLocalSpace={showLocalSpace}
           onToggleLocalSpace={() => setShowLocalSpace(!showLocalSpace)}
           showFixedStars={showFixedStars}
           onToggleFixedStars={() => setShowFixedStars(!showFixedStars)}
           use3DAspects={use3DOffEclipticAspects}
           onToggle3DAspects={() => setUse3DOffEclipticAspects(!use3DOffEclipticAspects)}
-          onOpenTutorial={() => setIsTutorialOpen(true)}
           // Crossings & Parans Launchers
           onOpenCrossingsModal={() => setIsCrossingsModalOpen(true)}
           onOpenParansModal={() => setIsParansModalOpen(true)}
