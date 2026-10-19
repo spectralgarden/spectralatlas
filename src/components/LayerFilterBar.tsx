@@ -40,14 +40,13 @@ interface LayerFilterBarProps {
   onOpenParansModal?: () => void;
   crossingsCount?: number;
   paransCount?: number;
-  // Local Space, Star Parans, 3D Aspects, and Tutorial
+  // Local Space, Star Parans, and 3D Aspects
   showLocalSpace?: boolean;
   onToggleLocalSpace?: () => void;
   showFixedStars?: boolean;
   onToggleFixedStars?: () => void;
   use3DAspects?: boolean;
   onToggle3DAspects?: () => void;
-  onOpenTutorial?: () => void;
 }
 
 interface GeocodedResult {
@@ -101,7 +100,6 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
   onToggleFixedStars,
   use3DAspects = true,
   onToggle3DAspects,
-  onOpenTutorial,
 }) => {
   const [citySearch, setCitySearch] = useState('');
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
@@ -226,7 +224,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
     >
       {/* City Search Bar & Action Buttons Unified Container */}
       <div className="relative w-full">
-        <div className="flex flex-wrap items-center gap-2 p-2 sm:p-2.5 rounded-2xl bg-slate-900/95 backdrop-blur-md border border-slate-700/80 shadow-2xl shadow-slate-950/70 w-full">
+        <div className="atlas-cosmic-search flex flex-wrap items-center gap-2 p-2 sm:p-2.5 rounded-2xl backdrop-blur-md shadow-2xl shadow-slate-950/70 w-full">
           {/* Search Input Pill */}
           <div className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-950/70 border border-slate-800 focus-within:border-slate-600 w-full sm:w-56 md:w-64 shrink-0 transition">
             <span className="text-slate-400 text-xs">🔍</span>
@@ -391,17 +389,6 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
               Filters ({selectedPlanets.length}) {selectedPlanets.length < allPlanetKeys.length || selectedAngles.length < 4 ? '•' : ''}
             </button>
 
-            {/* Tutorial & Beginner's Manual Button */}
-            {onOpenTutorial && (
-              <button
-                id="btn-filter-open-tutorial"
-                onClick={onOpenTutorial}
-                className="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-violet-500/10 hover:bg-violet-500/25 text-violet-300 border border-violet-500/40 transition shrink-0 flex items-center gap-1 cursor-pointer shadow-xs"
-                title="Open Complete Beginner's Manual and Tutorial Guide"
-              >
-                <span>📖 Tutorial</span>
-              </button>
-            )}
           </div>
         </div>
 
