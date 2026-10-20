@@ -48,7 +48,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
       {/* Left Brand Identity */}
       <div className="flex items-center gap-3">
         <a
-          href="https://spectralgarden.github.io/spectralgarden/"
+          href="https://spectralgarden.net/"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Visit Spectral Garden"
@@ -142,7 +142,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
 
         <a
           id="btn-nav-flame-finder"
-          href="https://flamefinder.spectralgarden.workers.dev/"
+          href="https://flamefinder.spectralgarden.net/"
           target="_blank"
           rel="noopener noreferrer"
           className="flame-finder-nav flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-500/10 text-red-300 border border-red-500/40 transition cursor-pointer"
@@ -219,7 +219,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         )}
         <a
           id="btn-open-forum"
-          href="https://flamefinder.spectralgarden.workers.dev/?tab=forum"
+          href="https://flamefinder.spectralgarden.net/?tab=forum"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-fuchsia-500/10 hover:bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/40 hover:border-fuchsia-400 transition cursor-pointer shadow-xs"
@@ -234,7 +234,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
       <div className="flex items-center gap-2">
         <a
           id="btn-home"
-          href="https://spectralgarden.github.io/spectralgarden/"
+          href="https://spectralgarden.net/"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Visit Spectral Garden home"

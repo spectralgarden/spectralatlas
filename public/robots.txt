@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://spectralgarden.github.io/spectralatlas/sitemap.xml
+Sitemap: https://spectralatlas.spectralgarden.net/sitemap.xml

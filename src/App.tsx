@@ -39,7 +39,7 @@ import { TutorialModal } from './components/TutorialModal';
 import { calculateLocalSpaceLines } from './engine/localSpaceEngine';
 import { calculateStarParans } from './engine/fixedStarsEngine';
 
-const FLAME_FINDER_API = 'https://flamefinder.spectralgarden.workers.dev';
+const FLAME_FINDER_API = 'https://flamefinder.spectralgarden.net';
 const ATLAS_ACCESS_TOKEN_KEY = 'spectral_atlas_access_token';
 const ATLAS_SSO_PENDING_KEY = 'spectral_atlas_sso_pending';
 const ATLAS_PRIVACY_ACK_KEY = 'spectral_atlas_cookie_notice_v2_acknowledged';
@@ -1102,7 +1102,7 @@ export default function App() {
               <br /><br />
               <strong className="text-white">Flame Finder:</strong> If you choose to sign in or use its community features, Flame Finder separately processes account and service data as described in its privacy and cookie notice.{' '}
               <a
-                href="https://flamefinder.spectralgarden.workers.dev/"
+                href="https://flamefinder.spectralgarden.net/"
                 target="_blank"
                 rel="noreferrer"
                 className="text-violet-200 underline underline-offset-2 hover:text-white"
