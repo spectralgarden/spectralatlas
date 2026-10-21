@@ -4,18 +4,20 @@ import { CalculationMethod } from '../types/astronomy';
 interface CalculationLoadingDialogProps {
   isOpen: boolean;
   targetMethod: CalculationMethod | null;
+  isBirthDataLoading?: boolean;
 }
 
 export const CalculationLoadingDialog: React.FC<CalculationLoadingDialogProps> = ({
   isOpen,
   targetMethod,
+  isBirthDataLoading = false,
 }) => {
   if (!isOpen) return null;
 
   const isZodiaco = targetMethod === 'in_zodiaco';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm pointer-events-auto select-none transition-all duration-200">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm pointer-events-auto select-none transition-all duration-200" role="status" aria-live="polite" aria-busy="true">
       <div className="relative max-w-sm w-full bg-slate-950/95 backdrop-blur-xl border border-violet-500/40 shadow-2xl shadow-violet-500/20 rounded-2xl p-5 text-center space-y-3.5 animate-scaleUp">
         {/* Animated Celestial Gyroscope / Orbital Spinner */}
         <div className="relative w-16 h-16 mx-auto flex items-center justify-center">
@@ -48,7 +50,7 @@ export const CalculationLoadingDialog: React.FC<CalculationLoadingDialogProps> =
         {/* Title & Method Badge */}
         <div>
           <h3 className="text-sm font-serif font-bold text-white tracking-wide">
-            Recalculating Astrological Matrix
+            {isBirthDataLoading ? 'Updating Birth Information' : 'Recalculating Astrological Matrix'}
           </h3>
           <div className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold border bg-slate-900/90 border-slate-700">
             <span className={isZodiaco ? 'text-cyan-400' : 'text-violet-400'}>
@@ -59,7 +61,9 @@ export const CalculationLoadingDialog: React.FC<CalculationLoadingDialogProps> =
 
         {/* Informative Explanation */}
         <p className="text-xs text-slate-300 leading-relaxed px-2">
-          {isZodiaco
+          {isBirthDataLoading
+            ? 'Recalculating your astrocartography map from the updated birth date, time, and location.'
+            : isZodiaco
             ? 'Transforming planetary azimuths to relocated ecliptic cusps (matching standard Astro-Seek & Astro.com chart angles).'
             : 'Computing 3D prime vertical topocentric coordinates (Jim Lewis original physical rising, culmination & horizon crossings).'}
         </p>
@@ -77,8 +81,8 @@ export const CalculationLoadingDialog: React.FC<CalculationLoadingDialogProps> =
             />
           </div>
           <div className="flex justify-between items-center text-[10px] font-mono text-slate-400 px-0.5">
-            <span>Updating Spherical Projections</span>
-            <span className="text-violet-400 animate-pulse">Calculating...</span>
+            <span>{isBirthDataLoading ? 'Recalculating Birth Chart' : 'Updating Spherical Projections'}</span>
+            <span className="text-violet-400 animate-pulse">{isBirthDataLoading ? 'Updating…' : 'Calculating...'}</span>
           </div>
         </div>
       </div>

@@ -154,6 +154,7 @@ export default function App() {
 
   // Let the map and welcome prompt show before requesting birth information.
   const [isBirthModalOpen, setIsBirthModalOpen] = useState(false);
+  const [isBirthDataLoading, setIsBirthDataLoading] = useState(false);
   const [isRelocationModalOpen, setIsRelocationModalOpen] = useState(false);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
   const [returnToTopCities, setReturnToTopCities] = useState(false);
@@ -953,7 +954,9 @@ export default function App() {
       <BirthInputModal
         isOpen={isBirthModalOpen}
         onClose={() => setIsBirthModalOpen(false)}
-        onSubmit={(newProfile) => {
+        onLoadingChange={setIsBirthDataLoading}
+        onSubmit={async (newProfile) => {
+          await new Promise<void>((resolve) => window.setTimeout(resolve, 50));
           setSavedProfiles((prev) => [newProfile, ...prev.filter((p) => p.id !== newProfile.id)]);
           setActiveProfile(newProfile);
           setActiveLocation({ lat: newProfile.lat, lng: newProfile.lng });
@@ -966,7 +969,7 @@ export default function App() {
             timezone: newProfile.timezone,
             population: 0,
           });
-          setIsBirthModalOpen(false);
+          await new Promise<void>((resolve) => window.setTimeout(resolve, 550));
         }}
         savedProfiles={savedProfiles}
         onSelectProfile={(profile) => {
@@ -1055,8 +1058,9 @@ export default function App() {
 
       {/* Animated Calculation Transition Loading Dialog */}
       <CalculationLoadingDialog
-        isOpen={isSwitchingMethod}
+        isOpen={isSwitchingMethod || isBirthDataLoading}
         targetMethod={targetMethod || calculationMethod}
+        isBirthDataLoading={isBirthDataLoading}
       />
 
       {/* Complete Beginner's Manual & Astrological Guide */}
@@ -1069,7 +1073,7 @@ export default function App() {
         <aside className="fixed inset-x-0 bottom-0 z-[70] border-t border-violet-300/30 bg-slate-950/90 px-4 py-3 text-xs text-slate-200 shadow-[0_-8px_32px_rgba(2,3,12,0.55)] backdrop-blur-md sm:px-6">
           <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p className="max-w-4xl leading-relaxed">
-              <strong className="text-violet-200">Cookies &amp; privacy:</strong> Spectral Garden does not sell your data. Atlas stores chart profiles and settings in this browser; map providers receive requests when maps load. AdSense is not currently active.
+              <strong className="text-violet-200">Cookies &amp; privacy:</strong> Continue as a guest or sign in to your Spectral Garden member account. Chart profiles stay in this browser; signing in connects your member account through Flame Finder, hosted on Cloudflare. Spectral Garden does not sell personal data. AdSense is not currently active.
             </p>
             <div className="flex shrink-0 items-center gap-4">
               <button
@@ -1091,7 +1095,7 @@ export default function App() {
           </div>
           {showPrivacyDetails && (
             <div className="mx-auto mt-3 max-w-7xl border-t border-slate-700/80 pt-3 leading-relaxed text-slate-300">
-              <strong className="text-white">Atlas storage and use:</strong> Birth-chart profiles (including birth date, time, and place), favorites, relocation targets, and settings are saved in this browser's local storage so the app can restore your work. They are not sent to the Spectral Garden account database. Clearing this site's browser storage removes them. Member sign-in temporarily keeps a limited token in this tab's session storage (up to one hour) and sends only your member ID and username to Flame Finder to display your signed-in status. The notice preference is also stored in this browser. Map providers receive map requests, including your IP address and the map area requested. When you use city search or address lookup, OpenStreetMap's Nominatim service receives the search query and your network request information. These providers process requests under their own privacy terms.
+              <strong className="text-white">Atlas storage and use:</strong> Birth-chart profiles (including birth date, time, and place), favorites, relocation targets, and settings are saved in this browser's local storage and are not uploaded to your member account. This applies whether you continue as a guest or sign in. Local browser storage is not encrypted by Atlas, so anyone with access to your browser profile or device may be able to view it; clearing this site's browser storage removes it. If you sign in, Atlas connects to Flame Finder, Spectral Garden's member service hosted on Cloudflare, for account authentication. Atlas temporarily keeps a limited access token in this tab's session storage (up to one hour) and sends your member ID and username to Flame Finder to display your signed-in status. Account information is used to provide member services, not sold or shared for third-party marketing. The service processes account data under the Flame Finder privacy notice. The notice preference is also stored in this browser. Map providers receive map requests, including your IP address and the map area requested. When you use city search or address lookup, OpenStreetMap's Nominatim service receives the search query and your network request information. These providers process requests under their own privacy terms.
               <br /><br />
               <strong className="text-white">Cookies:</strong> Atlas does not currently use its own advertising cookies or analytics trackers. Browser storage described above is still used for app functionality and may be treated as similar technology under some laws. Third-party map and geocoding services may use their own technologies.
               <br /><br />

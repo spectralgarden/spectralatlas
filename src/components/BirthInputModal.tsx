@@ -5,7 +5,8 @@ import { WORLD_CITIES } from '../constants/worldCities';
 interface BirthInputModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (birthData: BirthData) => void;
+  onSubmit: (birthData: BirthData) => void | Promise<void>;
+  onLoadingChange: (isLoading: boolean) => void;
   savedProfiles: BirthData[];
   onSelectProfile: (profile: BirthData) => void;
   onDeleteProfile: (id: string) => void;
@@ -31,6 +32,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
+  onLoadingChange,
   savedProfiles,
   onSelectProfile,
   onDeleteProfile,
@@ -45,6 +47,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
   const [customLng, setCustomLng] = useState<string>('');
   const [customTzOffset, setCustomTzOffset] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Live Geocoding State
   const [liveResults, setLiveResults] = useState<CityData[]>([]);
@@ -186,59 +189,69 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
       return;
     }
 
-    let latVal = parseFloat(customLat);
-    let lngVal = parseFloat(customLng);
-    let finalCityName = selectedCity ? selectedCity.name : searchQuery.split(',')[0].trim();
-    let finalCountry = selectedCity ? selectedCity.country : (searchQuery.includes(',') ? searchQuery.split(',')[1].trim() : 'Global');
-    let finalTzOffset = customTzOffset;
+    setIsSubmitting(true);
+    onLoadingChange(true);
 
-    // If coordinates are missing or unselected, auto-geocode query string right now
-    if ((isNaN(latVal) || isNaN(lngVal) || (latVal === 0 && lngVal === 0)) && searchQuery.trim()) {
-      try {
-        const res = await fetch(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-            searchQuery.trim()
-          )}&limit=1&addressdetails=1`
-        );
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.length > 0) {
-            latVal = parseFloat(data[0].lat);
-            lngVal = parseFloat(data[0].lon);
-            finalTzOffset = getTimezoneOffsetFromLocation(latVal, lngVal);
-            finalCityName = data[0].display_name.split(',')[0];
-            finalCountry = data[0].address?.country || 'Global';
+    try {
+      let latVal = parseFloat(customLat);
+      let lngVal = parseFloat(customLng);
+      let finalCityName = selectedCity ? selectedCity.name : searchQuery.split(',')[0].trim();
+      let finalCountry = selectedCity ? selectedCity.country : (searchQuery.includes(',') ? searchQuery.split(',')[1].trim() : 'Global');
+      let finalTzOffset = customTzOffset;
+
+      // If coordinates are missing or unselected, auto-geocode query string right now
+      if ((isNaN(latVal) || isNaN(lngVal) || (latVal === 0 && lngVal === 0)) && searchQuery.trim()) {
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+              searchQuery.trim()
+            )}&limit=1&addressdetails=1`
+          );
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.length > 0) {
+              latVal = parseFloat(data[0].lat);
+              lngVal = parseFloat(data[0].lon);
+              finalTzOffset = getTimezoneOffsetFromLocation(latVal, lngVal);
+              finalCityName = data[0].display_name.split(',')[0];
+              finalCountry = data[0].address?.country || 'Global';
+            }
           }
+        } catch (err) {
+          // Continue validation
         }
-      } catch (err) {
-        // Continue validation
       }
-    }
 
-    if (isNaN(latVal) || latVal < -90 || latVal > 90) {
-      setError('Please select a birth city from search results or enter a valid latitude (-90 to 90).');
-      return;
-    }
-    if (isNaN(lngVal) || lngVal < -180 || lngVal > 180) {
-      setError('Please select a birth city from search results or enter a valid longitude (-180 to 180).');
-      return;
-    }
+      if (isNaN(latVal) || latVal < -90 || latVal > 90) {
+        setError('Please select a birth city from search results or enter a valid latitude (-90 to 90).');
+        return;
+      }
+      if (isNaN(lngVal) || lngVal < -180 || lngVal > 180) {
+        setError('Please select a birth city from search results or enter a valid longitude (-180 to 180).');
+        return;
+      }
 
-    const birthData: BirthData = {
-      id: activeProfileId || `profile_${Date.now()}`,
-      name: name.trim(),
-      date,
-      time,
-      cityName: finalCityName || 'Birth Location',
-      country: finalCountry || 'Global',
-      lat: latVal,
-      lng: lngVal,
-      timezone: selectedCity ? selectedCity.timezone : `UTC${finalTzOffset >= 0 ? '+' : ''}${finalTzOffset}`,
-      timezoneOffsetHours: finalTzOffset,
-    };
+      const birthData: BirthData = {
+        id: activeProfileId || `profile_${Date.now()}`,
+        name: name.trim(),
+        date,
+        time,
+        cityName: finalCityName || 'Birth Location',
+        country: finalCountry || 'Global',
+        lat: latVal,
+        lng: lngVal,
+        timezone: selectedCity ? selectedCity.timezone : `UTC${finalTzOffset >= 0 ? '+' : ''}${finalTzOffset}`,
+        timezoneOffsetHours: finalTzOffset,
+      };
 
-    onSubmit(birthData);
-    onClose();
+      await onSubmit(birthData);
+      onClose();
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : 'Could not update the birth information.');
+    } finally {
+      setIsSubmitting(false);
+      onLoadingChange(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -247,7 +260,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-fadeIn"
       onClick={(e) => {
-        if (e.target === e.currentTarget && !isInitialSetup) {
+        if (e.target === e.currentTarget && !isInitialSetup && !isSubmitting) {
           onClose();
         }
       }}
@@ -276,8 +289,9 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
           </div>
           {!isInitialSetup && (
             <button
+              disabled={isSubmitting}
               onClick={onClose}
-              className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition shrink-0 cursor-pointer"
+              className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition shrink-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               title="Close"
             >
               ✕
@@ -507,8 +521,9 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
             {!isInitialSetup && (
               <button
                 type="button"
+                disabled={isSubmitting}
                 onClick={onClose}
-                className="px-4 py-2 rounded-lg text-xs text-slate-400 hover:text-white transition cursor-pointer"
+                className="px-4 py-2 rounded-lg text-xs text-slate-400 hover:text-white transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancel
               </button>
@@ -516,10 +531,11 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
             <button
               id="btn-calculate-chart"
               type="submit"
-              className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-400 hover:to-violet-500 text-slate-950 shadow-lg shadow-violet-500/20 transition cursor-pointer flex items-center gap-1.5"
+              disabled={isSubmitting}
+              className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-400 hover:to-violet-500 text-slate-950 shadow-lg shadow-violet-500/20 transition cursor-pointer flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-wait"
             >
-              <span>✦</span>
-              <span>{isInitialSetup ? 'Calculate & Generate My Map' : 'Update & View Map'}</span>
+              <span>{isSubmitting ? '⟳' : '✦'}</span>
+              <span>{isSubmitting ? 'Updating Map…' : isInitialSetup ? 'Calculate & Generate My Map' : 'Update & View Map'}</span>
             </button>
           </div>
         </form>
