@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 
 interface TutorialModalProps {
   isOpen: boolean;
@@ -17,6 +17,21 @@ interface Chapter {
 export const TutorialModal: React.FC<TutorialModalProps> = ({ isOpen, onClose }) => {
   const [activeChapterId, setActiveChapterId] = useState<string>('quickstart');
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      onClose();
+    };
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [isOpen, onClose]);
 
   const chapters: Chapter[] = useMemo(
     () => [
