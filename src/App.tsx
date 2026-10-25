@@ -893,6 +893,9 @@ export default function App() {
           onSelectPolarity={setFilteredPolarity}
           onSelectCity={(c) => handleSelectLocation({ lat: c.lat, lng: c.lng }, c)}
           savedLocations={savedLocations}
+          onOpenTopCities={() => setIsTopCitiesOpen(true)}
+          onOpenFavorites={() => setIsFavoritesOpen(true)}
+          favoritesCount={savedLocations.length}
           onQuickLocate={(loc) => {
             if ('name' in loc) {
               handleSelectLocation({ lat: loc.lat, lng: loc.lng }, loc);

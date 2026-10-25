@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { Star } from 'lucide-react';
 import { CalculationMethod, CityData, Coordinates, LifeCategory, PlanetId } from '../types/astronomy';
 import { ANGLE_DEFINITIONS, LIFE_CATEGORIES_META, PLANET_DEFINITIONS } from '../constants/celestialData';
 import { WORLD_CITIES } from '../constants/worldCities';
@@ -24,6 +25,9 @@ interface LayerFilterBarProps {
   onSelectCity: (city: CityData) => void;
   savedLocations: (CityData | Coordinates)[];
   onQuickLocate: (loc: CityData | Coordinates) => void;
+  onOpenTopCities?: () => void;
+  onOpenFavorites?: () => void;
+  favoritesCount?: number;
   calculationMethod?: CalculationMethod;
   onChangeCalculationMethod?: (method: CalculationMethod) => void;
   isRecalculating?: boolean;
@@ -87,6 +91,9 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
   onSelectCity,
   savedLocations,
   onQuickLocate,
+  onOpenTopCities,
+  onOpenFavorites,
+  favoritesCount = 0,
   calculationMethod = 'in_mundo',
   onChangeCalculationMethod,
   isRecalculating = false,
@@ -268,14 +275,14 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
       <div className="relative w-full">
         <div className="atlas-cosmic-search flex flex-wrap items-center gap-2 p-2 sm:p-2.5 rounded-2xl backdrop-blur-md shadow-2xl shadow-slate-950/70 w-full">
           {/* Search Input Pill */}
-          <div className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-950/70 border border-slate-800 focus-within:border-slate-600 w-full sm:w-56 md:w-64 shrink-0 transition">
+          <div className="relative flex min-w-0 flex-1 basis-40 items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-950/70 px-2 py-1.5 transition focus-within:border-slate-600 sm:w-56 sm:flex-none sm:basis-auto sm:px-3 md:w-64">
             <span className="text-slate-400 text-xs">🔍</span>
             <input
               type="text"
               placeholder="Search town or city..."
               value={citySearch}
               onChange={(e) => setCitySearch(e.target.value)}
-              className="w-full bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none"
+              className="min-w-0 w-full bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none"
             />
             {isSearchingLive && (
               <span className="text-[10px] text-violet-400 animate-pulse font-mono shrink-0">Searching...</span>
@@ -286,6 +293,32 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                 className="text-slate-400 hover:text-white text-xs pr-0.5 cursor-pointer"
               >
                 ✕
+              </button>
+            )}
+          </div>
+
+          <div className="flex shrink-0 items-center gap-1 min-[1920px]:hidden">
+            {onOpenTopCities && (
+              <button
+                type="button"
+                onClick={onOpenTopCities}
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-violet-500/40 bg-violet-500/15 text-violet-200 transition hover:bg-violet-500/25"
+                title="Top Cities"
+                aria-label="Open Top Cities"
+              >
+                <span aria-hidden="true">✦</span>
+              </button>
+            )}
+            {onOpenFavorites && (
+              <button
+                type="button"
+                onClick={onOpenFavorites}
+                className="flex h-9 min-w-9 items-center justify-center gap-1 rounded-xl border border-amber-400/30 bg-amber-500/10 px-2 text-amber-200 transition hover:bg-amber-500/20"
+                title={`View ${favoritesCount} starred location${favoritesCount === 1 ? '' : 's'}`}
+                aria-label={`Favorites, ${favoritesCount} starred location${favoritesCount === 1 ? '' : 's'}`}
+              >
+                <Star size={14} aria-hidden="true" className="fill-amber-300 text-amber-300" />
+                <span className="text-[10px] font-semibold">{favoritesCount}</span>
               </button>
             )}
           </div>
