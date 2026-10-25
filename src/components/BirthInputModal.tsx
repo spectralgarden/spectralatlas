@@ -258,7 +258,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-fadeIn"
+      className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-fadeIn"
       onClick={(e) => {
         if (e.target === e.currentTarget && !isInitialSetup && !isSubmitting) {
           onClose();
@@ -267,7 +267,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
     >
       <div
         id="birth-input-modal"
-        className="w-full max-w-xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col text-slate-100 animate-scaleUp"
+        className="w-full max-w-xl max-h-[calc(100dvh-2rem)] bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col text-slate-100 animate-scaleUp"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -347,7 +347,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
         )}
 
         {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto max-h-[72vh]">
+        <form onSubmit={handleSubmit} className="flex-1 min-h-0 p-4 sm:p-6 space-y-4 overflow-y-auto">
           {error && (
             <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-xs text-red-300 flex items-center gap-2">
               <span>⚠️</span>
@@ -519,7 +519,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="pt-4 flex items-center justify-between gap-3 border-t border-slate-800">
+          <div className="sticky bottom-0 pt-4 pb-1 flex items-center justify-between gap-3 border-t border-slate-800 bg-slate-900">
             {!isInitialSetup && (
               <button
                 type="button"
