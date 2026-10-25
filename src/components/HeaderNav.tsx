@@ -48,16 +48,16 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
   onOpenTutorial,
 }) => {
   return (
-    <header className="atlas-cosmic-nav h-16 px-4 sm:px-6 backdrop-blur-md flex items-center justify-between z-30 shrink-0 select-none">
+    <header className="atlas-cosmic-nav min-h-16 px-2 py-2 sm:h-16 sm:px-6 sm:py-0 backdrop-blur-md flex flex-wrap items-center justify-between gap-x-3 gap-y-2 z-30 shrink-0 select-none">
       {/* Left Brand Identity */}
-      <div className="flex items-center gap-3">
+      <div className="order-1 flex min-w-0 flex-1 items-center gap-2 sm:flex-none sm:gap-3">
         <a
           href="https://spectralgarden.net/"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Visit Spectral Garden"
           title="Visit Spectral Garden"
-          className="atlas-logo-link w-9 h-9 rounded-xl p-[1px] shadow-lg shadow-violet-500/10 transition duration-200 hover:shadow-[0_0_18px_rgba(167,139,250,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300"
+          className="atlas-logo-link w-9 h-9 shrink-0 rounded-xl p-[1px] shadow-lg shadow-violet-500/10 transition duration-200 hover:shadow-[0_0_18px_rgba(167,139,250,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300"
         >
           <span className="atlas-logo-link__inner flex h-full w-full items-center justify-center rounded-[11px] bg-slate-950">
             <img
@@ -67,10 +67,10 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
             />
           </span>
         </a>
-        <div>
+        <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <h1 className="font-serif font-bold text-sm sm:text-base text-white tracking-wider">SPECTRAL ATLAS</h1>
-            <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-300 border border-violet-500/30">
+            <h1 className="whitespace-nowrap font-serif font-bold text-xs sm:text-base text-white tracking-normal sm:tracking-wider">SPECTRAL ATLAS</h1>
+            <span className="hidden text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-300 border border-violet-500/30 sm:inline">
               Astrocartography
             </span>
           </div>
@@ -89,7 +89,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
       </div>
 
       {/* Center Action Features */}
-      <div className="flex items-center gap-1.5 sm:gap-2">
+      <div className="atlas-mobile-action-bar order-3 flex w-full items-center gap-1.5 overflow-x-auto scrollbar-none sm:order-none sm:w-auto sm:gap-2">
         {/* Mundo vs Zodiaco Projection Switcher */}
         <div
           className="flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5 shadow-inner"
@@ -248,7 +248,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
       </div>
 
       {/* Right: Relocation & Active Natal Profile Indicators */}
-      <div className="flex items-center gap-2">
+      <div className="order-2 flex shrink-0 items-center gap-1 sm:order-none sm:gap-2">
         <a
           id="btn-home"
           href="https://spectralgarden.net/"

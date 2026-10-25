@@ -38,6 +38,12 @@
     0 0 24px rgb(236 72 153 / 14%);
 }
 
+@media (max-width: 639px) {
+  .atlas-mobile-action-bar > * {
+    flex: 0 0 auto;
+  }
+}
+
 .atlas-logo-link {
   position: relative;
   isolation: isolate;
