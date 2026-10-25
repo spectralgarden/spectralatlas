@@ -49,6 +49,17 @@ interface NetworkMember {
   username: string;
 }
 
+interface NetworkBirthData {
+  date: string;
+  time: string;
+  cityName: string;
+  country: string;
+  lat: number;
+  lng: number;
+  timezone: string;
+  timezoneOffsetHours: number;
+}
+
 function encodeBase64Url(bytes: Uint8Array): string {
   return btoa(String.fromCharCode(...bytes))
     .replace(/\+/g, '-')
@@ -225,6 +236,27 @@ export default function App() {
     }
   };
 
+  const activateImportedBirthData = (birthData: NetworkBirthData, member: NetworkMember) => {
+    const profile: BirthData = {
+      id: `profile_${member.id}`,
+      name: `${member.username}'s Natal Chart`,
+      ...birthData,
+    };
+    setSavedProfiles((previous) => [profile, ...previous.filter((saved) => saved.id !== profile.id)]);
+    setActiveProfile(profile);
+    setActiveLocation({ lat: profile.lat, lng: profile.lng });
+    setSelectedCity({
+      id: `birth_${profile.id}`,
+      name: profile.cityName,
+      country: profile.country,
+      lat: profile.lat,
+      lng: profile.lng,
+      timezone: profile.timezone,
+      population: 0,
+    });
+    setIsBirthModalOpen(false);
+  };
+
   useEffect(() => {
     if (hasProcessedSsoCallback.current) return;
     hasProcessedSsoCallback.current = true;
@@ -260,6 +292,7 @@ export default function App() {
           const tokenData = await tokenResponse.json() as {
             accessToken?: string;
             user?: NetworkMember;
+            birthData?: NetworkBirthData | null;
             error?: string;
           };
           if (!tokenResponse.ok || !tokenData.accessToken || !tokenData.user) {
@@ -272,7 +305,11 @@ export default function App() {
           if (isActive) {
             setNetworkMember(tokenData.user);
             setNetworkAuthError(null);
-            if (!activeProfile) setIsBirthModalOpen(true);
+            if (!activeProfile && tokenData.birthData) {
+              activateImportedBirthData(tokenData.birthData, tokenData.user);
+            } else if (!activeProfile) {
+              setIsBirthModalOpen(true);
+            }
           }
         }
 
@@ -286,10 +323,17 @@ export default function App() {
           sessionStorage.removeItem(ATLAS_ACCESS_TOKEN_KEY);
           throw new Error('Your member session expired. Sign in again to reconnect.');
         }
-        const memberData = await memberResponse.json() as { user: NetworkMember };
+        const memberData = await memberResponse.json() as {
+          user: NetworkMember;
+          birthData?: NetworkBirthData | null;
+        };
         if (isActive) {
           setNetworkMember(memberData.user);
-          if (!activeProfile) setIsBirthModalOpen(true);
+          if (!activeProfile && memberData.birthData) {
+            activateImportedBirthData(memberData.birthData, memberData.user);
+          } else if (!activeProfile) {
+            setIsBirthModalOpen(true);
+          }
         }
       } catch (error) {
         if (isActive) {
@@ -1089,7 +1133,7 @@ export default function App() {
         <aside className="fixed inset-x-0 bottom-0 z-[70] border-t border-violet-300/30 bg-slate-950/90 px-4 py-3 text-xs text-slate-200 shadow-[0_-8px_32px_rgba(2,3,12,0.55)] backdrop-blur-md sm:px-6">
           <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p className="max-w-4xl leading-relaxed">
-              <strong className="text-violet-200">Cookies &amp; privacy:</strong> Continue as a guest or sign in to your Spectral Garden member account. Chart profiles stay in this browser; signing in connects your member account through Flame Finder, hosted on Cloudflare. Spectral Garden does not sell personal data. AdSense is not currently active.
+              <strong className="text-violet-200">Cookies &amp; privacy:</strong> Continue as a guest or sign in to your Spectral Garden member account. Atlas saves chart profiles in this browser and can import birth details already saved in your Flame Finder account after sign-in. Spectral Garden does not sell personal data. AdSense is not currently active.
             </p>
             <div className="flex shrink-0 items-center gap-4">
               <button
@@ -1111,7 +1155,7 @@ export default function App() {
           </div>
           {showPrivacyDetails && (
             <div className="mx-auto mt-3 max-w-7xl border-t border-slate-700/80 pt-3 leading-relaxed text-slate-300">
-              <strong className="text-white">Atlas storage and use:</strong> Birth-chart profiles (including birth date, time, and place), favorites, relocation targets, and settings are saved in this browser's local storage and are not uploaded to your member account. This applies whether you continue as a guest or sign in. Local browser storage is not encrypted by Atlas, so anyone with access to your browser profile or device may be able to view it; clearing this site's browser storage removes it. If you sign in, Atlas connects to Flame Finder, Spectral Garden's member service hosted on Cloudflare, for account authentication. Atlas temporarily keeps a limited access token in this tab's session storage (up to one hour) and sends your member ID and username to Flame Finder to display your signed-in status. Account information is used to provide member services, not sold or shared for third-party marketing. The service processes account data under the Flame Finder privacy notice. The notice preference is also stored in this browser. Map providers receive map requests, including your IP address and the map area requested. When you use city search or address lookup, OpenStreetMap's Nominatim service receives the search query and your network request information. These providers process requests under their own privacy terms.
+              <strong className="text-white">Atlas storage and use:</strong> Birth-chart profiles (including birth date, time, and place), favorites, relocation targets, and settings are saved in this browser's local storage; Atlas does not upload its local profiles to your member account. If you sign in, Atlas can retrieve the birth date, time, and place already saved in your Flame Finder account to calculate your planetary lines. Any imported chart is saved only in this browser. Local browser storage is not encrypted by Atlas, so anyone with access to your browser profile or device may be able to view it; clearing this site's browser storage removes it. Atlas connects to Flame Finder, Spectral Garden's member service hosted on Cloudflare, for account authentication and chart import. Atlas temporarily keeps a limited access token in this tab's session storage (up to one hour) and sends your member ID, username, and requested birth details to Flame Finder. Account information is used to provide member services, not sold or shared for third-party marketing. The service processes account data under the Flame Finder privacy notice. The notice preference is also stored in this browser. Map providers receive map requests, including your IP address and the map area requested. When you use city search or address lookup, OpenStreetMap's Nominatim service receives the search query and your network request information. These providers process requests under their own privacy terms.
               <br /><br />
               <strong className="text-white">Cookies:</strong> Atlas does not currently use its own advertising cookies or analytics trackers. Browser storage described above is still used for app functionality and may be treated as similar technology under some laws. Third-party map and geocoding services may use their own technologies.
               <br /><br />
