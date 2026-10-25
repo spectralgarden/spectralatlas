@@ -194,6 +194,17 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                   </span>
                 )}
               </div>
+              {selectedLine && (
+                <div className="text-[11px] text-violet-300 mt-1">
+                  {selectedLine.isTransit || selectedLine.chartOwner === 'transit'
+                    ? 'Selected transit line'
+                    : 'Selected astrocartography line'}
+                  : {PLANET_DEFINITIONS[selectedLine.planetId]?.name || selectedLine.planetId}
+                  {selectedLine.isAspectLine && selectedLine.aspectType
+                    ? ` ${selectedLine.aspectType.toUpperCase()}`
+                    : ` on ${ANGLE_DEFINITIONS[selectedLine.angle]?.name || selectedLine.angle}`}
+                </div>
+              )}
             </div>
           </div>
 

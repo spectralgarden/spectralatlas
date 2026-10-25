@@ -506,29 +506,35 @@ export default function App() {
     setIsInspectorOpen(true);
   };
 
-  const handleSelectLine = (line: AstrocartographyLine) => {
+  const handleSelectLine = (line: AstrocartographyLine, clickedLocation?: Coordinates) => {
     setSelectedLine(line);
-    // Focus midpoint of line
-    const midPt = line.points[Math.floor(line.points.length / 2)];
-    if (midPt) {
-      setActiveLocation(midPt);
-      // Find closest city
-      let closestCity: CityData | null = null;
-      let minD = Infinity;
-      for (const c of WORLD_CITIES) {
-        const d = Math.hypot(c.lat - midPt.lat, c.lng - midPt.lng);
-        if (d < minD) {
-          minD = d;
-          closestCity = c;
+    setSelectedCrossing(null);
+
+    const location = clickedLocation || line.points[Math.floor(line.points.length / 2)];
+    if (location) {
+      setActiveLocation(location);
+      if (clickedLocation) {
+        setSelectedCity(null);
+      } else {
+        // Keep the legacy fallback for line selections that do not provide a click location.
+        let closestCity: CityData | null = null;
+        let minD = Infinity;
+        for (const c of WORLD_CITIES) {
+          const d = Math.hypot(c.lat - location.lat, c.lng - location.lng);
+          if (d < minD) {
+            minD = d;
+            closestCity = c;
+          }
         }
+        setSelectedCity(closestCity);
       }
-      setSelectedCity(closestCity);
     }
     setIsInspectorOpen(true);
   };
 
   const handleSelectCrossing = (cross: PlanetaryCrossing) => {
     setSelectedCrossing(cross);
+    setSelectedLine(null);
     setActiveLocation({ lat: cross.lat, lng: cross.lng });
     const city = WORLD_CITIES.find((c) => c.name === cross.nearestCity) || null;
     setSelectedCity(city);

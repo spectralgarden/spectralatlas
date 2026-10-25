@@ -44,7 +44,7 @@ interface RealLeafletMapViewProps {
   activeCrossing?: PlanetaryCrossing | null;
   activeParan?: ParanLine | null;
   onSelectLocation: (coord: Coordinates, city?: CityData) => void;
-  onSelectLine?: (line: AstrocartographyLine) => void;
+  onSelectLine?: (line: AstrocartographyLine, clickedLocation?: Coordinates) => void;
   onSelectCrossing?: (crossing: PlanetaryCrossing) => void;
   onSelectTransitTrigger?: (trigger: TransitTrigger) => void;
   onSelectParan?: (paran: ParanLine) => void;
@@ -56,6 +56,17 @@ interface TileDefinition {
   attribution: string;
   maxZoom: number;
   overlayUrls?: string[];
+}
+
+function normalizeMapCoordinates(coordinates: Coordinates): Coordinates {
+  let lng = coordinates.lng % 360;
+  if (lng > 180) lng -= 360;
+  if (lng < -180) lng += 360;
+
+  return {
+    lat: Math.max(-85, Math.min(85, coordinates.lat)),
+    lng,
+  };
 }
 
 const TILE_PROVIDERS: Record<MapTileStyle, TileDefinition> = {
@@ -177,12 +188,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
 
     // Handle Map Click for Location Selection
     map.on('click', (e: L.LeafletMouseEvent) => {
-      let lng = e.latlng.lng % 360;
-      if (lng > 180) lng -= 360;
-      if (lng < -180) lng += 360;
-
-      const lat = Math.max(-85, Math.min(85, e.latlng.lat));
-      onSelectLocation({ lat, lng });
+      onSelectLocation(normalizeMapCoordinates(e.latlng));
     });
 
     return () => {
@@ -374,7 +380,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
 
         hitPoly.on('click', (e) => {
           L.DomEvent.stopPropagation(e);
-          if (onSelectLine) onSelectLine(line);
+          if (onSelectLine) onSelectLine(line, normalizeMapCoordinates(e.latlng));
         });
       });
     });
@@ -425,7 +431,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
 
           hitPoly.on('click', (e) => {
             L.DomEvent.stopPropagation(e);
-            if (onSelectLine) onSelectLine(tLine);
+            if (onSelectLine) onSelectLine(tLine, normalizeMapCoordinates(e.latlng));
           });
         });
       });
