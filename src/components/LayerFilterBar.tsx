@@ -327,7 +327,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
           <div className="hidden sm:block h-6 w-px bg-slate-800 shrink-0" />
 
           {/* Action Toolbar Cluster (All completely contained within the grey container) */}
-          <div className="flex flex-wrap items-center gap-1.5 flex-1 min-w-0">
+          <div className="flex w-full min-w-0 basis-full flex-nowrap items-center gap-1.5 overflow-x-auto overscroll-x-contain scrollbar-none sm:w-auto sm:basis-auto sm:flex-1 sm:flex-wrap sm:overflow-visible">
             {/* Quick Harmonious Aspects Toggle */}
             {onToggleHarmoniousAspects && (
               <button
