@@ -287,16 +287,18 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
               </p>
             </div>
           </div>
-          {!isInitialSetup && (
-            <button
-              disabled={isSubmitting}
-              onClick={onClose}
-              className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition shrink-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-              title="Close"
-            >
-              ✕
-            </button>
-          )}
+          <button
+            type="button"
+            disabled={isSubmitting}
+            onClick={onClose}
+            className={`flex h-8 items-center justify-center rounded-lg bg-slate-800 text-slate-300 transition hover:bg-slate-700 hover:text-white shrink-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+              isInitialSetup ? 'px-3 text-xs font-semibold' : 'w-8'
+            }`}
+            title={isInitialSetup ? 'Back' : 'Close'}
+            aria-label={isInitialSetup ? 'Back to welcome screen' : 'Close birth information'}
+          >
+            {isInitialSetup ? '← Back' : '✕'}
+          </button>
         </div>
 
         {/* Saved Profiles Switcher */}

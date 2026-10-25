@@ -272,6 +272,7 @@ export default function App() {
           if (isActive) {
             setNetworkMember(tokenData.user);
             setNetworkAuthError(null);
+            if (!activeProfile) setIsBirthModalOpen(true);
           }
         }
 
@@ -286,7 +287,10 @@ export default function App() {
           throw new Error('Your member session expired. Sign in again to reconnect.');
         }
         const memberData = await memberResponse.json() as { user: NetworkMember };
-        if (isActive) setNetworkMember(memberData.user);
+        if (isActive) {
+          setNetworkMember(memberData.user);
+          if (!activeProfile) setIsBirthModalOpen(true);
+        }
       } catch (error) {
         if (isActive) {
           setNetworkAuthError(
@@ -687,7 +691,7 @@ export default function App() {
       {/* Main Interactive Stage Area */}
       <main className="relative flex-1 w-full h-full overflow-hidden">
         {/* Welcome Prompt If No Profile Is Entered Yet */}
-        {!activeProfile && !isBirthModalOpen && !networkMember && (
+        {!activeProfile && !isBirthModalOpen && (
           <div className="absolute inset-0 z-20 flex items-center justify-center p-4">
             <div
               role="dialog"
@@ -707,7 +711,9 @@ export default function App() {
                   Welcome to Spectral Atlas
                 </h2>
                 <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
-                  Explore planetary maps as a guest, or connect your member account across Spectral Garden.
+                  {networkMember
+                    ? 'Your account is connected. Enter your birth information to calculate your planetary lines.'
+                    : 'Explore planetary maps as a guest, or connect your member account across Spectral Garden.'}
                 </p>
               </div>
               <div className="flex flex-col gap-2">
@@ -716,24 +722,28 @@ export default function App() {
                   onClick={() => setIsBirthModalOpen(true)}
                   className="w-full rounded-lg border border-cyan-300/50 bg-slate-950/65 px-4 py-2 text-xs font-semibold text-cyan-100 transition hover:border-cyan-200 hover:bg-cyan-500/15 cursor-pointer"
                 >
-                  Guest
+                  {networkMember ? 'Enter Birth Info' : 'Guest'}
                 </button>
-                <button
-                  id="btn-welcome-create-account"
-                  type="button"
-                  onClick={() => void startNetworkSignIn('register')}
-                  className="w-full rounded-lg border border-fuchsia-300/50 bg-slate-950/65 px-4 py-2 text-xs font-semibold text-fuchsia-100 transition hover:border-fuchsia-200 hover:bg-fuchsia-500/15 cursor-pointer"
-                >
-                  Create an account
-                </button>
-                <button
-                  id="btn-welcome-member-login"
-                  type="button"
-                  onClick={() => void startNetworkSignIn('login')}
-                  className="w-full rounded-lg border border-violet-300/50 bg-slate-950/65 px-4 py-2 text-xs font-semibold text-violet-100 transition hover:border-violet-200 hover:bg-violet-500/15 cursor-pointer"
-                >
-                  Log in
-                </button>
+                {!networkMember && (
+                  <>
+                    <button
+                      id="btn-welcome-create-account"
+                      type="button"
+                      onClick={() => void startNetworkSignIn('register')}
+                      className="w-full rounded-lg border border-fuchsia-300/50 bg-slate-950/65 px-4 py-2 text-xs font-semibold text-fuchsia-100 transition hover:border-fuchsia-200 hover:bg-fuchsia-500/15 cursor-pointer"
+                    >
+                      Create an account
+                    </button>
+                    <button
+                      id="btn-welcome-member-login"
+                      type="button"
+                      onClick={() => void startNetworkSignIn('login')}
+                      className="w-full rounded-lg border border-violet-300/50 bg-slate-950/65 px-4 py-2 text-xs font-semibold text-violet-100 transition hover:border-violet-200 hover:bg-violet-500/15 cursor-pointer"
+                    >
+                      Log in
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>
