@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { CalculationMethod, CityData, Coordinates, LifeCategory, PlanetId } from '../types/astronomy';
 import { ANGLE_DEFINITIONS, LIFE_CATEGORIES_META, PLANET_DEFINITIONS } from '../constants/celestialData';
 import { WORLD_CITIES } from '../constants/worldCities';
@@ -59,6 +60,13 @@ interface GeocodedResult {
   timezone: string;
 }
 
+interface FilterPanelPosition {
+  left: number;
+  top: number;
+  width: number;
+  maxHeight: number;
+}
+
 export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
   selectedPlanets,
   onTogglePlanet,
@@ -105,11 +113,42 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
 }) => {
   const [citySearch, setCitySearch] = useState('');
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
+  const [filterPanelPosition, setFilterPanelPosition] = useState<FilterPanelPosition | null>(null);
   const [liveResults, setLiveResults] = useState<GeocodedResult[]>([]);
   const [isSearchingLive, setIsSearchingLive] = useState(false);
+  const filterBarRef = useRef<HTMLDivElement>(null);
   const searchTimeoutRef = useRef<number | null>(null);
 
   const allPlanetKeys = Object.keys(PLANET_DEFINITIONS) as PlanetId[];
+
+  useLayoutEffect(() => {
+    if (!isFilterExpanded) return;
+
+    const updatePanelPosition = () => {
+      const bar = filterBarRef.current;
+      if (!bar) return;
+
+      const rect = bar.getBoundingClientRect();
+      const width = Math.min(rect.width, window.innerWidth - 32);
+      const left = Math.min(Math.max(16, rect.left), window.innerWidth - width - 16);
+      const top = Math.min(rect.bottom + 8, Math.max(16, window.innerHeight - 120));
+
+      setFilterPanelPosition({
+        left,
+        top,
+        width,
+        maxHeight: Math.max(80, window.innerHeight - top - 16),
+      });
+    };
+
+    updatePanelPosition();
+    window.addEventListener('resize', updatePanelPosition);
+    window.visualViewport?.addEventListener('resize', updatePanelPosition);
+    return () => {
+      window.removeEventListener('resize', updatePanelPosition);
+      window.visualViewport?.removeEventListener('resize', updatePanelPosition);
+    };
+  }, [isFilterExpanded]);
 
   // Local instant matches
   const localMatches = citySearch.trim().length >= 2
@@ -222,6 +261,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
   return (
     <div
       id="layer-filter-bar"
+      ref={filterBarRef}
       className="absolute top-4 left-4 z-30 flex flex-col gap-2 w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] xl:max-w-[1400px] pointer-events-auto select-none"
     >
       {/* City Search Bar & Action Buttons Unified Container */}
@@ -432,8 +472,16 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
       )}
 
       {/* Expanded Line Controls & Feature Toggles */}
-      {isFilterExpanded && (
-        <div className="p-4 rounded-xl bg-slate-950/95 backdrop-blur-md border border-slate-800 shadow-2xl space-y-3.5 text-xs max-h-[80vh] overflow-y-auto">
+      {isFilterExpanded && filterPanelPosition && createPortal(
+        <div
+          className="fixed z-[80] p-4 rounded-xl bg-slate-950/95 backdrop-blur-md border border-slate-800 shadow-2xl space-y-3.5 text-xs overflow-y-auto"
+          style={{
+            left: filterPanelPosition.left,
+            top: filterPanelPosition.top,
+            width: filterPanelPosition.width,
+            maxHeight: filterPanelPosition.maxHeight,
+          }}
+        >
           {/* Projection Calculation Method: In Mundo vs In Zodiaco */}
           {onChangeCalculationMethod && (
             <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
@@ -806,7 +854,8 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
               ))}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
