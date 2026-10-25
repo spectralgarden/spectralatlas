@@ -307,7 +307,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-6">
+        <div className="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-5 space-y-6">
           {/* TAB 1: SYNTHESIS & SCORING */}
           {activeTab === 'synthesis' && (
             <div className="space-y-6">

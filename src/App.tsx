@@ -404,6 +404,36 @@ export default function App() {
   const [isSwitchingMethod, setIsSwitchingMethod] = useState(false);
   const [targetMethod, setTargetMethod] = useState<CalculationMethod | null>(null);
 
+  const isAnyWindowOpen = [
+    isBirthModalOpen,
+    isRelocationModalOpen,
+    isInspectorOpen,
+    isChartWheelOpen,
+    isReportModalOpen,
+    isTopCitiesOpen,
+    isFavoritesOpen,
+    isTutorialOpen,
+    isCrossingsModalOpen,
+    isParansModalOpen,
+    isSwitchingMethod,
+    isBirthDataLoading,
+  ].some(Boolean);
+
+  useEffect(() => {
+    if (!isAnyWindowOpen) return;
+
+    const root = document.documentElement;
+    const previousRootOverflow = root.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+    root.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      root.style.overflow = previousRootOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+    };
+  }, [isAnyWindowOpen]);
+
   const handleToggleCalculationMethod = (method: CalculationMethod) => {
     if (method === calculationMethod && !isSwitchingMethod) return;
     setIsSwitchingMethod(true);
