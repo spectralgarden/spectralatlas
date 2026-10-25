@@ -687,7 +687,7 @@ export default function App() {
       {/* Main Interactive Stage Area */}
       <main className="relative flex-1 w-full h-full overflow-hidden">
         {/* Welcome Prompt If No Profile Is Entered Yet */}
-        {!activeProfile && !isBirthModalOpen && (
+        {!activeProfile && !isBirthModalOpen && !networkMember && (
           <div className="absolute inset-0 z-20 flex items-center justify-center p-4">
             <div
               role="dialog"
