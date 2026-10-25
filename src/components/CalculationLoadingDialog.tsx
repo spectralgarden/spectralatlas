@@ -5,12 +5,14 @@ interface CalculationLoadingDialogProps {
   isOpen: boolean;
   targetMethod: CalculationMethod | null;
   isBirthDataLoading?: boolean;
+  isMapLoading?: boolean;
 }
 
 export const CalculationLoadingDialog: React.FC<CalculationLoadingDialogProps> = ({
   isOpen,
   targetMethod,
   isBirthDataLoading = false,
+  isMapLoading = false,
 }) => {
   if (!isOpen) return null;
 
@@ -50,7 +52,11 @@ export const CalculationLoadingDialog: React.FC<CalculationLoadingDialogProps> =
         {/* Title & Method Badge */}
         <div>
           <h3 className="text-sm font-serif font-bold text-white tracking-wide">
-            {isBirthDataLoading ? 'Updating Birth Information' : 'Recalculating Astrological Matrix'}
+            {isMapLoading
+              ? 'Loading Your Atlas Map'
+              : isBirthDataLoading
+              ? 'Updating Birth Information'
+              : 'Recalculating Astrological Matrix'}
           </h3>
           <div className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold border bg-slate-900/90 border-slate-700">
             <span className={isZodiaco ? 'text-cyan-400' : 'text-violet-400'}>
@@ -61,7 +67,9 @@ export const CalculationLoadingDialog: React.FC<CalculationLoadingDialogProps> =
 
         {/* Informative Explanation */}
         <p className="text-xs text-slate-300 leading-relaxed px-2">
-          {isBirthDataLoading
+          {isMapLoading
+            ? 'Preparing the interactive map and loading its first map tiles. This usually takes just a few moments.'
+            : isBirthDataLoading
             ? 'Recalculating your astrocartography map from the updated birth date, time, and location.'
             : isZodiaco
             ? 'Transforming planetary azimuths to relocated ecliptic cusps (matching standard Astro-Seek & Astro.com chart angles).'
@@ -81,8 +89,8 @@ export const CalculationLoadingDialog: React.FC<CalculationLoadingDialogProps> =
             />
           </div>
           <div className="flex justify-between items-center text-[10px] font-mono text-slate-400 px-0.5">
-            <span>{isBirthDataLoading ? 'Recalculating Birth Chart' : 'Updating Spherical Projections'}</span>
-            <span className="text-violet-400 animate-pulse">{isBirthDataLoading ? 'Updating…' : 'Calculating...'}</span>
+            <span>{isMapLoading ? 'Loading Map Tiles' : isBirthDataLoading ? 'Recalculating Birth Chart' : 'Updating Spherical Projections'}</span>
+            <span className="text-violet-400 animate-pulse">{isMapLoading ? 'Loading…' : isBirthDataLoading ? 'Updating…' : 'Calculating...'}</span>
           </div>
         </div>
       </div>

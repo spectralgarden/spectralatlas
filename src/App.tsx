@@ -167,6 +167,7 @@ export default function App() {
   // Let the map and welcome prompt show before requesting birth information.
   const [isBirthModalOpen, setIsBirthModalOpen] = useState(false);
   const [isBirthDataLoading, setIsBirthDataLoading] = useState(false);
+  const [isMapLoading, setIsMapLoading] = useState(true);
   const [isRelocationModalOpen, setIsRelocationModalOpen] = useState(false);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
   const [returnToTopCities, setReturnToTopCities] = useState(false);
@@ -407,6 +408,7 @@ export default function App() {
   const isAnyWindowOpen = [
     isBirthModalOpen,
     isRelocationModalOpen,
+    isMapLoading,
     isInspectorOpen,
     isChartWheelOpen,
     isReportModalOpen,
@@ -969,6 +971,7 @@ export default function App() {
             handleSelectLocation({ lat: paran.latitude, lng: currentCenterLng });
           }}
           onSelectTransitTrigger={handleSelectTransitTrigger}
+          onMapReady={() => setIsMapLoading(false)}
         />
 
         {/* Floating Quick Summary Pill (When Location is active but drawer closed) */}
@@ -1194,9 +1197,10 @@ export default function App() {
 
       {/* Animated Calculation Transition Loading Dialog */}
       <CalculationLoadingDialog
-        isOpen={isSwitchingMethod || isBirthDataLoading}
+        isOpen={isSwitchingMethod || isBirthDataLoading || isMapLoading}
         targetMethod={targetMethod || calculationMethod}
         isBirthDataLoading={isBirthDataLoading}
+        isMapLoading={isMapLoading}
       />
 
       {/* Complete Beginner's Manual & Astrological Guide */}

@@ -89,7 +89,8 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
       </div>
 
       {/* Center Action Features */}
-      <div className="atlas-mobile-action-bar order-3 flex w-full items-center gap-1.5 overflow-x-auto overscroll-x-contain scrollbar-none xl:order-none xl:min-w-0 xl:w-auto xl:flex-1 xl:justify-center xl:gap-2 2xl:flex-1 min-[1920px]:flex-none min-[1920px]:overflow-visible">
+      <div className="atlas-mobile-action-bar order-3 relative flex w-full min-w-0 items-center xl:order-none xl:w-auto xl:flex-1 2xl:flex-1 min-[1920px]:flex-none">
+        <div className="atlas-mobile-action-bar__scroller flex min-w-0 w-full items-center gap-1.5 overflow-x-auto overscroll-x-contain scrollbar-none xl:justify-center xl:gap-2 min-[1920px]:overflow-visible">
         {/* Mundo vs Zodiaco Projection Switcher */}
         <div
           className="flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5 shadow-inner"
@@ -245,6 +246,8 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           <MessageSquare size={14} aria-hidden="true" />
           <span className="font-serif">Forum</span>
         </a>
+        </div>
+        <span className="atlas-header-scroll-cue" aria-hidden="true">›</span>
       </div>
 
       {/* Right: Relocation & Active Natal Profile Indicators */}

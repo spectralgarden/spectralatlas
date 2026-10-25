@@ -48,6 +48,7 @@ interface RealLeafletMapViewProps {
   onSelectCrossing?: (crossing: PlanetaryCrossing) => void;
   onSelectTransitTrigger?: (trigger: TransitTrigger) => void;
   onSelectParan?: (paran: ParanLine) => void;
+  onMapReady: () => void;
 }
 
 interface TileDefinition {
@@ -137,6 +138,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
   onSelectCrossing,
   onSelectTransitTrigger,
   onSelectParan,
+  onMapReady,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -173,7 +175,9 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
       attribution: provider.attribution,
       maxZoom: provider.maxZoom,
       subdomains: ['a', 'b', 'c'],
-    }).addTo(map);
+    });
+    baseLayer.once('load', onMapReady);
+    baseLayer.addTo(map);
     baseTileLayerRef.current = baseLayer;
 
     // Create Layer Groups in correct rendering order
