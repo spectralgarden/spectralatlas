@@ -743,56 +743,6 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
             )}
           </div>
 
-          {/* Dedicated Intersection & Parans Tools */}
-          <div className="pt-2 border-t border-slate-800/80 space-y-2">
-            <span className="block font-mono uppercase text-[10px] text-slate-300 font-semibold tracking-wider flex items-center gap-1.5">
-              <span className="text-purple-400">✦</span> Advanced Intersection & Paran Suites
-            </span>
-            <div className="grid grid-cols-2 gap-2">
-              {onOpenCrossingsModal ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsFilterExpanded(false);
-                    onOpenCrossingsModal();
-                  }}
-                  className="p-2.5 rounded-lg bg-purple-950/40 hover:bg-purple-950/70 border border-purple-500/40 text-left transition cursor-pointer"
-                >
-                  <div className="font-semibold text-xs text-purple-300 flex items-center justify-between">
-                    <span>✕ Crossings Atlas</span>
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-purple-500/30">
-                      {crossingsCount} Nodes
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-slate-400 mt-1 leading-tight">
-                    Search and jump to global power vortexes where planetary lines intersect.
-                  </p>
-                </button>
-              ) : null}
-
-              {onOpenParansModal ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsFilterExpanded(false);
-                    onOpenParansModal();
-                  }}
-                  className="p-2.5 rounded-lg bg-emerald-950/40 hover:bg-emerald-950/70 border border-emerald-500/40 text-left transition cursor-pointer"
-                >
-                  <div className="font-semibold text-xs text-emerald-300 flex items-center justify-between">
-                    <span>≡ Parans Atlas</span>
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-emerald-500/30">
-                      {paransCount} Bands
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-slate-400 mt-1 leading-tight">
-                    Explore Brady & Lewis Paranatellonta latitude resonance circles.
-                  </p>
-                </button>
-              ) : null}
-            </div>
-          </div>
-
           {/* Specialized Lines: Parans & Crossings */}
           <div className="pt-2 border-t border-slate-800/80">
             <span className="block font-mono uppercase text-[10px] text-slate-400 tracking-wider mb-2">
