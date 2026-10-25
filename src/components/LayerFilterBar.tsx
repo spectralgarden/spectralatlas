@@ -327,7 +327,24 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
           <div className="hidden sm:block h-6 w-px bg-slate-800 shrink-0" />
 
           {/* Action Toolbar Cluster (All completely contained within the grey container) */}
-          <div className="flex w-full min-w-0 basis-full flex-nowrap items-center gap-1.5 overflow-x-auto overscroll-x-contain scrollbar-none sm:w-auto sm:basis-auto sm:flex-1 sm:flex-wrap sm:overflow-visible">
+          <div className="relative w-full min-w-0 basis-full sm:contents">
+            <div className="atlas-filter-toolbar flex w-full min-w-0 flex-nowrap items-center gap-1.5 overflow-x-auto overscroll-x-contain scrollbar-none sm:w-auto sm:basis-auto sm:flex-1 sm:flex-wrap sm:overflow-visible">
+              {/* Lines Filter Drawer Toggle */}
+              <button
+                id="btn-toggle-filter-panel"
+                type="button"
+                aria-expanded={isFilterExpanded}
+                onClick={() => setIsFilterExpanded((expanded) => !expanded)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition shrink-0 cursor-pointer shadow-xs ${
+                  isFilterExpanded
+                    ? 'bg-red-500/20 text-red-200 border-red-500/60 hover:bg-red-500/30'
+                    : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
+                }`}
+              >
+                {isFilterExpanded && <span aria-hidden="true" className="mr-1 font-bold">×</span>}
+                Filters ({selectedPlanets.length}) {selectedPlanets.length < allPlanetKeys.length || selectedAngles.length < 4 ? '•' : ''}
+              </button>
+
             {/* Quick Harmonious Aspects Toggle */}
             {onToggleHarmoniousAspects && (
               <button
@@ -441,22 +458,8 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
               </button>
             )}
 
-            {/* Lines Filter Drawer Toggle */}
-            <button
-              id="btn-toggle-filter-panel"
-              type="button"
-              aria-expanded={isFilterExpanded}
-              onClick={() => setIsFilterExpanded((expanded) => !expanded)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition shrink-0 cursor-pointer shadow-xs ${
-                isFilterExpanded
-                  ? 'bg-red-500/20 text-red-200 border-red-500/60 hover:bg-red-500/30'
-                  : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
-              }`}
-            >
-              {isFilterExpanded && <span aria-hidden="true" className="mr-1 font-bold">×</span>}
-              Filters ({selectedPlanets.length}) {selectedPlanets.length < allPlanetKeys.length || selectedAngles.length < 4 ? '•' : ''}
-            </button>
-
+            </div>
+            <span className="atlas-filter-scroll-cue" aria-hidden="true">›</span>
           </div>
         </div>
 
