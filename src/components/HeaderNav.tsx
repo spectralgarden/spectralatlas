@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flame, Home, MessageSquare } from 'lucide-react';
+import { Flame, Home, MessageSquare, Star } from 'lucide-react';
 import { BirthData, CalculationMethod, CityData, Coordinates } from '../types/astronomy';
 
 interface HeaderNavProps {
@@ -16,6 +16,8 @@ interface HeaderNavProps {
   onToggleChartWheel: () => void;
   isChartWheelOpen: boolean;
   onOpenTopCities: () => void;
+  onOpenFavorites: () => void;
+  favoritesCount: number;
   activeLocationName?: string;
   calculationMethod: CalculationMethod;
   onChangeCalculationMethod: (method: CalculationMethod) => void;
@@ -37,6 +39,8 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
   onToggleChartWheel,
   isChartWheelOpen,
   onOpenTopCities,
+  onOpenFavorites,
+  favoritesCount,
   activeLocationName,
   calculationMethod,
   onChangeCalculationMethod,
@@ -138,6 +142,19 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         >
           <span className="text-violet-400">✦</span>
           <span className="font-serif">Top Cities List</span>
+        </button>
+
+        <button
+          id="btn-nav-favorites"
+          type="button"
+          onClick={onOpenFavorites}
+          className="relative flex items-center gap-1.5 rounded-lg border border-amber-400/30 bg-amber-500/10 px-2.5 py-1.5 text-xs font-semibold text-amber-200 transition hover:bg-amber-500/20 cursor-pointer"
+          title={`View ${favoritesCount} starred location${favoritesCount === 1 ? '' : 's'}`}
+          aria-label={`Favorites, ${favoritesCount} starred location${favoritesCount === 1 ? '' : 's'}`}
+        >
+          <Star size={14} aria-hidden="true" className="fill-amber-300 text-amber-300" />
+          <span className="hidden xl:inline font-serif">Favorites</span>
+          <span>{favoritesCount}</span>
         </button>
 
         <a

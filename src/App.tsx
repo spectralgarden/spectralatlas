@@ -25,6 +25,7 @@ import { PLANET_DEFINITIONS } from './constants/celestialData';
 import { HeaderNav } from './components/HeaderNav';
 import { RealLeafletMapView } from './components/RealLeafletMapView';
 import { TopCitiesDrawer } from './components/TopCitiesDrawer';
+import { FavoritesDrawer } from './components/FavoritesDrawer';
 import { LayerFilterBar } from './components/LayerFilterBar';
 import { ChartWheel } from './components/ChartWheel';
 import { LocationInspectorModal } from './components/LocationInspectorModal';
@@ -172,6 +173,7 @@ export default function App() {
   const [isChartWheelOpen, setIsChartWheelOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isTopCitiesOpen, setIsTopCitiesOpen] = useState(false);
+  const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
   const [networkMember, setNetworkMember] = useState<NetworkMember | null>(null);
   const [isCheckingNetworkSession, setIsCheckingNetworkSession] = useState(true);
   const [networkAuthError, setNetworkAuthError] = useState<string | null>(null);
@@ -677,6 +679,8 @@ export default function App() {
         }}
         isChartWheelOpen={isChartWheelOpen}
         onOpenTopCities={() => setIsTopCitiesOpen(true)}
+        onOpenFavorites={() => setIsFavoritesOpen(true)}
+        favoritesCount={savedLocations.length}
         activeLocationName={selectedCity ? `${selectedCity.name}, ${selectedCity.country}` : activeLocation ? `${activeLocation.lat.toFixed(1)}°, ${activeLocation.lng.toFixed(1)}°` : undefined}
         calculationMethod={calculationMethod}
         onChangeCalculationMethod={handleToggleCalculationMethod}
@@ -1084,6 +1088,15 @@ export default function App() {
           setIsInspectorOpen(true);
         }}
         activeCityId={selectedCity?.id}
+      />
+
+      <FavoritesDrawer
+        isOpen={isFavoritesOpen}
+        onClose={() => setIsFavoritesOpen(false)}
+        favorites={savedLocations}
+        activeLocation={activeLocation}
+        onSelectLocation={(location) => handleSelectLocation(location, 'id' in location ? location : undefined)}
+        onRemoveFavorite={handleToggleFavorite}
       />
 
       {/* Comprehensive Crossings & Intersection Suite */}
