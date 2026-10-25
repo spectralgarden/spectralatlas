@@ -656,6 +656,14 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
     });
   }, [activeParan]);
 
+  useEffect(() => {
+    if (!mapInstanceRef.current || !birthplaceLocation) return;
+    const coordinates = normalizeMapCoordinates(birthplaceLocation);
+    mapInstanceRef.current.flyTo([coordinates.lat, coordinates.lng], 6, {
+      duration: 1.2,
+    });
+  }, [birthplaceLocation?.lat, birthplaceLocation?.lng]);
+
   // Update Active Selected Location & Relocation Markers
   useEffect(() => {
     if (!mapInstanceRef.current || !markerLayerGroupRef.current) return;
