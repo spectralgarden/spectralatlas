@@ -46,6 +46,8 @@ interface LayerFilterBarProps {
   onToggleFixedStars?: () => void;
   use3DAspects?: boolean;
   onToggle3DAspects?: () => void;
+  isGeodeticEnabled?: boolean;
+  onToggleGeodetic?: () => void;
 }
 
 interface GeocodedResult {
@@ -98,6 +100,8 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
   onToggleFixedStars,
   use3DAspects = true,
   onToggle3DAspects,
+  isGeodeticEnabled = false,
+  onToggleGeodetic,
 }) => {
   const [citySearch, setCitySearch] = useState('');
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
@@ -207,7 +211,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
 
   const handlePresetLove = () => {
     onSetPlanets(['venus', 'moon', 'jupiter']);
-    onSetAngles(['DSC', 'ASC']);
+    onSetAngles(['DSC']);
   };
 
   const handlePresetSanctuary = () => {
@@ -367,13 +371,16 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
             {/* Lines Filter Drawer Toggle */}
             <button
               id="btn-toggle-filter-panel"
-              onClick={() => setIsFilterExpanded(!isFilterExpanded)}
+              type="button"
+              aria-expanded={isFilterExpanded}
+              onClick={() => setIsFilterExpanded((expanded) => !expanded)}
               className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium border transition shrink-0 cursor-pointer shadow-xs ${
                 isFilterExpanded
-                  ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                  ? 'bg-red-500/20 text-red-200 border-red-500/60 hover:bg-red-500/30'
                   : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
               }`}
             >
+              {isFilterExpanded && <span aria-hidden="true" className="mr-1 font-bold">×</span>}
               Filters ({selectedPlanets.length}) {selectedPlanets.length < allPlanetKeys.length || selectedAngles.length < 4 ? '•' : ''}
             </button>
 
@@ -490,6 +497,31 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                   </p>
                 </button>
               </div>
+              {onToggleGeodetic && (
+                <label
+                  className="mt-2.5 flex cursor-pointer items-start gap-2 rounded-lg border border-slate-800 bg-slate-950/70 px-2.5 py-2 text-slate-300 transition hover:border-violet-500/40"
+                  title={
+                    calculationMethod === 'in_zodiaco'
+                      ? 'Maps each planet to its geodetic longitude: 0° Aries is Greenwich, and every 30° of longitude is one zodiac sign.'
+                      : 'Maps physical rising and setting paths across the geodetic globe; horizon lines curve with latitude.'
+                  }
+                >
+                  <input
+                    type="checkbox"
+                    checked={isGeodeticEnabled}
+                    onChange={onToggleGeodetic}
+                    className="mt-0.5 accent-violet-400"
+                  />
+                  <span>
+                    <span className="block font-semibold text-xs text-slate-200">Geodetic</span>
+                    <span className="block text-[10px] leading-tight text-slate-400">
+                      {calculationMethod === 'in_zodiaco'
+                        ? '30° of longitude per zodiac sign; planetary lines are vertical.'
+                        : 'Earth-curved planetary horizon paths; 0° Aries aligns with Greenwich.'}
+                    </span>
+                  </span>
+                </label>
+              )}
             </div>
           )}
 

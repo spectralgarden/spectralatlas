@@ -17,7 +17,7 @@ import {
   RelocationComparison,
   TransitTrigger,
 } from './types/astronomy';
-import { calculateAstrocartography, calculateTransits } from './engine/astronomyEngine';
+import { applyGeodeticProjection, calculateAstrocartography, calculateTransits } from './engine/astronomyEngine';
 import { calculateLocationScore, generateRelocationComparison } from './engine/locationScoring';
 import { WORLD_CITIES } from './constants/worldCities';
 import { PLANET_DEFINITIONS } from './constants/celestialData';
@@ -375,6 +375,7 @@ export default function App() {
   // Local Space Lines & Bernadette Brady Star Parans
   const [showLocalSpace, setShowLocalSpace] = useState(false);
   const [showFixedStars, setShowFixedStars] = useState(false);
+  const [isGeodeticEnabled, setIsGeodeticEnabled] = useState(false);
 
   // Beginner's Tutorial / User Manual Modal
   const [isTutorialOpen, setIsTutorialOpen] = useState(false);
@@ -449,6 +450,19 @@ export default function App() {
     });
   }, [activeProfile, calculationMethod, use3DOffEclipticAspects]);
 
+  const displayedPrimaryLines = useMemo(
+    () =>
+      isGeodeticEnabled
+        ? applyGeodeticProjection(
+            primaryAtlas.lines,
+            primaryAtlas.natalPositions,
+            calculationMethod,
+            primaryAtlas.obliquity
+          )
+        : primaryAtlas.lines,
+    [isGeodeticEnabled, primaryAtlas, calculationMethod]
+  );
+
   // Compute Local Space Lines (Horizon Coordinate Great Circle Bearings)
   const localSpaceLines = useMemo(() => {
     if (!activeProfile || !primaryAtlas || primaryAtlas.natalPositions.length === 0) return [];
@@ -474,13 +488,27 @@ export default function App() {
   const transitData = useMemo(() => {
     if (!showTransits || primaryAtlas.lines.length === 0) {
       return {
+        obliquity: primaryAtlas.obliquity,
         transitingPositions: [],
         transitLines: [],
         transitTriggers: [] as TransitTrigger[],
       };
     }
     return calculateTransits(transitDate, primaryAtlas.lines, calculationMethod);
-  }, [showTransits, transitDate, primaryAtlas.lines, calculationMethod]);
+  }, [showTransits, transitDate, primaryAtlas.lines, primaryAtlas.obliquity, calculationMethod]);
+
+  const displayedTransitLines = useMemo(
+    () =>
+      isGeodeticEnabled
+        ? applyGeodeticProjection(
+            transitData.transitLines,
+            transitData.transitingPositions,
+            calculationMethod,
+            transitData.obliquity
+          )
+        : transitData.transitLines,
+    [isGeodeticEnabled, transitData, calculationMethod]
+  );
 
   // Compute Secondary Astrocartography Atlas (if dual chart mode is enabled)
   const secondaryAtlas = useMemo(() => {
@@ -861,6 +889,8 @@ export default function App() {
           onToggleFixedStars={() => setShowFixedStars(!showFixedStars)}
           use3DAspects={use3DOffEclipticAspects}
           onToggle3DAspects={() => setUse3DOffEclipticAspects(!use3DOffEclipticAspects)}
+          isGeodeticEnabled={isGeodeticEnabled}
+          onToggleGeodetic={() => setIsGeodeticEnabled((enabled) => !enabled)}
           // Crossings & Parans Launchers
           onOpenCrossingsModal={() => setIsCrossingsModalOpen(true)}
           onOpenParansModal={() => setIsParansModalOpen(true)}
@@ -870,8 +900,8 @@ export default function App() {
 
         {/* High-Resolution Real OpenStreetMap / Carto Leaflet Map */}
         <RealLeafletMapView
-          lines={primaryAtlas.lines}
-          transitLines={transitData.transitLines}
+          lines={displayedPrimaryLines}
+          transitLines={displayedTransitLines}
           transitTriggers={transitData.transitTriggers}
           parans={primaryAtlas.parans}
           crossings={primaryAtlas.crossings}

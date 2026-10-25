@@ -714,6 +714,66 @@ export function generateAstroLines(
 }
 
 /**
+ * Project astrocartography lines onto the geodetic longitude grid, where
+ * terrestrial longitude 0° corresponds to 0° Aries.
+ */
+export function applyGeodeticProjection(
+  lines: AstrocartographyLine[],
+  positions: PlanetPosition[],
+  method: CalculationMethod,
+  obliquity: number = 23.439291
+): AstrocartographyLine[] {
+  const positionsById = new Map(positions.map((position) => [position.planetId, position]));
+  const epsRad = obliquity * DEG2RAD;
+
+  return lines.map((line) => {
+    const position = positionsById.get(line.planetId);
+    if (!position) return line;
+
+    const aspectOffsetMatch = line.isAspectLine
+      ? line.description.match(/\(([+-])(\d+(?:\.\d+)?)°\)/)
+      : null;
+    const aspectOffset = aspectOffsetMatch
+      ? Number(`${aspectOffsetMatch[1]}${aspectOffsetMatch[2]}`)
+      : 0;
+    const oppositeAngle = line.angle === 'IC' || line.angle === 'DSC';
+    const baseLongitude = normalizeLng(position.longitude + aspectOffset + (oppositeAngle ? 180 : 0));
+    const points: Coordinates[] = [];
+
+    if (method === 'in_zodiaco' || line.angle === 'MC' || line.angle === 'IC') {
+      for (let lat = -85; lat <= 85; lat += 1) {
+        points.push({ lat, lng: baseLongitude });
+      }
+    } else {
+      const decRad = position.declination * DEG2RAD;
+      const maxLat = Math.min(84, Math.max(10, 90 - Math.abs(position.declination) - 0.2));
+      const isRising = line.angle === 'ASC';
+      const rightAscension = position.rightAscension + aspectOffset;
+
+      for (let lat = -maxLat; lat <= maxLat; lat += 0.5) {
+        const cosH = -Math.tan(lat * DEG2RAD) * Math.tan(decRad);
+        if (Math.abs(cosH) > 1) continue;
+
+        const hourAngle = Math.acos(Math.max(-1, Math.min(1, cosH)));
+        const localSiderealTime = rightAscension * DEG2RAD + (isRising ? -hourAngle : hourAngle);
+        const geodeticLongitude = Math.atan2(
+          Math.sin(localSiderealTime),
+          Math.cos(localSiderealTime) * Math.cos(epsRad)
+        ) * RAD2DEG;
+
+        points.push({ lat, lng: normalizeLng(geodeticLongitude) });
+      }
+    }
+
+    return {
+      ...line,
+      points,
+      description: `${line.description} — Geodetic projection (0° Aries = 0° longitude)`,
+    };
+  });
+}
+
+/**
  * Generate Harmonious & Disharmonious Aspect Lines and Custom Harmonics
  *
  * Supported Aspects & Harmonics:

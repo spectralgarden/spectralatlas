@@ -279,14 +279,14 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
 
     // 1. Draw Natal Planetary Lines & Aspects
     lines.forEach((line) => {
-      if (filteredPlanets.length > 0 && !filteredPlanets.includes(line.planetId)) return;
-      if (filteredAngles.length > 0 && !filteredAngles.includes(line.angle)) return;
+      if (!filteredPlanets.includes(line.planetId)) return;
+      if (!filteredAngles.includes(line.angle)) return;
 
       // Filter by aspect line settings
       if (line.isAspectLine) {
         if (line.polarity === 'harmonious' && !showHarmoniousAspects) return;
         if (line.polarity === 'challenging' && !showDisharmoniousAspects) return;
-        if (line.harmonic && activeHarmonics.length > 0 && !activeHarmonics.includes(line.harmonic)) return;
+        if (line.harmonic && !activeHarmonics.includes(line.harmonic)) return;
       } else {
         if (!showConjunctions) return;
       }
@@ -388,8 +388,8 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
     // 2. Draw Transiting Planetary Lines (if enabled)
     if (showTransits && transitLines.length > 0) {
       transitLines.forEach((tLine) => {
-        if (filteredPlanets.length > 0 && !filteredPlanets.includes(tLine.planetId)) return;
-        if (filteredAngles.length > 0 && !filteredAngles.includes(tLine.angle)) return;
+        if (!filteredPlanets.includes(tLine.planetId)) return;
+        if (!filteredAngles.includes(tLine.angle)) return;
 
         const pDef = PLANET_DEFINITIONS[tLine.planetId];
         const angDef = ANGLE_DEFINITIONS[tLine.angle];
@@ -530,7 +530,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
     // 5. Draw Local Space Horizon Vector Great Circles (Compass Heading Lines)
     if (showLocalSpace && localSpaceLines.length > 0) {
       localSpaceLines.forEach((ls) => {
-        if (filteredPlanets.length > 0 && !filteredPlanets.includes(ls.planetId)) return;
+        if (!filteredPlanets.includes(ls.planetId)) return;
 
         const segments = splitAcrossDateLine(ls.points);
         segments.forEach((seg) => {
@@ -572,7 +572,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
     // 6. Draw Bernadette Brady Star Parans (Prominent Fixed Star Latitudinal Alignments)
     if (showFixedStars && starParans.length > 0) {
       starParans.forEach((sp) => {
-        if (filteredPlanets.length > 0 && !filteredPlanets.includes(sp.planetId)) return;
+        if (!filteredPlanets.includes(sp.planetId)) return;
 
         const poly = L.polyline(
           [
