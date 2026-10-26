@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Flame, Home, MessageSquare, Star } from 'lucide-react';
 import { BirthData, CalculationMethod, CityData, Coordinates } from '../types/astronomy';
 
@@ -47,6 +47,36 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
   isRecalculating = false,
   onOpenTutorial,
 }) => {
+  const actionScrollerRef = useRef<HTMLDivElement>(null);
+  const [canScrollActionsLeft, setCanScrollActionsLeft] = useState(false);
+  const [canScrollActionsRight, setCanScrollActionsRight] = useState(false);
+
+  const updateActionScrollState = useCallback(() => {
+    const scroller = actionScrollerRef.current;
+    if (!scroller) return;
+    setCanScrollActionsLeft(scroller.scrollLeft > 0);
+    setCanScrollActionsRight(scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth - 1);
+  }, []);
+
+  useEffect(() => {
+    const scroller = actionScrollerRef.current;
+    if (!scroller) return;
+
+    updateActionScrollState();
+    scroller.addEventListener('scroll', updateActionScrollState, { passive: true });
+    const resizeObserver = new ResizeObserver(updateActionScrollState);
+    resizeObserver.observe(scroller);
+
+    return () => {
+      scroller.removeEventListener('scroll', updateActionScrollState);
+      resizeObserver.disconnect();
+    };
+  }, [updateActionScrollState]);
+
+  const scrollActions = (direction: -1 | 1) => {
+    actionScrollerRef.current?.scrollBy({ left: direction * 180, behavior: 'smooth' });
+  };
+
   return (
     <header className="atlas-cosmic-nav min-h-16 px-2 py-2 xl:h-16 xl:flex-nowrap xl:px-6 xl:py-0 backdrop-blur-md flex flex-wrap items-center justify-between gap-x-3 gap-y-2 z-30 shrink-0 select-none">
       {/* Left Brand Identity */}
@@ -90,7 +120,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
 
       {/* Center Action Features */}
       <div className="atlas-mobile-action-bar order-3 relative flex w-full min-w-0 items-center xl:order-none xl:w-auto xl:flex-1 2xl:flex-1 min-[1920px]:flex-none">
-        <div className="atlas-mobile-action-bar__scroller flex min-w-0 w-full items-center gap-1.5 overflow-x-auto overscroll-x-contain scrollbar-none xl:justify-center xl:gap-2 min-[1920px]:overflow-visible">
+        <div ref={actionScrollerRef} className="atlas-mobile-action-bar__scroller flex min-w-0 w-full items-center gap-1.5 overflow-x-auto overscroll-x-contain scrollbar-none xl:justify-center xl:gap-2 min-[1920px]:overflow-visible">
         {/* Mundo vs Zodiaco Projection Switcher */}
         <div
           className="flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5 shadow-inner"
@@ -247,7 +277,26 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           <span className="font-serif">Forum</span>
         </a>
         </div>
-        <span className="atlas-header-scroll-cue" aria-hidden="true">›</span>
+        {canScrollActionsLeft && (
+          <button
+            type="button"
+            className="atlas-header-scroll-cue atlas-header-scroll-cue--left"
+            onClick={() => scrollActions(-1)}
+            aria-label="Scroll header options left"
+          >
+            ‹
+          </button>
+        )}
+        {canScrollActionsRight && (
+          <button
+            type="button"
+            className="atlas-header-scroll-cue atlas-header-scroll-cue--right"
+            onClick={() => scrollActions(1)}
+            aria-label="Scroll header options right"
+          >
+            ›
+          </button>
+        )}
       </div>
 
       {/* Right: Relocation & Active Natal Profile Indicators */}

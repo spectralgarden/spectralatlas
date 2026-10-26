@@ -49,6 +49,8 @@ interface RealLeafletMapViewProps {
   onSelectTransitTrigger?: (trigger: TransitTrigger) => void;
   onSelectParan?: (paran: ParanLine) => void;
   onMapReady: () => void;
+  tileStyle: MapTileStyle;
+  onChangeTileStyle: (style: MapTileStyle) => void;
 }
 
 interface TileDefinition {
@@ -139,6 +141,8 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
   onSelectTransitTrigger,
   onSelectParan,
   onMapReady,
+  tileStyle,
+  onChangeTileStyle,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -148,7 +152,6 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
   const orbLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const markerLayerGroupRef = useRef<L.LayerGroup | null>(null);
 
-  const [tileStyle, setTileStyle] = useState<MapTileStyle>('streets');
   const [hoveredInfo, setHoveredInfo] = useState<{
     title: string;
     orb?: string;
@@ -773,12 +776,12 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
       )}
 
       {/* Floating Map Style Selector: Placed at bottom-center so it NEVER overlaps bottom-left coordinates pill or right-side panels */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 p-1 rounded-xl bg-slate-900/90 backdrop-blur-md border border-slate-800 shadow-2xl">
+      <div className="absolute bottom-6 left-1/2 z-20 hidden -translate-x-1/2 items-center gap-1 rounded-xl border border-slate-800 bg-slate-900/90 p-1 shadow-2xl backdrop-blur-md sm:flex">
         <span className="text-[10px] font-mono text-slate-400 uppercase px-1.5 hidden sm:inline">Map:</span>
         {(Object.keys(TILE_PROVIDERS) as MapTileStyle[]).map((style) => (
           <button
             key={style}
-            onClick={() => setTileStyle(style)}
+            onClick={() => onChangeTileStyle(style)}
             className={`px-2.5 py-1 rounded-lg text-xs font-medium transition cursor-pointer ${
               tileStyle === style
                 ? 'bg-violet-500 text-slate-950 font-bold shadow-md shadow-violet-500/20'
@@ -797,7 +800,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
             mapInstanceRef.current.setView([25, 10], 3);
           }
         }}
-        className="absolute bottom-20 right-3.5 z-20 w-8 h-8 rounded-lg bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 shadow-xl flex items-center justify-center text-xs transition cursor-pointer"
+        className="absolute bottom-20 right-[10px] z-20 flex h-8 w-8 items-center justify-center rounded-lg border border-slate-800 bg-slate-900/90 text-xs text-slate-300 shadow-xl transition hover:bg-slate-800 hover:text-white"
         title="Reset Map View"
       >
         ⟲

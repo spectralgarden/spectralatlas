@@ -23,7 +23,7 @@ import { WORLD_CITIES } from './constants/worldCities';
 import { PLANET_DEFINITIONS } from './constants/celestialData';
 
 import { HeaderNav } from './components/HeaderNav';
-import { RealLeafletMapView } from './components/RealLeafletMapView';
+import { RealLeafletMapView, type MapTileStyle } from './components/RealLeafletMapView';
 import { TopCitiesDrawer } from './components/TopCitiesDrawer';
 import { FavoritesDrawer } from './components/FavoritesDrawer';
 import { LayerFilterBar } from './components/LayerFilterBar';
@@ -168,6 +168,7 @@ export default function App() {
   const [isBirthModalOpen, setIsBirthModalOpen] = useState(false);
   const [isBirthDataLoading, setIsBirthDataLoading] = useState(false);
   const [isMapLoading, setIsMapLoading] = useState(true);
+  const [mapTileStyle, setMapTileStyle] = useState<MapTileStyle>('streets');
   const [isRelocationModalOpen, setIsRelocationModalOpen] = useState(false);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
   const [returnToTopCities, setReturnToTopCities] = useState(false);
@@ -898,6 +899,8 @@ export default function App() {
           onOpenTopCities={() => setIsTopCitiesOpen(true)}
           onOpenFavorites={() => setIsFavoritesOpen(true)}
           favoritesCount={savedLocations.length}
+          mapTileStyle={mapTileStyle}
+          onChangeMapTileStyle={setMapTileStyle}
           onQuickLocate={(loc) => {
             if ('name' in loc) {
               handleSelectLocation({ lat: loc.lat, lng: loc.lng }, loc);
@@ -972,6 +975,8 @@ export default function App() {
           }}
           onSelectTransitTrigger={handleSelectTransitTrigger}
           onMapReady={() => setIsMapLoading(false)}
+          tileStyle={mapTileStyle}
+          onChangeTileStyle={setMapTileStyle}
         />
 
         {/* Floating Quick Summary Pill (When Location is active but drawer closed) */}

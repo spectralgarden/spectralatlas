@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { Star } from 'lucide-react';
+import { Map as MapIcon, Star, X } from 'lucide-react';
 import { CalculationMethod, CityData, Coordinates, LifeCategory, PlanetId } from '../types/astronomy';
 import { ANGLE_DEFINITIONS, LIFE_CATEGORIES_META, PLANET_DEFINITIONS } from '../constants/celestialData';
 import { WORLD_CITIES } from '../constants/worldCities';
+import type { MapTileStyle } from './RealLeafletMapView';
 
 interface LayerFilterBarProps {
   selectedPlanets: PlanetId[];
@@ -28,6 +29,8 @@ interface LayerFilterBarProps {
   onOpenTopCities?: () => void;
   onOpenFavorites?: () => void;
   favoritesCount?: number;
+  mapTileStyle: MapTileStyle;
+  onChangeMapTileStyle: (style: MapTileStyle) => void;
   calculationMethod?: CalculationMethod;
   onChangeCalculationMethod?: (method: CalculationMethod) => void;
   isRecalculating?: boolean;
@@ -94,6 +97,8 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
   onOpenTopCities,
   onOpenFavorites,
   favoritesCount = 0,
+  mapTileStyle,
+  onChangeMapTileStyle,
   calculationMethod = 'in_mundo',
   onChangeCalculationMethod,
   isRecalculating = false,
@@ -119,6 +124,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
   onToggleGeodetic,
 }) => {
   const [citySearch, setCitySearch] = useState('');
+  const [isMapStyleMenuOpen, setIsMapStyleMenuOpen] = useState(false);
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
   const [filterPanelPosition, setFilterPanelPosition] = useState<FilterPanelPosition | null>(null);
   const [liveResults, setLiveResults] = useState<GeocodedResult[]>([]);
@@ -321,6 +327,21 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                 <span className="text-[10px] font-semibold">{favoritesCount}</span>
               </button>
             )}
+            <button
+              type="button"
+              onClick={() => setIsMapStyleMenuOpen((open) => !open)}
+              className={`flex h-9 items-center justify-center gap-1.5 rounded-xl border px-2 text-xs transition ${
+                isMapStyleMenuOpen
+                  ? 'border-cyan-400/50 bg-cyan-500/15 text-cyan-200'
+                  : 'border-slate-700 bg-slate-900/80 text-slate-300 hover:bg-slate-800'
+              }`}
+              title="Map options"
+              aria-label="Map options"
+              aria-expanded={isMapStyleMenuOpen}
+            >
+              <MapIcon size={14} aria-hidden="true" />
+              <span>Map</span>
+            </button>
           </div>
 
           {/* Subtle Vertical Divider */}
@@ -462,6 +483,44 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
             <span className="atlas-filter-scroll-cue" aria-hidden="true">›</span>
           </div>
         </div>
+
+        {isMapStyleMenuOpen && (
+          <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded-xl border border-slate-700 bg-slate-950/95 p-2 shadow-2xl backdrop-blur-md sm:hidden">
+            <div className="mb-2 flex items-center justify-between border-b border-slate-800 px-1 pb-2">
+              <span className="text-xs font-semibold text-slate-200">Map style</span>
+              <button
+                type="button"
+                onClick={() => setIsMapStyleMenuOpen(false)}
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-800 hover:text-white"
+                aria-label="Close map options"
+              >
+                <X size={15} aria-hidden="true" />
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {([
+                ['streets', 'Detailed Streets'],
+                ['osm', 'OpenStreetMap'],
+                ['satellite', 'Hybrid Satellite'],
+                ['dark', 'Cosmic Dark'],
+              ] as [MapTileStyle, string][]).map(([style, label]) => (
+                <button
+                  key={style}
+                  type="button"
+                  onClick={() => onChangeMapTileStyle(style)}
+                  aria-pressed={mapTileStyle === style}
+                  className={`rounded-lg border px-2 py-2 text-left text-xs transition ${
+                    mapTileStyle === style
+                      ? 'border-violet-400/60 bg-violet-500/20 font-semibold text-violet-200'
+                      : 'border-slate-800 bg-slate-900/70 text-slate-300 hover:border-slate-600'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Dynamic City Search Dropdown */}
         {citySearch.trim().length >= 2 && combinedResults.length > 0 && (
