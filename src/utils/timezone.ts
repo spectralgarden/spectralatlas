@@ -1,4 +1,4 @@
-import { WORLD_CITIES } from '../constants/worldCities';
+import tzLookup from 'tz-lookup';
 
 export function resolveTimezoneForLocation(timezone: string, lat: number, lng: number): string {
   const fixedOffsetMatch = timezone.match(/^UTC([+-])?(\d{1,2}(?:\.\d+)?)?$/);
@@ -6,24 +6,11 @@ export function resolveTimezoneForLocation(timezone: string, lat: number, lng: n
 
   const offset = Number(fixedOffsetMatch[2] || 0) * (fixedOffsetMatch[1] === '-' ? -1 : 1);
   if (offset !== Math.round(lng / 15)) return timezone;
+  if (!Number.isFinite(lat) || lat < -90 || lat > 90 || !Number.isFinite(lng) || lng < -180 || lng > 180) {
+    return timezone;
+  }
 
-  const nearestCity = WORLD_CITIES.reduce(
-    (nearest, city) => {
-      if (/^UTC/.test(city.timezone)) return nearest;
-      const lat1 = lat * (Math.PI / 180);
-      const lat2 = city.lat * (Math.PI / 180);
-      const deltaLat = (city.lat - lat) * (Math.PI / 180);
-      const deltaLng = (city.lng - lng) * (Math.PI / 180);
-      const a =
-        Math.sin(deltaLat / 2) ** 2 +
-        Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLng / 2) ** 2;
-      const distanceKm = 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return distanceKm < nearest.distanceKm ? { timezone: city.timezone, distanceKm } : nearest;
-    },
-    { timezone, distanceKm: 75 }
-  );
-
-  return nearestCity.timezone;
+  return tzLookup(lat, lng);
 }
 
 export function getTimezoneOffsetAtBirth(date: string, time: string, timezone: string): number | null {
