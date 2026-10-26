@@ -20,6 +20,7 @@ import {
 } from '../types/astronomy';
 import { PLANET_DEFINITIONS, ZODIAC_SIGNS } from '../constants/celestialData';
 import { WORLD_CITIES } from '../constants/worldCities';
+import { getTimezoneOffsetAtBirth } from '../utils/timezone';
 
 const DEG2RAD = Math.PI / 180;
 const RAD2DEG = 180 / Math.PI;
@@ -88,13 +89,14 @@ export function calculateObliquity(jd: number): number {
  * High-Precision Astronomical ephemeris using VSOP87 and NOVAS C 3.1
  * (Accurate to sub-arcminute matching Swiss Ephemeris / Astro.com / Astro-Seek)
  */
-export function calculatePlanetaryPositions(jd: number): PlanetPosition[] {
-  const d = new Date((jd - 2440587.5) * 86400000);
+export function calculatePlanetaryPositions(jdUt: number): PlanetPosition[] {
+  const d = new Date((jdUt - 2440587.5) * 86400000);
   const time = Astronomy.MakeTime(d);
   const timeNext = time.AddDays(0.05); // For speed / retrograde calculation
   const obs = new Astronomy.Observer(0, 0, 0); // Geocentric observer
   const eps = Astronomy.e_tilt(time).tobl * DEG2RAD;
-  const T = (jd - 2451545.0) / 36525.0;
+  const jdTt = time.tt + 2451545.0;
+  const T = (jdTt - 2451545.0) / 36525.0;
 
   // Major VSOP87 bodies
   const bodyMap: Record<string, Astronomy.Body> = {
@@ -157,7 +159,7 @@ export function calculatePlanetaryPositions(jd: number): PlanetPosition[] {
   // 11. Chiron (High-precision Keplerian orbital integration with geocentric conversion)
   {
     const chironDef = PLANET_DEFINITIONS.chiron;
-    const dayOffset = jd - 2451545.0;
+    const dayOffset = jdTt - 2451545.0;
     const n = 0.0195616; // deg / day
     const M0 = 70.82;
     let M = normalizeDeg(M0 + n * dayOffset) * DEG2RAD;
@@ -363,7 +365,7 @@ export function calculatePlanetaryPositions(jd: number): PlanetPosition[] {
   ) => {
     const def = PLANET_DEFINITIONS[id];
     if (!def) return;
-    const dayOffset = jd - epochJd;
+    const dayOffset = jdTt - epochJd;
     let M = normalizeDeg(M0Deg + nDegPerDay * dayOffset) * DEG2RAD;
     let E = M;
     for (let i = 0; i < 6; i++) {
@@ -1654,17 +1656,21 @@ export function computeAstrocartographySuite(
 
   // Exact UTC conversion handling day/month/leap year rollovers cleanly
   const utcDate = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
-  const totalOffsetMinutes = Math.round(birthData.timezoneOffsetHours * 60);
+  const timezoneOffset =
+    getTimezoneOffsetAtBirth(birthData.date, birthData.time, birthData.timezone) ??
+    birthData.timezoneOffsetHours;
+  const totalOffsetMinutes = Math.round(timezoneOffset * 60);
   const totalMinutes = localHour * 60 + localMin - totalOffsetMinutes;
   utcDate.setUTCMinutes(totalMinutes);
 
   const astroTime = Astronomy.MakeTime(utcDate);
   const jd = astroTime.tt + 2451545.0;
+  const jdUt = astroTime.ut + 2451545.0;
   const gmst = normalizeDeg(Astronomy.SiderealTime(astroTime) * 15);
   const obliquity = Astronomy.e_tilt(astroTime).tobl;
 
   // High-precision planetary positions
-  const positions = calculatePlanetaryPositions(jd);
+  const positions = calculatePlanetaryPositions(jdUt);
 
   // Natal chart angles for birth place
   const natalAngles = calculateChartAngles(birthData.lat, birthData.lng, gmst, obliquity);
@@ -1754,11 +1760,12 @@ export function calculateTransits(
 ) {
   const astroTime = Astronomy.MakeTime(transitDate);
   const jd = astroTime.tt + 2451545.0;
+  const jdUt = astroTime.ut + 2451545.0;
   const gmst = normalizeDeg(Astronomy.SiderealTime(astroTime) * 15);
   const obliquity = Astronomy.e_tilt(astroTime).tobl;
 
   // Compute transiting planetary positions
-  const transitingPositions = calculatePlanetaryPositions(jd);
+  const transitingPositions = calculatePlanetaryPositions(jdUt);
 
   // Generate transiting astrocartography lines
   const transitLines: AstrocartographyLine[] = [];

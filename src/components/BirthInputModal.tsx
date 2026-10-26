@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BirthData, CityData } from '../types/astronomy';
 import { WORLD_CITIES } from '../constants/worldCities';
+import { getTimezoneOffsetAtBirth } from '../utils/timezone';
 
 interface BirthInputModalProps {
   isOpen: boolean;
@@ -81,6 +82,12 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
       if (!time) setTime('12:00');
     }
   }, [isOpen, activeProfileId, savedProfiles]);
+
+  useEffect(() => {
+    if (!selectedCity || !date || !time) return;
+    const offset = getTimezoneOffsetAtBirth(date, time, selectedCity.timezone);
+    if (offset !== null) setCustomTzOffset(offset);
+  }, [selectedCity, date, time]);
 
   // Live Geocoding lookup on search query changes
   useEffect(() => {
@@ -512,7 +519,16 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
                 step="0.5"
                 placeholder="e.g. -5 or +1"
                 value={customTzOffset}
-                onChange={(e) => setCustomTzOffset(parseFloat(e.target.value) || 0)}
+                onChange={(e) => {
+                  const offset = parseFloat(e.target.value) || 0;
+                  setCustomTzOffset(offset);
+                  if (selectedCity) {
+                    setSelectedCity({
+                      ...selectedCity,
+                      timezone: `UTC${offset >= 0 ? '+' : ''}${offset}`,
+                    });
+                  }
+                }}
                 className="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white font-mono"
               />
             </div>
