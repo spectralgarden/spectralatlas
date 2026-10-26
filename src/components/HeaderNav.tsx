@@ -15,7 +15,6 @@ interface HeaderNavProps {
   onOpenReportModal: () => void;
   onToggleChartWheel: () => void;
   isChartWheelOpen: boolean;
-  onOpenTopCities: () => void;
   onOpenFavorites: () => void;
   favoritesCount: number;
   activeLocationName?: string;
@@ -38,7 +37,6 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
   onOpenReportModal,
   onToggleChartWheel,
   isChartWheelOpen,
-  onOpenTopCities,
   onOpenFavorites,
   favoritesCount,
   activeLocationName,
@@ -163,17 +161,6 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
             <span>In Zodiaco</span>
           </button>
         </div>
-
-        {/* Top Cities Power List Trigger */}
-        <button
-          id="btn-nav-top-cities"
-          onClick={onOpenTopCities}
-          className="hidden px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-violet-500/20 to-violet-600/20 hover:from-violet-500/30 hover:to-violet-600/30 text-violet-300 border border-violet-500/40 shadow-sm shadow-violet-500/10 transition min-[1920px]:flex min-[1920px]:items-center min-[1920px]:gap-1.5 cursor-pointer"
-          title="Ranked Top Cities and Planetary Power Spots for your Chart"
-        >
-          <span className="text-violet-400">✦</span>
-          <span className="font-serif">Top Cities List</span>
-        </button>
 
         <button
           id="btn-nav-favorites"

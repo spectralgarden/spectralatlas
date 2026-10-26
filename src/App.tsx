@@ -739,7 +739,6 @@ export default function App() {
           }
         }}
         isChartWheelOpen={isChartWheelOpen}
-        onOpenTopCities={() => setIsTopCitiesOpen(true)}
         onOpenFavorites={() => setIsFavoritesOpen(true)}
         favoritesCount={savedLocations.length}
         activeLocationName={selectedCity ? `${selectedCity.name}, ${selectedCity.country}` : activeLocation ? `${activeLocation.lat.toFixed(1)}°, ${activeLocation.lng.toFixed(1)}°` : undefined}

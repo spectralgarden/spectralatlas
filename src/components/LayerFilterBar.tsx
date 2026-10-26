@@ -303,16 +303,17 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
             )}
           </div>
 
-          <div className="flex shrink-0 items-center gap-1 min-[1920px]:hidden">
+          <div className="flex shrink-0 items-center gap-1">
             {onOpenTopCities && (
               <button
                 type="button"
                 onClick={onOpenTopCities}
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-violet-500/40 bg-violet-500/15 text-violet-200 transition hover:bg-violet-500/25"
+                className="flex h-9 items-center justify-center gap-1.5 rounded-xl border border-violet-500/40 bg-violet-500/15 px-2.5 text-xs font-semibold text-violet-200 transition hover:bg-violet-500/25"
                 title="Top Cities"
                 aria-label="Open Top Cities"
               >
                 <span aria-hidden="true">✦</span>
+                <span>Top Cities</span>
               </button>
             )}
             {onOpenFavorites && (
@@ -330,7 +331,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
             <button
               type="button"
               onClick={() => setIsMapStyleMenuOpen((open) => !open)}
-              className={`flex h-9 items-center justify-center gap-1.5 rounded-xl border px-2 text-xs transition ${
+              className={`flex h-9 items-center justify-center gap-1.5 rounded-xl border px-2 text-xs transition sm:hidden ${
                 isMapStyleMenuOpen
                   ? 'border-cyan-400/50 bg-cyan-500/15 text-cyan-200'
                   : 'border-slate-700 bg-slate-900/80 text-slate-300 hover:bg-slate-800'
