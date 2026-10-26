@@ -1181,6 +1181,8 @@ export default function App() {
           setIsCrossingsModalOpen(false);
         }}
         activeCrossing={activeCrossing}
+        showCrossings={showCrossings}
+        onToggleCrossings={() => setShowCrossings((visible) => !visible)}
       />
 
       {/* Advanced Paran Options (Paranatellonta) Suite */}
@@ -1197,6 +1199,8 @@ export default function App() {
         }}
         activeParan={activeParan}
         userLocation={activeLocation}
+        showParans={showParans}
+        onToggleParans={() => setShowParans((visible) => !visible)}
       />
 
       {/* Animated Calculation Transition Loading Dialog */}

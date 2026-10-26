@@ -9,6 +9,8 @@ interface ParansExplorerModalProps {
   onSelectParan: (paran: ParanLine) => void;
   activeParan?: ParanLine | null;
   userLocation?: Coordinates | null;
+  showParans: boolean;
+  onToggleParans: () => void;
 }
 
 export const ParansExplorerModal: React.FC<ParansExplorerModalProps> = ({
@@ -18,6 +20,8 @@ export const ParansExplorerModal: React.FC<ParansExplorerModalProps> = ({
   onSelectParan,
   activeParan,
   userLocation,
+  showParans,
+  onToggleParans,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<LifeCategory | 'all'>('all');
@@ -118,6 +122,24 @@ export const ParansExplorerModal: React.FC<ParansExplorerModalProps> = ({
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between gap-3 border-b border-slate-800 bg-slate-950/50 px-4 py-3 sm:px-6">
+          <span className="text-xs font-medium text-slate-300">Show paran lines on map</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={showParans}
+            onClick={onToggleParans}
+            className={`flex min-w-20 items-center justify-between gap-3 rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
+              showParans
+                ? 'border-emerald-500/40 bg-emerald-950/60 text-emerald-300'
+                : 'border-slate-700 bg-slate-900/60 text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <span>{showParans ? 'ON' : 'OFF'}</span>
+            <span className={`h-2 w-2 rounded-full ${showParans ? 'bg-emerald-400' : 'bg-slate-600'}`} />
           </button>
         </div>
 

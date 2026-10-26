@@ -8,6 +8,8 @@ interface CrossingsExplorerModalProps {
   crossings: PlanetaryCrossing[];
   onSelectCrossing: (crossing: PlanetaryCrossing) => void;
   activeCrossing?: PlanetaryCrossing | null;
+  showCrossings: boolean;
+  onToggleCrossings: () => void;
 }
 
 export const CrossingsExplorerModal: React.FC<CrossingsExplorerModalProps> = ({
@@ -16,6 +18,8 @@ export const CrossingsExplorerModal: React.FC<CrossingsExplorerModalProps> = ({
   crossings,
   onSelectCrossing,
   activeCrossing,
+  showCrossings,
+  onToggleCrossings,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTheme, setSelectedTheme] = useState<string>('all');
@@ -111,6 +115,24 @@ export const CrossingsExplorerModal: React.FC<CrossingsExplorerModalProps> = ({
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between gap-3 border-b border-slate-800 bg-slate-950/50 px-4 py-3 sm:px-6">
+          <span className="text-xs font-medium text-slate-300">Show crossings on map</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={showCrossings}
+            onClick={onToggleCrossings}
+            className={`flex min-w-20 items-center justify-between gap-3 rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
+              showCrossings
+                ? 'border-violet-500/40 bg-violet-950/60 text-violet-300'
+                : 'border-slate-700 bg-slate-900/60 text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <span>{showCrossings ? 'ON' : 'OFF'}</span>
+            <span className={`h-2 w-2 rounded-full ${showCrossings ? 'bg-violet-400' : 'bg-slate-600'}`} />
           </button>
         </div>
 
