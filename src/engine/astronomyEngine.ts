@@ -156,46 +156,53 @@ export function calculatePlanetaryPositions(jdUt: number): PlanetPosition[] {
     });
   }
 
-  // 11. Chiron (High-precision Keplerian orbital integration with geocentric conversion)
+  // 11. Chiron (JPL J2000 osculating elements with geocentric conversion)
   {
     const chironDef = PLANET_DEFINITIONS.chiron;
     const dayOffset = jdTt - 2451545.0;
-    const n = 0.0195616; // deg / day
-    const M0 = 70.82;
+    const n = 0.0195; // deg / day
+    const M0 = 27.9972;
     let M = normalizeDeg(M0 + n * dayOffset) * DEG2RAD;
-    const e = 0.383;
+    const e = 0.379343664188071;
     let E = M;
     for (let i = 0; i < 6; i++) {
       E = E - (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
     }
     const vTrue = 2 * Math.atan2(Math.sqrt(1 + e) * Math.sin(E / 2), Math.sqrt(1 - e) * Math.cos(E / 2));
-    const r = 13.670 * (1 - e * Math.cos(E));
-    const w = 339.63 * DEG2RAD;
+    const r = 13.6050807485 * (1 - e * Math.cos(E));
+    const w = 339.142185687749 * DEG2RAD;
     const u = vTrue + w;
-    const Omega = 209.34 * DEG2RAD;
-    const inc = 6.94 * DEG2RAD;
+    const Omega = 209.39667436638 * DEG2RAD;
+    const inc = 6.94156706694 * DEG2RAD;
     const xHelio = r * (Math.cos(Omega) * Math.cos(u) - Math.sin(Omega) * Math.sin(u) * Math.cos(inc));
     const yHelio = r * (Math.sin(Omega) * Math.cos(u) + Math.cos(Omega) * Math.sin(u) * Math.cos(inc));
     const zHelio = r * Math.sin(u) * Math.sin(inc);
 
     // Geocentric vector: Chiron - Earth
-    const sunVec = Astronomy.GeoVector(Astronomy.Body.Sun, time, true);
-    // Earth heliocentric = -Sun geocentric
+    const sunVec = Astronomy.RotateVector(
+      Astronomy.Rotation_EQJ_ECL(),
+      Astronomy.GeoVector(Astronomy.Body.Sun, time, true)
+    );
     const xGeo = xHelio + sunVec.x;
     const yGeo = yHelio + sunVec.y;
     const zGeo = zHelio + sunVec.z;
+    const eclipticVector = new Astronomy.Vector(xGeo, yGeo, zGeo, time);
+    const equatorialVector = Astronomy.RotateVector(
+      Astronomy.Rotation_ECL_EQJ(),
+      eclipticVector
+    );
+    const eclipticCoordinates = Astronomy.Ecliptic(equatorialVector);
+    const equatorialOfDate = Astronomy.RotateVector(
+      Astronomy.Rotation_EQJ_EQD(time),
+      equatorialVector
+    );
 
-    const chironLon = normalizeDeg(Math.atan2(yGeo, xGeo) * RAD2DEG);
-    const chironLat = Math.atan2(zGeo, Math.hypot(xGeo, yGeo)) * RAD2DEG;
-
-    // Convert Ecliptic (lon, lat) to Equatorial (RA, Dec)
-    const lonRad = chironLon * DEG2RAD;
-    const latRad = chironLat * DEG2RAD;
-    const sinDec = Math.sin(latRad) * Math.cos(eps) + Math.cos(latRad) * Math.sin(eps) * Math.sin(lonRad);
-    const dec = Math.asin(Math.max(-1, Math.min(1, sinDec))) * RAD2DEG;
-    const yRA = Math.cos(latRad) * Math.cos(eps) * Math.sin(lonRad) - Math.sin(latRad) * Math.sin(eps);
-    const xRA = Math.cos(latRad) * Math.cos(lonRad);
-    const ra = normalizeDeg(Math.atan2(yRA, xRA) * RAD2DEG);
+    const chironLon = normalizeDeg(eclipticCoordinates.elon);
+    const chironLat = eclipticCoordinates.elat;
+    const dec =
+      Math.atan2(equatorialOfDate.z, Math.hypot(equatorialOfDate.x, equatorialOfDate.y)) *
+      RAD2DEG;
+    const ra = normalizeDeg(Math.atan2(equatorialOfDate.y, equatorialOfDate.x) * RAD2DEG);
 
     const signIndex = Math.floor(chironLon / 30);
     const sign = ZODIAC_SIGNS[signIndex].sign;
@@ -210,7 +217,7 @@ export function calculatePlanetaryPositions(jdUt: number): PlanetPosition[] {
       latitude: chironLat,
       declination: dec,
       rightAscension: ra,
-      distanceAU: Math.hypot(xGeo, yGeo, zGeo),
+      distanceAU: equatorialOfDate.Length(),
       speed: 0.02,
       sign,
       degreeInSign,
