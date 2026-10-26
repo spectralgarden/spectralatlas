@@ -28,6 +28,8 @@ Spectral Atlas converts the entered local birth date and time to UTC using the l
 
 The app also derives planetary aspects and harmonic lines, latitude-based planetary parans, line intersections, and optional fixed-star parans and local-space bearings. Relocation charts recalculate angles and house placements for a destination. Location scores estimate nearby planetary influences by distance, then apply the app's interpretive weights for life categories; these are exploratory astrology interpretations, not scientifically validated predictions. Transit maps repeat the position and line calculations for a selected date and compare them with natal lines.
 
+Paran calculations retain valid latitude bands in both hemispheres and keep distinct angle combinations separate. On the map, nearby paran bands are visually grouped according to zoom level; the Paran Explorer retains the individual results.
+
 The optional **Geodetic** map projection is off by default and can be enabled in the expanded search filters. It maps 0° Aries to 0° terrestrial longitude. In Zodiaco, planetary lines follow fixed longitude meridians; in Mundo, planetary rising and setting paths curve by latitude to reflect the local horizon.
 
 ## Deploy to GitHub Pages

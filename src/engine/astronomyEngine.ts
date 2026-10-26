@@ -1181,127 +1181,153 @@ export function calculateParans(positions: PlanetPosition[]): ParanLine[] {
       const p2 = activePositions[j];
       const dec1 = p1.declination * DEG2RAD;
       const dec2 = p2.declination * DEG2RAD;
-      const deltaRA = (p2.rightAscension - p1.rightAscension) * DEG2RAD;
       const theme = getPairTheme(p1.planetId, p2.planetId);
+      const addParan = (
+        angle1: AngleType,
+        angle2: AngleType,
+        latitude: number,
+        interpretation: string,
+        categories: LifeCategory[] = theme.categories
+      ) => {
+        const roundedLatitude = Number(latitude.toFixed(6));
+        parans.push({
+          id: `paran_${p1.planetId}_${angle1.toLowerCase()}_${p2.planetId}_${angle2.toLowerCase()}_${roundedLatitude}`,
+          latitude: roundedLatitude,
+          planet1: p1.planetId,
+          angle1,
+          planet2: p2.planetId,
+          angle2,
+          title: `${p1.name} (${angle1}) & ${p2.name} (${angle2}) Paran`,
+          interpretation,
+          categories,
+          polarity: theme.polarity,
+        });
+      };
 
-      // Combination 1: P1 on MC, P2 on Rising (ASC)
-      if (Math.abs(Math.tan(dec2)) > 0.05) {
-        const tanPhi = -Math.cos(deltaRA) / Math.tan(dec2);
-        const lat = Math.atan(tanPhi) * RAD2DEG;
-        if (Math.abs(lat) <= 72) {
-          parans.push({
-            id: `paran_${p1.planetId}_mc_${p2.planetId}_asc`,
-            latitude: Number(lat.toFixed(2)),
-            planet1: p1.planetId,
-            angle1: 'MC',
-            planet2: p2.planetId,
-            angle2: 'ASC',
-            title: `${p1.name} (MC) & ${p2.name} (ASC) Paran`,
-            interpretation: `${theme.interpretation} (Culminating ${p1.name} channels directly into Rising ${p2.name}).`,
-            categories: theme.categories,
-            polarity: theme.polarity,
-          });
-        }
-      }
+      const meridianAngles: { angle: 'MC' | 'IC'; rightAscension: number }[] = [
+        { angle: 'MC', rightAscension: p1.rightAscension },
+        { angle: 'IC', rightAscension: normalizeDeg(p1.rightAscension + 180) },
+      ];
+      const horizonAngles: ('ASC' | 'DSC')[] = ['ASC', 'DSC'];
 
-      // Combination 2: P1 on MC, P2 on Setting (DSC)
-      if (Math.abs(Math.tan(dec2)) > 0.05) {
-        const tanPhi = Math.cos(deltaRA) / Math.tan(dec2);
-        const lat = Math.atan(tanPhi) * RAD2DEG;
-        if (Math.abs(lat) <= 72) {
-          parans.push({
-            id: `paran_${p1.planetId}_mc_${p2.planetId}_dsc`,
-            latitude: Number(lat.toFixed(2)),
-            planet1: p1.planetId,
-            angle1: 'MC',
-            planet2: p2.planetId,
-            angle2: 'DSC',
-            title: `${p1.name} (MC) & ${p2.name} (DSC) Paran`,
-            interpretation: `${theme.interpretation} (Public status connects with external partner dynamics).`,
-            categories: ['career', 'relationships', ...theme.categories],
-            polarity: theme.polarity,
-          });
-        }
-      }
+      for (const meridian of meridianAngles) {
+        for (const horizon of horizonAngles) {
+          const angleDifference = normalizeDeg(meridian.rightAscension - p2.rightAscension + 180) - 180;
+          const atOppositeMeridian = Math.abs(Math.abs(angleDifference) - 180) < 1e-8;
+          const isCorrectHorizon = atOppositeMeridian ||
+            (horizon === 'ASC' ? angleDifference <= 0 : angleDifference >= 0);
+          const tanDeclination = Math.tan(dec2);
+          if (!isCorrectHorizon || Math.abs(tanDeclination) <= 0.05) continue;
 
-      // Combination 3: P1 on IC, P2 on Rising (ASC)
-      if (Math.abs(Math.tan(dec2)) > 0.05) {
-        const tanPhi = Math.cos(deltaRA) / Math.tan(dec2);
-        const lat = Math.atan(tanPhi) * RAD2DEG;
-        if (Math.abs(lat) <= 72) {
-          parans.push({
-            id: `paran_${p1.planetId}_ic_${p2.planetId}_asc`,
-            latitude: Number(lat.toFixed(2)),
-            planet1: p1.planetId,
-            angle1: 'IC',
-            planet2: p2.planetId,
-            angle2: 'ASC',
-            title: `${p1.name} (IC) & ${p2.name} (ASC) Paran`,
-            interpretation: `Private soul sanctuary meets outer embodiment: ${p1.name}'s roots feed ${p2.name}'s persona.`,
-            categories: ['family', 'stability', ...theme.categories],
-            polarity: theme.polarity,
-          });
-        }
-      }
+          const latitude = Math.atan(-Math.cos(angleDifference * DEG2RAD) / tanDeclination) * RAD2DEG;
+          if (Math.abs(latitude) > 72) continue;
 
-      // Combination 4: P1 on IC, P2 on Setting (DSC)
-      if (Math.abs(Math.tan(dec2)) > 0.05) {
-        const tanPhi = -Math.cos(deltaRA) / Math.tan(dec2);
-        const lat = Math.atan(tanPhi) * RAD2DEG;
-        if (Math.abs(lat) <= 72) {
-          parans.push({
-            id: `paran_${p1.planetId}_ic_${p2.planetId}_dsc`,
-            latitude: Number(lat.toFixed(2)),
-            planet1: p1.planetId,
-            angle1: 'IC',
-            planet2: p2.planetId,
-            angle2: 'DSC',
-            title: `${p1.name} (IC) & ${p2.name} (DSC) Paran`,
-            interpretation: `Domestic security and relationship stability: Shared sanctuaries and private domestic bonds.`,
-            categories: ['family', 'relationships'],
-            polarity: theme.polarity,
-          });
+          const interpretation = meridian.angle === 'MC'
+            ? horizon === 'ASC'
+              ? `${theme.interpretation} (Culminating ${p1.name} channels directly into Rising ${p2.name}).`
+              : `${theme.interpretation} (Public status connects with external partner dynamics).`
+            : horizon === 'ASC'
+              ? `Private soul sanctuary meets outer embodiment: ${p1.name}'s roots feed ${p2.name}'s persona.`
+              : `Domestic security and relationship stability: Shared sanctuaries and private domestic bonds.`;
+          const categories = meridian.angle === 'MC' && horizon === 'DSC'
+            ? Array.from(new Set<LifeCategory>(['career', 'relationships', ...theme.categories]))
+            : meridian.angle === 'IC'
+              ? Array.from(new Set<LifeCategory>(['family', 'stability', ...theme.categories]))
+              : theme.categories;
+
+          addParan(meridian.angle, horizon, latitude, interpretation, categories);
         }
       }
 
       // Combination 5: P1 on ASC, P2 on DSC (Simultaneous Rising & Setting / Horizon Opposition)
-      if (Math.abs(Math.tan(dec1) + Math.tan(dec2)) > 0.05) {
-        const deltaH = (p2.rightAscension - p1.rightAscension - 180) * DEG2RAD;
-        const tanPhi = -Math.cos(deltaH) / (Math.tan(dec1) + Math.tan(dec2));
-        const lat = Math.atan(tanPhi) * RAD2DEG;
-        if (Math.abs(lat) <= 72 && !isNaN(lat)) {
-          parans.push({
-            id: `paran_${p1.planetId}_asc_${p2.planetId}_dsc`,
-            latitude: Number(lat.toFixed(2)),
-            planet1: p1.planetId,
-            angle1: 'ASC',
-            planet2: p2.planetId,
-            angle2: 'DSC',
-            title: `${p1.name} (ASC) & ${p2.name} (DSC) Paran`,
-            interpretation: `Direct relational axis: Self-embodiment of ${p1.name} mirrors the reflection of ${p2.name} in partners.`,
-            categories: ['relationships', 'growth'],
-            polarity: theme.polarity,
-          });
+      const getHorizonHourAngle = (latitude: number, declination: number): number | null => {
+        const cosine = -Math.tan(latitude * DEG2RAD) * Math.tan(declination);
+        if (Math.abs(cosine) > 1) return null;
+        return Math.acos(Math.max(-1, Math.min(1, cosine)));
+      };
+      const ascDscDifference = (latitude: number): number | null => {
+        const ascHourAngle = getHorizonHourAngle(latitude, dec1);
+        const dscHourAngle = getHorizonHourAngle(latitude, dec2);
+        if (ascHourAngle === null || dscHourAngle === null) return null;
+        return p1.rightAscension - p2.rightAscension -
+          (ascHourAngle + dscHourAngle) * RAD2DEG;
+      };
+
+      let previousSample: { latitude: number; difference: number } | null = null;
+      for (let latitude = -72; latitude <= 72; latitude += 0.25) {
+        const difference = ascDscDifference(latitude);
+        if (difference === null) {
+          previousSample = null;
+          continue;
         }
+        if (previousSample) {
+          const minTarget = Math.ceil(Math.min(previousSample.difference, difference) / 360);
+          const maxTarget = Math.floor(Math.max(previousSample.difference, difference) / 360);
+          for (let turn = minTarget; turn <= maxTarget; turn++) {
+            const target = turn * 360;
+            let low = previousSample.latitude;
+            let high = latitude;
+            let lowValue = previousSample.difference - target;
+            if (Math.abs(lowValue) < 1e-9) {
+              addParan(
+                'ASC',
+                'DSC',
+                low,
+                `Direct relational axis: Self-embodiment of ${p1.name} mirrors the reflection of ${p2.name} in partners.`,
+                ['relationships', 'growth']
+              );
+              continue;
+            }
+            if (lowValue * (difference - target) > 0) continue;
+
+            for (let iteration = 0; iteration < 24; iteration++) {
+              const mid = (low + high) / 2;
+              const midDifference = ascDscDifference(mid);
+              if (midDifference === null) break;
+              const midValue = midDifference - target;
+              if (lowValue * midValue <= 0) {
+                high = mid;
+              } else {
+                low = mid;
+                lowValue = midValue;
+              }
+            }
+
+            addParan(
+              'ASC',
+              'DSC',
+              (low + high) / 2,
+              `Direct relational axis: Self-embodiment of ${p1.name} mirrors the reflection of ${p2.name} in partners.`,
+              ['relationships', 'growth']
+            );
+          }
+        }
+        previousSample = { latitude, difference };
       }
     }
   }
 
-  // Deduplicate parans within 0.15 degrees latitude for same planet pairs
+  // Keep distinct angle pairs while removing numerically duplicated solutions.
   const deduped: ParanLine[] = [];
   for (const p of parans.sort((a, b) => b.latitude - a.latitude)) {
     const exists = deduped.some(
       (d) =>
         Math.abs(d.latitude - p.latitude) < 0.2 &&
-        ((d.planet1 === p.planet1 && d.planet2 === p.planet2) ||
-          (d.planet1 === p.planet2 && d.planet2 === p.planet1))
+        ((d.planet1 === p.planet1 &&
+          d.angle1 === p.angle1 &&
+          d.planet2 === p.planet2 &&
+          d.angle2 === p.angle2) ||
+          (d.planet1 === p.planet2 &&
+            d.angle1 === p.angle2 &&
+            d.planet2 === p.planet1 &&
+            d.angle2 === p.angle1))
     );
     if (!exists) {
       deduped.push(p);
     }
   }
 
-  return deduped.slice(0, 64);
+  return deduped;
 }
 
 /**

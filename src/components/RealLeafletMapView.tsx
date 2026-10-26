@@ -72,6 +72,28 @@ function normalizeMapCoordinates(coordinates: Coordinates): Coordinates {
   };
 }
 
+function clusterParansForDisplay(parans: ParanLine[], map: L.Map): ParanLine[][] {
+  const sortedParans = parans
+    .map((paran) => ({
+      paran,
+      screenY: map.latLngToContainerPoint([paran.latitude, 0]).y,
+    }))
+    .sort((a, b) => a.screenY - b.screenY);
+  const clusters: ParanLine[][] = [];
+  let clusterStartY: number | null = null;
+
+  for (const { paran, screenY } of sortedParans) {
+    if (clusterStartY === null || screenY - clusterStartY > 12) {
+      clusters.push([paran]);
+      clusterStartY = screenY;
+    } else {
+      clusters[clusters.length - 1].push(paran);
+    }
+  }
+
+  return clusters;
+}
+
 const TILE_PROVIDERS: Record<MapTileStyle, TileDefinition> = {
   streets: {
     name: 'Detailed Streets',
@@ -152,6 +174,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
   const orbLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const markerLayerGroupRef = useRef<L.LayerGroup | null>(null);
 
+  const [mapZoom, setMapZoom] = useState(3);
   const [hoveredInfo, setHoveredInfo] = useState<{
     title: string;
     orb?: string;
@@ -171,6 +194,9 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
       zoomControl: false,
       worldCopyJump: true,
     });
+    const updateZoom = () => setMapZoom(map.getZoom());
+    map.on('zoomend', updateZoom);
+    updateZoom();
 
     // Add Base Tile Layer
     const provider = TILE_PROVIDERS[tileStyle];
@@ -277,7 +303,8 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
 
   // Redraw Astrocartography Lines, Orbs, and Overlays
   useEffect(() => {
-    if (!mapInstanceRef.current || !linesLayerGroupRef.current || !orbLayerGroupRef.current) return;
+    const map = mapInstanceRef.current;
+    if (!map || !linesLayerGroupRef.current || !orbLayerGroupRef.current) return;
 
     const group = linesLayerGroupRef.current;
     const orbGroup = orbLayerGroupRef.current;
@@ -446,15 +473,28 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
 
     // 3. Draw Parans (Horizontal Latitude Crossings)
     if (showParans && parans.length > 0) {
-      parans.forEach((paran) => {
-        const isActive = activeParan?.id === paran.id;
+      clusterParansForDisplay(parans, map).forEach((cluster) => {
+        const paran = cluster[0];
+        const latitude = cluster.reduce((sum, item) => sum + item.latitude, 0) / cluster.length;
+        const isActive = cluster.some((item) => activeParan?.id === item.id);
+        const isSinglePolarity = cluster.every((item) => item.polarity === paran.polarity);
+        const color = isActive
+          ? '#a78bfa'
+          : isSinglePolarity && paran.polarity === 'harmonious'
+            ? '#10b981'
+            : '#64748b';
+        const clusterDescription = cluster.length === 1
+          ? paran.title
+          : `${cluster.length} nearby paran lines:\n${cluster.slice(0, 3).map((item) => item.title).join('\n')}${
+              cluster.length > 3 ? `\n+ ${cluster.length - 3} more; open Paran Explorer to inspect all.` : ''
+            }`;
         const poly = L.polyline(
           [
-            [paran.latitude, -180],
-            [paran.latitude, 180],
+            [latitude, -180],
+            [latitude, 180],
           ],
           {
-            color: isActive ? '#a78bfa' : paran.polarity === 'harmonious' ? '#10b981' : '#64748b',
+            color,
             weight: isActive ? 4 : 1.4,
             opacity: isActive ? 1 : 0.6,
             dashArray: isActive ? undefined : '4, 8',
@@ -464,8 +504,8 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
 
         const hitPoly = L.polyline(
           [
-            [paran.latitude, -180],
-            [paran.latitude, 180],
+            [latitude, -180],
+            [latitude, 180],
           ],
           {
             weight: 18,
@@ -477,15 +517,15 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
         hitPoly.on('mouseover', () => {
           poly.setStyle({ weight: 3.5, opacity: 1 });
           setHoveredInfo({
-            title: `Paran: ${paran.title}`,
-            orb: `Latitude ${paran.latitude.toFixed(1)}°`,
-            subtitle: paran.interpretation,
-            color: paran.polarity === 'harmonious' ? '#10b981' : '#94a3b8',
+            title: cluster.length === 1 ? `Paran: ${paran.title}` : `${cluster.length} nearby paran lines`,
+            orb: `Latitude ${latitude.toFixed(1)}°${cluster.length > 1 ? ` • ${cluster.length} lines grouped` : ''}`,
+            subtitle: cluster.length === 1 ? paran.interpretation : clusterDescription,
+            color,
           });
         });
 
         hitPoly.on('mouseout', () => {
-          poly.setStyle({ weight: isActive ? 4 : 1.4, opacity: isActive ? 1 : 0.6 });
+          poly.setStyle({ weight: isActive ? 4 : 1.4, opacity: isActive ? 1 : 0.6, color });
           setHoveredInfo(null);
         });
 
@@ -644,6 +684,7 @@ export const RealLeafletMapView: React.FC<RealLeafletMapViewProps> = ({
     activeHarmonics,
     activeCrossing,
     activeParan,
+    mapZoom,
   ]);
 
   // Fly to active crossing when selected

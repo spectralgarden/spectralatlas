@@ -16,6 +16,7 @@ export const WORLD_CITIES: CityData[] = [
   { id: 'pit', name: 'Pittsburgh', country: 'United States', adminCode: 'PA', lat: 40.4406, lng: -79.9959, timezone: 'America/New_York', population: 300431 },
   { id: 'atl', name: 'Atlanta', country: 'United States', adminCode: 'GA', lat: 33.749, lng: -84.388, timezone: 'America/New_York', population: 500000 },
   { id: 'tor', name: 'Toronto', country: 'Canada', adminCode: 'ON', lat: 43.6532, lng: -79.3832, timezone: 'America/Toronto', population: 2930000 },
+  { id: 'que', name: 'Quebec City', country: 'Canada', adminCode: 'QC', lat: 46.8139, lng: -71.208, timezone: 'America/Toronto', population: 549459 },
   { id: 'van', name: 'Vancouver', country: 'Canada', adminCode: 'BC', lat: 49.2827, lng: -123.1207, timezone: 'America/Vancouver', population: 675000 },
   { id: 'mtl', name: 'Montreal', country: 'Canada', adminCode: 'QC', lat: 45.5017, lng: -73.5673, timezone: 'America/Toronto', population: 1780000 },
   { id: 'mex', name: 'Mexico City', country: 'Mexico', lat: 19.4326, lng: -99.1332, timezone: 'America/Mexico_City', population: 9200000 },
