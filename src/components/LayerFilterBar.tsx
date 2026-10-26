@@ -99,7 +99,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
   favoritesCount = 0,
   mapTileStyle,
   onChangeMapTileStyle,
-  calculationMethod = 'in_mundo',
+  calculationMethod = 'in_zodiaco',
   onChangeCalculationMethod,
   isRecalculating = false,
   showConjunctions = true,

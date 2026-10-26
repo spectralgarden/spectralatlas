@@ -400,7 +400,7 @@ export default function App() {
       const saved = localStorage.getItem('spectral_atlas_calc_method');
       if (saved === 'in_zodiaco' || saved === 'in_mundo') return saved;
     } catch (e) {}
-    return 'in_mundo';
+    return 'in_zodiaco';
   });
 
   const [isSwitchingMethod, setIsSwitchingMethod] = useState(false);
