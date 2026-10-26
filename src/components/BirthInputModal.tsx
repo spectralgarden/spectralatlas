@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BirthData, CityData } from '../types/astronomy';
 import { WORLD_CITIES } from '../constants/worldCities';
-import { getTimezoneOffsetAtBirth } from '../utils/timezone';
+import { getTimezoneOffsetAtBirth, resolveTimezoneForLocation } from '../utils/timezone';
 
 interface BirthInputModalProps {
   isOpen: boolean;
@@ -74,7 +74,7 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
         country: active.country,
         lat: active.lat,
         lng: active.lng,
-        timezone: active.timezone,
+        timezone: resolveTimezoneForLocation(active.timezone, active.lat, active.lng),
         population: 0,
       });
     } else if (!active && isOpen) {
@@ -85,7 +85,11 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
 
   useEffect(() => {
     if (!selectedCity || !date || !time) return;
-    const offset = getTimezoneOffsetAtBirth(date, time, selectedCity.timezone);
+    const offset = getTimezoneOffsetAtBirth(
+      date,
+      time,
+      resolveTimezoneForLocation(selectedCity.timezone, selectedCity.lat, selectedCity.lng)
+    );
     if (offset !== null) setCustomTzOffset(offset);
   }, [selectedCity, date, time]);
 
@@ -170,12 +174,13 @@ export const BirthInputModal: React.FC<BirthInputModalProps> = ({
   ].slice(0, 7);
 
   const handleSelectCity = (c: CityData) => {
-    setSelectedCity(c);
+    const timezone = resolveTimezoneForLocation(c.timezone, c.lat, c.lng);
+    setSelectedCity({ ...c, timezone });
     setSearchQuery(`${c.name}, ${c.country}`);
     setCustomLat(c.lat.toFixed(4));
     setCustomLng(c.lng.toFixed(4));
-    const offset = getTimezoneOffsetFromLocation(c.lat, c.lng);
-    setCustomTzOffset(offset);
+    const offset = getTimezoneOffsetAtBirth(date, time, timezone);
+    setCustomTzOffset(offset ?? getTimezoneOffsetFromLocation(c.lat, c.lng));
     setLiveResults([]);
   };
 

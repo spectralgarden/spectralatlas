@@ -20,7 +20,7 @@ import {
 } from '../types/astronomy';
 import { PLANET_DEFINITIONS, ZODIAC_SIGNS } from '../constants/celestialData';
 import { WORLD_CITIES } from '../constants/worldCities';
-import { getTimezoneOffsetAtBirth } from '../utils/timezone';
+import { getTimezoneOffsetAtBirth, resolveTimezoneForLocation } from '../utils/timezone';
 
 const DEG2RAD = Math.PI / 180;
 const RAD2DEG = 180 / Math.PI;
@@ -1657,7 +1657,11 @@ export function computeAstrocartographySuite(
   // Exact UTC conversion handling day/month/leap year rollovers cleanly
   const utcDate = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
   const timezoneOffset =
-    getTimezoneOffsetAtBirth(birthData.date, birthData.time, birthData.timezone) ??
+    getTimezoneOffsetAtBirth(
+      birthData.date,
+      birthData.time,
+      resolveTimezoneForLocation(birthData.timezone, birthData.lat, birthData.lng)
+    ) ??
     birthData.timezoneOffsetHours;
   const totalOffsetMinutes = Math.round(timezoneOffset * 60);
   const totalMinutes = localHour * 60 + localMin - totalOffsetMinutes;
