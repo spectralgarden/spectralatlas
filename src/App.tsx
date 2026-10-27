@@ -582,7 +582,6 @@ export default function App() {
       activeLocation,
       visiblePrimaryLines,
       primaryAtlas.parans,
-      primaryAtlas.crossings,
       radiusKm
     );
   }, [activeLocation, primaryAtlas, visiblePrimaryLines, radiusKm]);
@@ -1176,7 +1175,6 @@ export default function App() {
         onClose={() => setIsTopCitiesOpen(false)}
         lines={primaryAtlas.lines}
         parans={primaryAtlas.parans}
-        crossings={primaryAtlas.crossings}
         radiusKm={radiusKm}
         onSelectCity={(city) => {
           setReturnToTopCities(true);

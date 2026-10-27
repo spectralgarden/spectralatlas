@@ -4,7 +4,6 @@ import {
   CityData,
   LifeCategory,
   ParanLine,
-  PlanetaryCrossing,
 } from '../types/astronomy';
 import { calculateLocationScore } from '../engine/locationScoring';
 import { PLANET_DEFINITIONS } from '../constants/celestialData';
@@ -15,7 +14,6 @@ interface TopCitiesDrawerProps {
   onClose: () => void;
   lines: AstrocartographyLine[];
   parans?: ParanLine[];
-  crossings?: PlanetaryCrossing[];
   radiusKm?: number;
   onSelectCity: (city: CityData) => void;
   activeCityId?: string;
@@ -44,7 +42,6 @@ export const TopCitiesDrawer: React.FC<TopCitiesDrawerProps> = ({
   onClose,
   lines,
   parans = [],
-  crossings = [],
   radiusKm = 350,
   onSelectCity,
   activeCityId,
@@ -62,7 +59,6 @@ export const TopCitiesDrawer: React.FC<TopCitiesDrawerProps> = ({
         { lat: city.lat, lng: city.lng },
         lines,
         parans,
-        crossings,
         radiusKm
       );
 
@@ -140,7 +136,7 @@ export const TopCitiesDrawer: React.FC<TopCitiesDrawerProps> = ({
         tags: Array.from(new Set(tags)),
       };
     });
-  }, [lines, parans, crossings, radiusKm]);
+  }, [lines, parans, radiusKm]);
 
   // Filtered and ranked cities
   const filteredCities = useMemo(() => {

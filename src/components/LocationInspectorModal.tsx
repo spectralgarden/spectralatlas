@@ -861,6 +861,11 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                           <div className="text-[11px] text-slate-400 mt-0.5">
                             Coordinates: {c.lat}°, {c.lng}° {c.nearestCity ? `• Near ${c.nearestCity}` : ''}
                           </div>
+                          {c.distanceToLine1Km !== undefined && c.distanceToLine2Km !== undefined && (
+                            <div className="text-[11px] text-slate-400 mt-0.5">
+                              Location to lines: {PLANET_DEFINITIONS[c.planet1].name} {c.aspectType1 ? `${c.aspectType1.toUpperCase()} ` : ''}{c.angle1} {c.distanceToLine1Km} km • {PLANET_DEFINITIONS[c.planet2].name} {c.aspectType2 ? `${c.aspectType2.toUpperCase()} ` : ''}{c.angle2} {c.distanceToLine2Km} km
+                            </div>
+                          )}
                         </div>
                         <span
                           className={`text-[10px] font-mono px-2 py-0.5 rounded ${

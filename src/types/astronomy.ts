@@ -195,13 +195,17 @@ export interface PlanetaryCrossing {
   lng: number;
   planet1: PlanetId;
   angle1: AngleType;
+  aspectType1?: AspectLineType;
   planet2: PlanetId;
   angle2: AngleType;
+  aspectType2?: AspectLineType;
   nearestCity?: string;
   distanceToNearestCityKm?: number;
   country?: string;
   polarity: InfluencePolarity;
   summary: string;
+  distanceToLine1Km?: number;
+  distanceToLine2Km?: number;
   isHarmonious?: boolean;
   theme?: 'career' | 'love' | 'wealth' | 'transformation' | 'spirituality' | 'creativity';
 }

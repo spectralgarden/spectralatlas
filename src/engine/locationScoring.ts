@@ -21,28 +21,196 @@ import { PLANET_ANGLE_INTERPRETATIONS } from './interpretations';
 export function getDistanceToLineKm(coord: Coordinates, line: AstrocartographyLine): number {
   if (!line.points || line.points.length === 0) return Infinity;
 
-  // Exact fast calculation for vertical meridian lines (MC and IC)
-  if (line.angle === 'MC' || line.angle === 'IC') {
-    const lineLng = line.points[0].lng;
-    let dLng = Math.abs(coord.lng - lineLng);
-    if (dLng > 180) dLng = 360 - dLng;
-    const dist = dLng * (Math.PI / 180) * 6371 * Math.cos((coord.lat * Math.PI) / 180);
-    return Math.round(dist);
+  const radiansPerDegree = Math.PI / 180;
+  const latitudeScale = radiansPerDegree * 6371;
+  const longitudeScale = latitudeScale * Math.max(Math.abs(Math.cos(coord.lat * radiansPerDegree)), 0.01);
+  const toLocal = (point: Coordinates) => {
+    let longitudeDelta = point.lng - coord.lng;
+    if (longitudeDelta > 180) longitudeDelta -= 360;
+    if (longitudeDelta < -180) longitudeDelta += 360;
+    return {
+      x: longitudeDelta * longitudeScale,
+      y: (point.lat - coord.lat) * latitudeScale,
+    };
+  };
+
+  const localOrigin = { x: 0, y: 0 };
+  let minimumDistance = Infinity;
+  for (let index = 0; index < line.points.length - 1; index++) {
+    const firstCoordinate = line.points[index];
+    const secondCoordinate = line.points[index + 1];
+    if (Math.abs(secondCoordinate.lng - firstCoordinate.lng) > 180) continue;
+
+    const start = toLocal(firstCoordinate);
+    const end = toLocal(secondCoordinate);
+    const segment = { x: end.x - start.x, y: end.y - start.y };
+    const segmentLengthSquared = segment.x * segment.x + segment.y * segment.y;
+    const projection =
+      segmentLengthSquared === 0
+        ? 0
+        : Math.max(
+            0,
+            Math.min(
+              1,
+              ((localOrigin.x - start.x) * segment.x + (localOrigin.y - start.y) * segment.y) /
+                segmentLengthSquared
+            )
+          );
+    const nearestPoint = {
+      x: start.x + projection * segment.x,
+      y: start.y + projection * segment.y,
+    };
+    minimumDistance = Math.min(
+      minimumDistance,
+      Math.hypot(nearestPoint.x, nearestPoint.y)
+    );
   }
 
-  let minDistance = Infinity;
-  for (let i = 0; i < line.points.length; i++) {
-    const pt = line.points[i];
-    // Fast latitude filter: 1 deg latitude ≈ 111 km
-    const latDiffKm = Math.abs(coord.lat - pt.lat) * 111;
-    if (latDiffKm > minDistance) continue;
+  if (line.points.length === 1) {
+    const point = toLocal(line.points[0]);
+    minimumDistance = Math.hypot(point.x, point.y);
+  }
+  return Math.round(minimumDistance);
+}
 
-    const dist = haversineDistanceKm(coord.lat, coord.lng, pt.lat, pt.lng);
-    if (dist < minDistance) {
-      minDistance = dist;
+function calculateCrossingsNearLocation(
+  coord: Coordinates,
+  lines: AstrocartographyLine[],
+  maxRadiusKm: number
+): PlanetaryCrossing[] {
+  const searchRadiusKm = maxRadiusKm + 200;
+  const latitudeScale = (Math.PI / 180) * 6371;
+  const longitudeFactor = Math.max(Math.cos((coord.lat * Math.PI) / 180), 0.01);
+  const longitudeScale = latitudeScale * longitudeFactor;
+  const toLocal = (point: Coordinates) => {
+    let longitudeDelta = point.lng - coord.lng;
+    if (longitudeDelta > 180) longitudeDelta -= 360;
+    if (longitudeDelta < -180) longitudeDelta += 360;
+    return {
+      x: longitudeDelta * longitudeScale,
+      y: (point.lat - coord.lat) * latitudeScale,
+    };
+  };
+  const searchRadiusX = searchRadiusKm;
+  const candidateLines = lines.flatMap((line) => {
+    if (line.points.length < 2) return [];
+    const points = line.points.map(toLocal);
+    const segments = [];
+    for (let index = 0; index < points.length - 1; index++) {
+      if (Math.abs(line.points[index + 1].lng - line.points[index].lng) > 180) continue;
+      const start = points[index];
+      const end = points[index + 1];
+      if (
+        Math.max(start.x, end.x) < -searchRadiusX ||
+        Math.min(start.x, end.x) > searchRadiusX ||
+        Math.max(start.y, end.y) < -searchRadiusKm ||
+        Math.min(start.y, end.y) > searchRadiusKm
+      ) {
+        continue;
+      }
+      segments.push({ start, end });
+    }
+    return segments.length > 0 ? [{ line, segments }] : [];
+  });
+
+  const found: PlanetaryCrossing[] = [];
+  const crossingIds = new Set<string>();
+  for (let firstIndex = 0; firstIndex < candidateLines.length; firstIndex++) {
+    const firstCandidate = candidateLines[firstIndex];
+    const firstLine = firstCandidate.line;
+    for (let secondIndex = firstIndex + 1; secondIndex < candidateLines.length; secondIndex++) {
+      const secondCandidate = candidateLines[secondIndex];
+      const secondLine = secondCandidate.line;
+      if (firstLine.planetId === secondLine.planetId) continue;
+
+      for (const firstSegment of firstCandidate.segments) {
+        const { start: a, end: b } = firstSegment;
+        for (const secondSegment of secondCandidate.segments) {
+          const { start: c, end: d } = secondSegment;
+
+          if (
+            Math.max(a.x, b.x) < Math.min(c.x, d.x) ||
+            Math.max(c.x, d.x) < Math.min(a.x, b.x) ||
+            Math.max(a.y, b.y) < Math.min(c.y, d.y) ||
+            Math.max(c.y, d.y) < Math.min(a.y, b.y)
+          ) {
+            continue;
+          }
+
+          const firstVector = { x: b.x - a.x, y: b.y - a.y };
+          const secondVector = { x: d.x - c.x, y: d.y - c.y };
+          const denominator = firstVector.x * secondVector.y - firstVector.y * secondVector.x;
+          if (Math.abs(denominator) < 1e-9) continue;
+
+          const betweenStarts = { x: c.x - a.x, y: c.y - a.y };
+          const firstRatio =
+            (betweenStarts.x * secondVector.y - betweenStarts.y * secondVector.x) / denominator;
+          const secondRatio =
+            (betweenStarts.x * firstVector.y - betweenStarts.y * firstVector.x) / denominator;
+          if (
+            firstRatio < 0 ||
+            firstRatio > 1 ||
+            secondRatio < 0 ||
+            secondRatio > 1
+          ) {
+            continue;
+          }
+
+          const crossingX = a.x + firstRatio * firstVector.x;
+          const crossingY = a.y + firstRatio * firstVector.y;
+          const crossingLat = coord.lat + crossingY / latitudeScale;
+          let crossingLng = coord.lng + crossingX / longitudeScale;
+          if (crossingLng > 180) crossingLng -= 360;
+          if (crossingLng < -180) crossingLng += 360;
+          const distanceKm = haversineDistanceKm(coord.lat, coord.lng, crossingLat, crossingLng);
+          if (distanceKm > maxRadiusKm) continue;
+
+          const firstAspect = firstLine.aspectType
+            ? `${firstLine.aspectType.toUpperCase()} ${firstLine.angle}`
+            : firstLine.angle;
+          const secondAspect = secondLine.aspectType
+            ? `${secondLine.aspectType.toUpperCase()} ${secondLine.angle}`
+            : secondLine.angle;
+          const firstPlanet = PLANET_DEFINITIONS[firstLine.planetId].name;
+          const secondPlanet = PLANET_DEFINITIONS[secondLine.planetId].name;
+          const isHarmonious =
+            firstLine.polarity === 'harmonious' && secondLine.polarity === 'harmonious';
+          const polarity =
+            isHarmonious
+              ? 'harmonious'
+              : firstLine.polarity === 'challenging' || secondLine.polarity === 'challenging'
+                ? 'challenging'
+                : 'neutral';
+
+          const id = `crossing_${firstLine.id}_${secondLine.id}_${crossingLat.toFixed(3)}_${crossingLng.toFixed(3)}`;
+          if (crossingIds.has(id)) continue;
+          crossingIds.add(id);
+          found.push({
+            id,
+            lat: Number(crossingLat.toFixed(4)),
+            lng: Number(crossingLng.toFixed(4)),
+            planet1: firstLine.planetId,
+            angle1: firstLine.angle,
+            aspectType1: firstLine.aspectType,
+            planet2: secondLine.planetId,
+            angle2: secondLine.angle,
+            aspectType2: secondLine.aspectType,
+            distanceToLine1Km: getDistanceToLineKm(coord, firstLine),
+            distanceToLine2Km: getDistanceToLineKm(coord, secondLine),
+            polarity,
+            isHarmonious,
+            summary: `${firstPlanet} ${firstAspect} line intersects ${secondPlanet} ${secondAspect} line (${Math.round(distanceKm)} km to intersection).`,
+          });
+        }
+      }
     }
   }
-  return Math.round(minDistance);
+
+  return found.sort(
+    (first, second) =>
+      haversineDistanceKm(coord.lat, coord.lng, first.lat, first.lng) -
+      haversineDistanceKm(coord.lat, coord.lng, second.lat, second.lng)
+  );
 }
 
 /**
@@ -52,7 +220,6 @@ export function calculateLocationScore(
   coord: Coordinates,
   lines: AstrocartographyLine[],
   parans: ParanLine[],
-  crossings: PlanetaryCrossing[],
   maxRadiusKm: number = 700
 ): LocationScore {
   const categoryScores: Record<LifeCategory, number> = {
@@ -165,9 +332,7 @@ export function calculateLocationScore(
   }
 
   // Nearby Crossings within radius
-  const nearbyCrossings = crossings.filter(
-    (c) => haversineDistanceKm(coord.lat, coord.lng, c.lat, c.lng) <= maxRadiusKm
-  );
+  const nearbyCrossings = calculateCrossingsNearLocation(coord, lines, maxRadiusKm);
 
   // Clamp category scores between 10 and 99
   let totalScore = 0;
@@ -187,7 +352,7 @@ export function calculateLocationScore(
     categories: categoryScores,
     topInfluences: topInfluences.slice(0, 8),
     activeParans: activeParans.slice(0, 5),
-    nearbyCrossings: nearbyCrossings.slice(0, 5),
+    nearbyCrossings: nearbyCrossings.slice(0, 12),
   };
 }
 

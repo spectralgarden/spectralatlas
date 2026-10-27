@@ -1469,8 +1469,12 @@ export function calculatePlanetaryCrossings(lines: AstrocartographyLine[]): Plan
   };
 
   // MC/IC are vertical meridians, ASC/DSC are curved lines
-  const verticalLines = lines.filter((l) => (l.angle === 'MC' || l.angle === 'IC') && !l.isAspectLine);
-  const curvedLines = lines.filter((l) => (l.angle === 'ASC' || l.angle === 'DSC') && !l.isAspectLine);
+  const verticalLines = lines.filter(
+    (l) => (l.angle === 'MC' || l.angle === 'IC') && !l.isAspectLine && l.points.length > 1
+  );
+  const curvedLines = lines.filter(
+    (l) => (l.angle === 'ASC' || l.angle === 'DSC') && !l.isAspectLine && l.points.length > 1
+  );
 
   // 1. Vertical with Curved lines
   for (const vLine of verticalLines) {
