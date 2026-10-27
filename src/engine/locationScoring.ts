@@ -24,25 +24,27 @@ export function getDistanceToLineKm(coord: Coordinates, line: AstrocartographyLi
   const radiansPerDegree = Math.PI / 180;
   const latitudeScale = radiansPerDegree * 6371;
   const longitudeScale = latitudeScale * Math.max(Math.abs(Math.cos(coord.lat * radiansPerDegree)), 0.01);
-  const toLocal = (point: Coordinates) => {
-    let longitudeDelta = point.lng - coord.lng;
+  const normalizeLongitudeDelta = (longitudeDelta: number) => {
     if (longitudeDelta > 180) longitudeDelta -= 360;
     if (longitudeDelta < -180) longitudeDelta += 360;
-    return {
-      x: longitudeDelta * longitudeScale,
-      y: (point.lat - coord.lat) * latitudeScale,
-    };
+    return longitudeDelta;
   };
 
-  const localOrigin = { x: 0, y: 0 };
   let minimumDistance = Infinity;
   for (let index = 0; index < line.points.length - 1; index++) {
     const firstCoordinate = line.points[index];
     const secondCoordinate = line.points[index + 1];
-    if (Math.abs(secondCoordinate.lng - firstCoordinate.lng) > 180) continue;
 
-    const start = toLocal(firstCoordinate);
-    const end = toLocal(secondCoordinate);
+    const startLongitudeDelta = normalizeLongitudeDelta(firstCoordinate.lng - coord.lng);
+    const segmentLongitudeDelta = normalizeLongitudeDelta(secondCoordinate.lng - firstCoordinate.lng);
+    const start = {
+      x: startLongitudeDelta * longitudeScale,
+      y: (firstCoordinate.lat - coord.lat) * latitudeScale,
+    };
+    const end = {
+      x: (startLongitudeDelta + segmentLongitudeDelta) * longitudeScale,
+      y: (secondCoordinate.lat - coord.lat) * latitudeScale,
+    };
     const segment = { x: end.x - start.x, y: end.y - start.y };
     const segmentLengthSquared = segment.x * segment.x + segment.y * segment.y;
     const projection =
@@ -52,8 +54,7 @@ export function getDistanceToLineKm(coord: Coordinates, line: AstrocartographyLi
             0,
             Math.min(
               1,
-              ((localOrigin.x - start.x) * segment.x + (localOrigin.y - start.y) * segment.y) /
-                segmentLengthSquared
+              (-start.x * segment.x - start.y * segment.y) / segmentLengthSquared
             )
           );
     const nearestPoint = {
@@ -67,8 +68,12 @@ export function getDistanceToLineKm(coord: Coordinates, line: AstrocartographyLi
   }
 
   if (line.points.length === 1) {
-    const point = toLocal(line.points[0]);
-    minimumDistance = Math.hypot(point.x, point.y);
+    const point = line.points[0];
+    const longitudeDelta = normalizeLongitudeDelta(point.lng - coord.lng);
+    minimumDistance = Math.hypot(
+      longitudeDelta * longitudeScale,
+      (point.lat - coord.lat) * latitudeScale
+    );
   }
   return Math.round(minimumDistance);
 }
@@ -82,24 +87,28 @@ function calculateCrossingsNearLocation(
   const latitudeScale = (Math.PI / 180) * 6371;
   const longitudeFactor = Math.max(Math.cos((coord.lat * Math.PI) / 180), 0.01);
   const longitudeScale = latitudeScale * longitudeFactor;
-  const toLocal = (point: Coordinates) => {
-    let longitudeDelta = point.lng - coord.lng;
+  const normalizeLongitudeDelta = (longitudeDelta: number) => {
     if (longitudeDelta > 180) longitudeDelta -= 360;
     if (longitudeDelta < -180) longitudeDelta += 360;
-    return {
-      x: longitudeDelta * longitudeScale,
-      y: (point.lat - coord.lat) * latitudeScale,
-    };
+    return longitudeDelta;
   };
   const searchRadiusX = searchRadiusKm;
   const candidateLines = lines.flatMap((line) => {
     if (line.points.length < 2) return [];
-    const points = line.points.map(toLocal);
     const segments = [];
-    for (let index = 0; index < points.length - 1; index++) {
-      if (Math.abs(line.points[index + 1].lng - line.points[index].lng) > 180) continue;
-      const start = points[index];
-      const end = points[index + 1];
+    for (let index = 0; index < line.points.length - 1; index++) {
+      const firstPoint = line.points[index];
+      const secondPoint = line.points[index + 1];
+      const startLongitudeDelta = normalizeLongitudeDelta(firstPoint.lng - coord.lng);
+      const segmentLongitudeDelta = normalizeLongitudeDelta(secondPoint.lng - firstPoint.lng);
+      const start = {
+        x: startLongitudeDelta * longitudeScale,
+        y: (firstPoint.lat - coord.lat) * latitudeScale,
+      };
+      const end = {
+        x: (startLongitudeDelta + segmentLongitudeDelta) * longitudeScale,
+        y: (secondPoint.lat - coord.lat) * latitudeScale,
+      };
       if (
         Math.max(start.x, end.x) < -searchRadiusX ||
         Math.min(start.x, end.x) > searchRadiusX ||
