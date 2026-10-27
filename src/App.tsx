@@ -496,6 +496,32 @@ export default function App() {
     [isGeodeticEnabled, primaryAtlas, calculationMethod]
   );
 
+  const visiblePrimaryLines = useMemo(
+    () =>
+      displayedPrimaryLines.filter((line) => {
+        if (!filteredPlanets.includes(line.planetId) || !filteredAngles.includes(line.angle)) {
+          return false;
+        }
+        if (line.isAspectLine) {
+          if (line.polarity === 'harmonious' && !showHarmoniousAspects) return false;
+          if (line.polarity === 'challenging' && !showDisharmoniousAspects) return false;
+          if (line.harmonic && !activeHarmonics.includes(line.harmonic)) return false;
+        } else if (!showConjunctions) {
+          return false;
+        }
+        return true;
+      }),
+    [
+      displayedPrimaryLines,
+      filteredPlanets,
+      filteredAngles,
+      showHarmoniousAspects,
+      showDisharmoniousAspects,
+      activeHarmonics,
+      showConjunctions,
+    ]
+  );
+
   // Compute Local Space Lines (Horizon Coordinate Great Circle Bearings)
   const localSpaceLines = useMemo(() => {
     if (!activeProfile || !primaryAtlas || primaryAtlas.natalPositions.length === 0) return [];
@@ -554,12 +580,12 @@ export default function App() {
     if (!activeLocation || primaryAtlas.lines.length === 0) return null;
     return calculateLocationScore(
       activeLocation,
-      primaryAtlas.lines,
+      visiblePrimaryLines.filter((line) => !line.isAspectLine),
       primaryAtlas.parans,
       primaryAtlas.crossings,
       radiusKm
     );
-  }, [activeLocation, primaryAtlas, radiusKm]);
+  }, [activeLocation, primaryAtlas, visiblePrimaryLines, radiusKm]);
 
   // Compute Relocation Comparison at active target location
   const relocationComparison: RelocationComparison | null = useMemo(() => {
@@ -937,7 +963,7 @@ export default function App() {
 
         {/* High-Resolution Real OpenStreetMap / Carto Leaflet Map */}
         <RealLeafletMapView
-          lines={displayedPrimaryLines}
+          lines={visiblePrimaryLines}
           transitLines={displayedTransitLines}
           transitTriggers={transitData.transitTriggers}
           parans={primaryAtlas.parans}
