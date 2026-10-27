@@ -367,7 +367,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                 Filters ({selectedPlanets.length}) {selectedPlanets.length < allPlanetKeys.length || selectedAngles.length < 4 ? '•' : ''}
               </button>
 
-            {/* Quick Harmonious Aspects Toggle */}
+            {/* Quick Harmonious Aspect Lines Toggle */}
             {onToggleHarmoniousAspects && (
               <button
                 onClick={onToggleHarmoniousAspects}
@@ -376,16 +376,16 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                     ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-xs'
                     : 'bg-slate-800/80 hover:bg-slate-800 text-slate-400 border-slate-700'
                 }`}
-                title="Toggle Harmonious Aspect Lines (Trines 120° & Sextiles 60°)"
+                title="Supplementary aspect overlay: trine and sextile lines. Turn off to compare standard astrocartography lines."
               >
                 <span className={showHarmoniousAspects ? 'text-emerald-400 font-bold' : ''}>
                   {showHarmoniousAspects ? '✓' : '+'}
                 </span>
-                <span>Harmonious</span>
+                <span>Harmonic +</span>
               </button>
             )}
 
-            {/* Quick Disharmonious Aspects Toggle */}
+            {/* Quick Challenging Aspect Lines Toggle */}
             {onToggleDisharmoniousAspects && (
               <button
                 onClick={onToggleDisharmoniousAspects}
@@ -394,12 +394,12 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                     ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 shadow-xs'
                     : 'bg-slate-800/80 hover:bg-slate-800 text-slate-400 border-slate-700'
                 }`}
-                title="Toggle Disharmonious Aspect Lines (Squares 90° & Semi-Squares 45°)"
+                title="Supplementary aspect overlay: square and semi-square lines. Turn off to compare standard astrocartography lines."
               >
                 <span className={showDisharmoniousAspects ? 'text-rose-400 font-bold' : ''}>
                   {showDisharmoniousAspects ? '✓' : '+'}
                 </span>
-                <span>Disharmonious</span>
+                <span>Harmonic −</span>
               </button>
             )}
 
@@ -836,7 +836,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                   }`}
                 >
                   <div className="font-bold flex items-center justify-between">
-                    <span>Harmonious</span>
+                    <span>Harmonic +</span>
                     <span className="text-[10px]">{showHarmoniousAspects ? 'ON' : 'OFF'}</span>
                   </div>
                   <div className="text-[9px] opacity-75 mt-0.5">120° Trine / 60° Sext</div>
@@ -854,7 +854,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                   }`}
                 >
                   <div className="font-bold flex items-center justify-between">
-                    <span>Disharmonious</span>
+                    <span>Harmonic −</span>
                     <span className="text-[10px]">{showDisharmoniousAspects ? 'ON' : 'OFF'}</span>
                   </div>
                   <div className="text-[9px] opacity-75 mt-0.5">90° Sq / 45° Semi-sq</div>

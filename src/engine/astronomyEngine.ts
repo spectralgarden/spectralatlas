@@ -923,7 +923,9 @@ export function generateAspectLines(
       const absOffset = Math.abs(offset);
       const correctionTag = is3D ? ' [3D Spatial]' : '';
 
-      if (method === 'in_zodiaco') {
+      if (method === 'in_zodiaco' || !is3D) {
+        // Standard aspects to chart angles are measured in ecliptic longitude,
+        // even when the primary planetary lines use the physical In Mundo sky.
         const lamAspect = normalizeDeg(planetPos.longitude + offset);
         const lamAspectRad = lamAspect * DEG2RAD;
         const ramcAspect = normalizeDeg(
@@ -942,7 +944,7 @@ export function generateAspectLines(
           angle: 'MC',
           color: cfg.color,
           points: mcPoints,
-          description: `${planetPos.name} ${cfg.type.toUpperCase()} (${offsetSign}${absOffset.toFixed(1)}°) MC${correctionTag} — ${cfg.description}`,
+          description: `${planetPos.name} ${cfg.type.toUpperCase()} (${offsetSign}${absOffset.toFixed(1)}°) MC [Ecliptic aspect; ${method === 'in_mundo' ? 'In Mundo' : 'In Zodiaco'}${correctionTag}] — ${cfg.description}`,
           polarity: cfg.polarity,
           chartOwner,
           method,
@@ -960,7 +962,7 @@ export function generateAspectLines(
         const maxLat = Math.min(80, Math.max(10, 90 - Math.abs(dec0) - 0.5));
         const ascPoints: Coordinates[] = [];
 
-        for (let lat = -maxLat; lat <= maxLat; lat += 1.5) {
+        for (let lat = -maxLat; lat <= maxLat; lat += 0.5) {
           const latRad = lat * DEG2RAD;
           const cosH = -Math.tan(latRad) * Math.tan(dec0Rad);
           if (Math.abs(cosH) <= 1.0) {
@@ -977,7 +979,7 @@ export function generateAspectLines(
             angle: 'ASC',
             color: cfg.color,
             points: ascPoints,
-            description: `${planetPos.name} ${cfg.type.toUpperCase()} (${offsetSign}${absOffset.toFixed(1)}°) ASC${correctionTag} — ${cfg.description}`,
+            description: `${planetPos.name} ${cfg.type.toUpperCase()} (${offsetSign}${absOffset.toFixed(1)}°) ASC [Ecliptic aspect; ${method === 'in_mundo' ? 'In Mundo' : 'In Zodiaco'}${correctionTag}] — ${cfg.description}`,
             polarity: cfg.polarity,
             chartOwner,
             method,
