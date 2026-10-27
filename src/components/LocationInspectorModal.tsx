@@ -86,7 +86,6 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
 
   // Compute effective verdict
   const verdict: RelocationVerdict = useMemo(() => {
-    if (relocation?.verdict) return relocation.verdict;
     if (relocation) return evaluateRelocationVerdict(relocation, score);
     return evaluateRelocationVerdict(
       {
@@ -416,7 +415,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                   <div className="p-3 rounded-lg bg-slate-900/80 border border-emerald-500/20 space-y-1.5">
                     <div className="font-semibold text-emerald-300 flex items-center gap-1.5">
                       <span>✓</span>
-                      <span>Auspicious Aspects (Why It's Good)</span>
+                      <span>Nearby Line Influences (Why It's Good)</span>
                     </div>
                     <ul className="space-y-1 text-slate-300">
                       {verdict.pros.map((pro, i) => (
@@ -431,7 +430,7 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                   <div className="p-3 rounded-lg bg-slate-900/80 border border-rose-500/20 space-y-1.5">
                     <div className="font-semibold text-rose-300 flex items-center gap-1.5">
                       <span>⚠️</span>
-                      <span>Friction & Caution Points (Why It's Challenging)</span>
+                      <span>Nearby Line Influences (Potential Challenges)</span>
                     </div>
                     <ul className="space-y-1 text-slate-300">
                       {verdict.cons.map((con, i) => (

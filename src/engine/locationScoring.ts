@@ -284,7 +284,6 @@ export function generateRelocationComparison(
     significantShifts,
   };
 
-  comparison.verdict = evaluateRelocationVerdict(comparison);
   return comparison;
 }
 
@@ -302,73 +301,74 @@ export function evaluateRelocationVerdict(
 
   let goodnessBalance = 0; // positive = benefic, negative = challenging
 
-  // 1. Evaluate angular proximity from relocated chart
-  for (const shift of relocation.significantShifts) {
-    if (shift.angularType && shift.angularProximityDeg !== undefined && shift.angularProximityDeg <= 6.0) {
-      const pId = shift.planetId;
-      const def = PLANET_DEFINITIONS[pId];
-      const ang = shift.angularType;
-      const orbStr = `${shift.angularProximityDeg.toFixed(1)}° orb`;
+  // Angular ecliptic proximity is not the same as geographic distance to an astrocartography line.
+  if (!locationScore) {
+    for (const shift of relocation.significantShifts) {
+      if (shift.angularType && shift.angularProximityDeg !== undefined && shift.angularProximityDeg <= 6.0) {
+        const pId = shift.planetId;
+        const ang = shift.angularType;
+        const orbStr = `${shift.angularProximityDeg.toFixed(1)}° orb`;
 
-      if (pId === 'venus') {
-        goodnessBalance += 30;
-        keyBenefics.push(`Venus on ${ang}`);
-        pros.push(`✦ Venus on ${ang} (${orbStr}): Supreme magnetism, social grace, romantic ease, and effortless aesthetic/financial harmony.`);
-      } else if (pId === 'jupiter') {
-        goodnessBalance += 35;
-        keyBenefics.push(`Jupiter on ${ang}`);
-        pros.push(`✦ Jupiter on ${ang} (${orbStr}): Expansive luck, exceptional benevolence, educational opportunities, and rapid worldly advancement.`);
-      } else if (pId === 'sun') {
-        goodnessBalance += 25;
-        keyBenefics.push(`Sun on ${ang}`);
-        pros.push(`✦ Sun on ${ang} (${orbStr}): High visibility, radiant health, natural executive leadership, and deep sense of core purpose.`);
-      } else if (pId === 'ceres') {
-        goodnessBalance += 18;
-        keyBenefics.push(`Ceres on ${ang}`);
-        pros.push(`✦ Ceres on ${ang} (${orbStr}): Profound nurturance, physical restoration, abundant nutrition, and feelings of maternal safety.`);
-      } else if (pId === 'juno') {
-        goodnessBalance += 18;
-        keyBenefics.push(`Juno on ${ang}`);
-        pros.push(`✦ Juno on ${ang} (${orbStr}): Auspicious soulmate encounters, reciprocal commitment, and marital equality.`);
-      } else if (pId === 'fortune') {
-        goodnessBalance += 20;
-        keyBenefics.push(`Part of Fortune on ${ang}`);
-        pros.push(`✦ Part of Fortune on ${ang} (${orbStr}): Serendipitous opportunities, material prosperity, and innate flow.`);
-      } else if (pId === 'saturn') {
-        goodnessBalance -= 28;
-        keyMalefics.push(`Saturn on ${ang}`);
-        cons.push(`⚠️ Saturn on ${ang} (${orbStr}): Heavy burdens of duty, potential loneliness, administrative delays, and austere pressure.`);
-      } else if (pId === 'mars') {
-        goodnessBalance -= 22;
-        keyMalefics.push(`Mars on ${ang}`);
-        cons.push(`⚠️ Mars on ${ang} (${orbStr}): High interpersonal friction, burnout risks, impulsiveness, and acute competition.`);
-      } else if (pId === 'pluto') {
-        goodnessBalance -= 20;
-        keyMalefics.push(`Pluto on ${ang}`);
-        cons.push(`⚠️ Pluto on ${ang} (${orbStr}): Intense psychological catharsis, power dynamics, and disruptive crisis/rebirth cycles.`);
-      } else if (pId === 'lilith') {
-        goodnessBalance -= 12;
-        keyMalefics.push(`Lilith on ${ang}`);
-        cons.push(`⚠️ Lilith on ${ang} (${orbStr}): Uncompromising raw rebellion, ostracization risks, and taboo friction.`);
-      } else if (pId === 'uranus') {
-        goodnessBalance += 5;
-        pros.push(`✦ Uranus on ${ang} (${orbStr}): Brilliant breakthroughs, radical personal liberation, and sudden innovative leaps.`);
-        cons.push(`⚠️ Uranus on ${ang} (${orbStr}): High unpredictability, restless nervous energy, and unstable living arrangements.`);
-      } else if (pId === 'neptune') {
-        goodnessBalance += 5;
-        pros.push(`✦ Neptune on ${ang} (${orbStr}): Mystical creative inspiration, spiritual bliss, and artistic sensitivity.`);
-        cons.push(`⚠️ Neptune on ${ang} (${orbStr}): Danger of illusions, fuzzy boundaries, lack of motivation, and deception.`);
-      } else if (pId === 'mercury') {
-        goodnessBalance += 15;
-        pros.push(`✦ Mercury on ${ang} (${orbStr}): Rapid intellectual networking, prolific commerce, and mental dexterity.`);
-      } else if (pId === 'moon') {
-        goodnessBalance += 15;
-        pros.push(`✦ Moon on ${ang} (${orbStr}): Deep emotional belonging, intuitive flow, and nourishing sanctuary.`);
+        if (pId === 'venus') {
+          goodnessBalance += 30;
+          keyBenefics.push(`Venus on ${ang}`);
+          pros.push(`✦ Venus on ${ang} (${orbStr}): Supreme magnetism, social grace, romantic ease, and effortless aesthetic/financial harmony.`);
+        } else if (pId === 'jupiter') {
+          goodnessBalance += 35;
+          keyBenefics.push(`Jupiter on ${ang}`);
+          pros.push(`✦ Jupiter on ${ang} (${orbStr}): Expansive luck, exceptional benevolence, educational opportunities, and rapid worldly advancement.`);
+        } else if (pId === 'sun') {
+          goodnessBalance += 25;
+          keyBenefics.push(`Sun on ${ang}`);
+          pros.push(`✦ Sun on ${ang} (${orbStr}): High visibility, radiant health, natural executive leadership, and deep sense of core purpose.`);
+        } else if (pId === 'ceres') {
+          goodnessBalance += 18;
+          keyBenefics.push(`Ceres on ${ang}`);
+          pros.push(`✦ Ceres on ${ang} (${orbStr}): Profound nurturance, physical restoration, abundant nutrition, and feelings of maternal safety.`);
+        } else if (pId === 'juno') {
+          goodnessBalance += 18;
+          keyBenefics.push(`Juno on ${ang}`);
+          pros.push(`✦ Juno on ${ang} (${orbStr}): Auspicious soulmate encounters, reciprocal commitment, and marital equality.`);
+        } else if (pId === 'fortune') {
+          goodnessBalance += 20;
+          keyBenefics.push(`Part of Fortune on ${ang}`);
+          pros.push(`✦ Part of Fortune on ${ang} (${orbStr}): Serendipitous opportunities, material prosperity, and innate flow.`);
+        } else if (pId === 'saturn') {
+          goodnessBalance -= 28;
+          keyMalefics.push(`Saturn on ${ang}`);
+          cons.push(`⚠️ Saturn on ${ang} (${orbStr}): Heavy burdens of duty, potential loneliness, administrative delays, and austere pressure.`);
+        } else if (pId === 'mars') {
+          goodnessBalance -= 22;
+          keyMalefics.push(`Mars on ${ang}`);
+          cons.push(`⚠️ Mars on ${ang} (${orbStr}): High interpersonal friction, burnout risks, impulsiveness, and acute competition.`);
+        } else if (pId === 'pluto') {
+          goodnessBalance -= 20;
+          keyMalefics.push(`Pluto on ${ang}`);
+          cons.push(`⚠️ Pluto on ${ang} (${orbStr}): Intense psychological catharsis, power dynamics, and disruptive crisis/rebirth cycles.`);
+        } else if (pId === 'lilith') {
+          goodnessBalance -= 12;
+          keyMalefics.push(`Lilith on ${ang}`);
+          cons.push(`⚠️ Lilith on ${ang} (${orbStr}): Uncompromising raw rebellion, ostracization risks, and taboo friction.`);
+        } else if (pId === 'uranus') {
+          goodnessBalance += 5;
+          pros.push(`✦ Uranus on ${ang} (${orbStr}): Brilliant breakthroughs, radical personal liberation, and sudden innovative leaps.`);
+          cons.push(`⚠️ Uranus on ${ang} (${orbStr}): High unpredictability, restless nervous energy, and unstable living arrangements.`);
+        } else if (pId === 'neptune') {
+          goodnessBalance += 5;
+          pros.push(`✦ Neptune on ${ang} (${orbStr}): Mystical creative inspiration, spiritual bliss, and artistic sensitivity.`);
+          cons.push(`⚠️ Neptune on ${ang} (${orbStr}): Danger of illusions, fuzzy boundaries, lack of motivation, and deception.`);
+        } else if (pId === 'mercury') {
+          goodnessBalance += 15;
+          pros.push(`✦ Mercury on ${ang} (${orbStr}): Rapid intellectual networking, prolific commerce, and mental dexterity.`);
+        } else if (pId === 'moon') {
+          goodnessBalance += 15;
+          pros.push(`✦ Moon on ${ang} (${orbStr}): Deep emotional belonging, intuitive flow, and nourishing sanctuary.`);
+        }
       }
     }
   }
 
-  // 2. Evaluate active terrestrial lines if locationScore is provided
+  // Evaluate only actual line distances when a map location score is available.
   if (locationScore) {
     for (const inf of locationScore.topInfluences) {
       const pDef = PLANET_DEFINITIONS[inf.planetId];
