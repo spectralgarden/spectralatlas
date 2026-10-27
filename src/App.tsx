@@ -580,7 +580,7 @@ export default function App() {
     if (!activeLocation || primaryAtlas.lines.length === 0) return null;
     return calculateLocationScore(
       activeLocation,
-      visiblePrimaryLines.filter((line) => !line.isAspectLine),
+      visiblePrimaryLines,
       primaryAtlas.parans,
       primaryAtlas.crossings,
       radiusKm

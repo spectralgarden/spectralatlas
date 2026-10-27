@@ -89,7 +89,12 @@ export function calculateLocationScore(
         distanceKm: dist,
         intensity,
         polarity: line.polarity,
-        summary: interpretation?.headline || `${pDef.name} on ${line.angle} line (${dist} km away)`,
+        summary: line.isAspectLine
+          ? line.description
+          : interpretation?.headline || `${pDef.name} on ${line.angle} line (${dist} km away)`,
+        isAspectLine: line.isAspectLine,
+        aspectType: line.aspectType,
+        harmonic: line.harmonic,
       });
 
       // Distribute points to categories based on nature

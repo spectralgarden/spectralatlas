@@ -216,6 +216,9 @@ export interface LocationScore {
     intensity: number; // 0 to 100
     polarity: InfluencePolarity;
     summary: string;
+    isAspectLine?: boolean;
+    aspectType?: AspectLineType;
+    harmonic?: number;
   }[];
   activeParans: ParanLine[];
   nearbyCrossings: PlanetaryCrossing[];

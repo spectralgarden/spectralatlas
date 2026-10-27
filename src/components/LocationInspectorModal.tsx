@@ -501,7 +501,9 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                 score.topInfluences.map((inf, idx) => {
                   const pDef = PLANET_DEFINITIONS[inf.planetId];
                   const angDef = ANGLE_DEFINITIONS[inf.angle];
-                  const deepInterp = PLANET_ANGLE_INTERPRETATIONS[inf.planetId]?.[inf.angle];
+                const deepInterp = inf.isAspectLine
+                  ? undefined
+                  : PLANET_ANGLE_INTERPRETATIONS[inf.planetId]?.[inf.angle];
 
                   return (
                     <div
@@ -518,11 +520,15 @@ export const LocationInspectorModal: React.FC<LocationInspectorModalProps> = ({
                           </span>
                           <div>
                             <div className="text-xs font-bold text-white tracking-wide">
-                              {pDef.name} on {inf.angle} ({angDef.name})
-                            </div>
-                            <div className="text-[10px] font-mono text-slate-400">
-                              Distance: {inf.distanceKm} km from line • Orb: ~{(inf.distanceKm / 111).toFixed(1)}°
-                            </div>
+                            {inf.isAspectLine
+                              ? `${pDef.name} ${inf.aspectType?.toUpperCase() ?? 'ASPECT'} ${inf.angle} (${angDef.name})`
+                              : `${pDef.name} on ${inf.angle} (${angDef.name})`}
+                          </div>
+                          <div className="text-[10px] font-mono text-slate-400">
+                            {inf.isAspectLine
+                              ? `Distance: ${inf.distanceKm} km from ${inf.aspectType ?? 'aspect'} line${inf.harmonic ? ` • Harmonic ${inf.harmonic}H` : ''}`
+                              : `Distance: ${inf.distanceKm} km from line • Orb: ~${(inf.distanceKm / 111).toFixed(1)}°`}
+                          </div>
                           </div>
                         </div>
 
