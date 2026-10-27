@@ -406,6 +406,9 @@ export const TutorialModal: React.FC<TutorialModalProps> = ({ isOpen, onClose })
                 <p className="text-xs text-slate-400">
                   Projects the planet purely onto the 2D ecliptic circle (0° Aries to 360° Pisces). Calculates where a relocated chart’s Ascendant or Midheaven degree is mathematically conjunct that zodiac degree.
                 </p>
+                <p className="text-xs text-cyan-200 mt-2">
+                  Because this projection treats the planet as if it were on the ecliptic, its MC/IC lines can shift from physical-sky maps for planets with high ecliptic latitude. Use In Mundo when comparing standard astrocartography lines with Astro.com.
+                </p>
               </div>
             </div>
 

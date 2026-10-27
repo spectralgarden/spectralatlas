@@ -500,7 +500,8 @@ export function calculateChartAngles(
  *
  * 2. 'in_zodiaco' (Zodico / Ecliptic Projection):
  *    Calculated from the degree-based ecliptic longitude of the planet (with zero latitude).
- *    Corresponds 1:1 with relocated natal chart house cusps (as seen on Astro.com & Astro-Seek).
+ *    Corresponds with relocated natal chart house cusps. Because it projects planets to zero
+ *    ecliptic latitude, its MC/IC meridians can differ from physical-sky astrocartography.
  *    A location on the Venus IC line in Zodiaco will have Venus exactly at the IC (4th house cusp degree)
  *    in its relocated chart.
  */

@@ -122,7 +122,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         {/* Mundo vs Zodiaco Projection Switcher */}
         <div
           className="flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5 shadow-inner"
-          title="Switch calculation method: In Mundo (Jim Lewis physical sky alignment) vs In Zodiaco (Zodico ecliptic projection matching relocated chart cusps like Astro.com & Astro-Seek)"
+          title="Switch calculation method: In Mundo uses each planet's physical sky position and is the standard for Astro.com line comparison. In Zodiaco projects planets to zero ecliptic latitude to match relocated zodiacal chart angles; its lines can differ for planets far from the ecliptic."
         >
           <button
             id="btn-calc-mundo"

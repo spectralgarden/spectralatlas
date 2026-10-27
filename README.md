@@ -30,7 +30,7 @@ Chiron's position uses JPL's J2000 osculating orbital elements with a Keplerian 
 
 Paran calculations retain valid latitude bands in both hemispheres and keep distinct angle combinations separate. On the map, nearby paran bands are visually grouped according to zoom level; the Paran Explorer retains the individual results.
 
-The optional **Geodetic** map projection is off by default and can be enabled in the expanded search filters. It maps 0° Aries to 0° terrestrial longitude. In Zodiaco, planetary lines follow fixed longitude meridians; in Mundo, planetary rising and setting paths curve by latitude to reflect the local horizon.
+The optional **Geodetic** map projection is off by default and can be enabled in the expanded search filters. It maps 0° Aries to 0° terrestrial longitude. In Zodiaco, planetary lines follow fixed longitude meridians based on zodiacal longitude (assuming zero ecliptic latitude); these MC/IC meridians can differ from standard physical-sky astrocartography, especially for planets far from the ecliptic. Use Mundo when comparing standard astrocartography lines with Astro.com. In Mundo, planetary rising and setting paths curve by latitude to reflect the local horizon.
 
 ## Deploy to GitHub Pages
 

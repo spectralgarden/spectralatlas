@@ -649,7 +649,7 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
                     {calculationMethod === 'in_zodiaco' && !isRecalculating && <span className="text-[10px] text-cyan-400">✓</span>}
                   </div>
                   <p className="text-[10px] text-slate-400 mt-0.5 leading-tight">
-                    Ecliptic projection: matches relocated chart angles 1:1 (Astro-Seek standard)
+                    Projects planets to zero ecliptic latitude to match relocated zodiac angles; MC/IC can differ from physical-sky maps.
                   </p>
                 </button>
               </div>
