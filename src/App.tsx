@@ -394,13 +394,13 @@ export default function App() {
     );
   };
 
-  // Calculation Method State: 'in_mundo' (Jim Lewis 3D Sky) vs 'in_zodiaco' (Zodico Relocated Cusps)
+  // Default to the standard physical-sky method used for Astro.com comparisons.
   const [calculationMethod, setCalculationMethod] = useState<CalculationMethod>(() => {
     try {
       const saved = localStorage.getItem('spectral_atlas_calc_method');
       if (saved === 'in_zodiaco' || saved === 'in_mundo') return saved;
     } catch (e) {}
-    return 'in_zodiaco';
+    return 'in_mundo';
   });
 
   const [isSwitchingMethod, setIsSwitchingMethod] = useState(false);
