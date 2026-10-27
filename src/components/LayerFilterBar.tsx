@@ -578,6 +578,18 @@ export const LayerFilterBar: React.FC<LayerFilterBarProps> = ({
             maxHeight: filterPanelPosition.maxHeight,
           }}
         >
+          <div className="sticky -top-4 z-10 -mx-4 -mt-4 mb-1 flex justify-end bg-slate-950/95 px-3 pt-2 pb-1 backdrop-blur-md">
+            <button
+              type="button"
+              onClick={() => setIsFilterExpanded(false)}
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-800 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400"
+              aria-label="Close filters"
+              title="Close filters"
+            >
+              <X size={16} aria-hidden="true" />
+            </button>
+          </div>
+
           {/* Projection Calculation Method: In Mundo vs In Zodiaco */}
           {onChangeCalculationMethod && (
             <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
