@@ -299,6 +299,13 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         >
           <Home aria-hidden="true" className="h-4 w-4 text-slate-300 transition-colors group-hover:text-violet-300" />
         </a>
+        <a
+          id="btn-about"
+          href={`${import.meta.env.BASE_URL}about.html`}
+          className="rounded-lg border border-violet-500/40 bg-violet-500/10 px-2.5 py-2 text-xs font-semibold text-violet-200 transition hover:border-violet-300 hover:bg-violet-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300"
+        >
+          About
+        </a>
 
         {/* Relocation Target Badge or Add Button */}
         {relocationTarget ? (

@@ -1245,7 +1245,7 @@ export default function App() {
         <aside className="fixed inset-x-0 bottom-0 z-[70] border-t border-violet-300/30 bg-slate-950/90 px-4 py-3 text-xs text-slate-200 shadow-[0_-8px_32px_rgba(2,3,12,0.55)] backdrop-blur-md sm:px-6">
           <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p className="max-w-4xl leading-relaxed">
-              <strong className="text-violet-200">Cookies &amp; privacy:</strong> Continue as a guest or sign in to your Spectral Garden member account. Atlas saves chart profiles in this browser and can import birth details already saved in your Flame Finder account after sign-in. Spectral Garden does not sell personal data. AdSense is not currently active.
+              <strong className="text-violet-200">Cookies &amp; privacy:</strong> Continue as a guest or sign in to your Spectral Garden member account. Atlas saves chart profiles in this browser and can import birth details already saved in your Flame Finder account after sign-in. Spectral Garden does not sell personal data.
             </p>
             <div className="flex shrink-0 items-center gap-4">
               <button
@@ -1254,7 +1254,7 @@ export default function App() {
                 className="font-semibold text-violet-200 underline underline-offset-2 hover:text-white"
                 aria-expanded={showPrivacyDetails}
               >
-                {showPrivacyDetails ? 'Hide details' : 'Cookie & ad details'}
+                {showPrivacyDetails ? 'Hide details' : 'Privacy details'}
               </button>
               <button
                 type="button"
@@ -1269,12 +1269,7 @@ export default function App() {
             <div className="mx-auto mt-3 max-w-7xl border-t border-slate-700/80 pt-3 leading-relaxed text-slate-300">
               <strong className="text-white">Atlas storage and use:</strong> Birth-chart profiles (including birth date, time, and place), favorites, relocation targets, and settings are saved in this browser's local storage; Atlas does not upload its local profiles to your member account. If you sign in, Atlas can retrieve the birth date, time, and place already saved in your Flame Finder account to calculate your planetary lines. Any imported chart is saved only in this browser. Local browser storage is not encrypted by Atlas, so anyone with access to your browser profile or device may be able to view it; clearing this site's browser storage removes it. Atlas connects to Flame Finder, Spectral Garden's member service hosted on Cloudflare, for account authentication and chart import. Atlas temporarily keeps a limited access token in this tab's session storage (up to one hour) and sends your member ID, username, and requested birth details to Flame Finder. Account information is used to provide member services, not sold or shared for third-party marketing. The service processes account data under the Flame Finder privacy notice. The notice preference is also stored in this browser. Map providers receive map requests, including your IP address and the map area requested. When you use city search or address lookup, OpenStreetMap's Nominatim service receives the search query and your network request information. These providers process requests under their own privacy terms.
               <br /><br />
-              <strong className="text-white">Cookies:</strong> Atlas does not currently use its own advertising cookies or analytics trackers. Browser storage described above is still used for app functionality and may be treated as similar technology under some laws. Third-party map and geocoding services may use their own technologies.
-              <br /><br />
-              <strong className="text-white">Google AdSense notice (planned):</strong> AdSense ads are not currently displayed by Atlas. When ads are enabled, third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to this website or other websites. Google's use of advertising cookies enables it and its partners to serve ads to users based on their visit to this site and/or other sites on the Internet. Google and its advertising partners may process device, browser, network, and ad-interaction information for ad delivery, personalization, frequency capping, fraud prevention, and measurement. Users may opt out of personalized advertising by visiting{' '}
-              <a href="https://adssettings.google.com/" target="_blank" rel="noreferrer" className="text-violet-200 underline underline-offset-2 hover:text-white">Google Ads Settings</a>.{' '}
-              See{' '}
-              <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noreferrer" className="text-violet-200 underline underline-offset-2 hover:text-white">how Google uses information from sites or apps that use its services</a>. Ad technology partners may also process data under their own privacy notices. Before ads are enabled, Spectral Garden must configure applicable Google settings and consent choices; where required by Google, this includes using a Google-certified consent-management platform. This notice is not itself an advertising-consent choice.
+              <strong className="text-white">Cookies:</strong> Atlas uses browser storage described above for app functionality and does not use advertising or analytics trackers. Third-party map and geocoding services may use their own technologies.
               <br /><br />
               <strong className="text-white">Flame Finder:</strong> If you choose to sign in or use its community features, Flame Finder separately processes account and service data as described in its privacy and cookie notice.{' '}
               <a
